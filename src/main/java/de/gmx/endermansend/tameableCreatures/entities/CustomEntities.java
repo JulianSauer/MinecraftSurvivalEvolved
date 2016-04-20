@@ -1,10 +1,9 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
-import net.minecraft.server.BiomeBase;
-import net.minecraft.server.EntityInsentient;
-import net.minecraft.server.EntitySpider;
-import net.minecraft.server.EntityTypes;
-import org.bukkit.block.Biome;
+import net.minecraft.server.v1_9_R1.BiomeBase;
+import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.EntityTypes;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Field;
@@ -24,7 +23,7 @@ public class CustomEntities {
         private Class<? extends EntityInsentient> nmsClass;
         private Class<? extends EntityInsentient> customClass;
 
-        private TameableEntityType(String name, int id, EntityType entityType, Class<? extends EntityInsentient> nmsClass, Class<? extends EntityInsentient> customClass) {
+        TameableEntityType(String name, int id, EntityType entityType, Class<? extends EntityInsentient> nmsClass, Class<? extends EntityInsentient> customClass) {
             this.name = name;
             this.id = id;
             this.entityType = entityType;
@@ -68,17 +67,17 @@ public class CustomEntities {
                 }
             }
 
-            for (Biome biome : Biome.values()) {
+            for (BiomeBase biomeBase : BiomeBase.i) {
 
-                if (biome == null)
+                if (biomeBase == null)
                     break;
 
-                for (String field : new String[]{"K", "J", "L", "M"}) {
+                for (String field : new String[]{"u", "v", "w", "x"}) {
                     try {
 
-                        Field list = Biome.class.getDeclaredField(field);
+                        Field list = BiomeBase.class.getDeclaredField(field);
                         list.setAccessible(true);
-                        List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) list.get(biome);
+                        List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) list.get(biomeBase);
 
                         for (BiomeBase.BiomeMeta meta : mobList) {
                             for (TameableEntityType entity : values()) {

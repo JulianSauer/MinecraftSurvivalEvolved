@@ -1,9 +1,9 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntitySpider;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_9_R1.Entity;
+import net.minecraft.server.v1_9_R1.EntityLiving;
+import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.entity.Player;
 
 public class TameableSpider extends EntitySpider {
