@@ -6,10 +6,17 @@ import net.minecraft.server.v1_9_R1.EntitySpider;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.entity.Player;
 
-public class TameableSpider extends EntitySpider {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.UUID;
+
+public class TameableSpider extends EntitySpider implements Tameable {
+
+    private TamingAttributes tamingAttributes;
 
     public TameableSpider(World world) {
         super(world);
+        tamingAttributes = new TamingAttributes();
     }
 
     @Override
@@ -26,7 +33,18 @@ public class TameableSpider extends EntitySpider {
         this.lastYaw = this.yaw = passenger.yaw;
         this.pitch = passenger.pitch * 0.5F;
 
-        this.b(this.yaw, this.pitch);
+        try {
+            Method b = EntitySpider.class.getDeclaredMethod("b", float.class, float.class);
+            b.setAccessible(true);
+            b.invoke(this.yaw, this.pitch);
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+
         this.aO = this.aM = this.yaw;
 
         sideMot = ((EntityLiving) passenger).bd * 0.5F;
@@ -43,10 +61,36 @@ public class TameableSpider extends EntitySpider {
 
     }
 
-    // Should actually be: https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/Entity.java#L163-L166
-    protected void b(float f, float f1) {
-        this.yaw = f % 360.0F;
-        this.pitch = f1 % 360.0F;
+    public boolean isTamed() {
+        return tamingAttributes.isTamed();
+    }
+
+    public boolean isTameable() {
+        return tamingAttributes.isTameable();
+    }
+
+    public boolean isUnconscious() {
+        return tamingAttributes.isUnconscious();
+    }
+
+    public int getTorpidity() {
+        return tamingAttributes.getTorpidity();
+    }
+
+    public UUID getOwner() {
+        return tamingAttributes.getOwner();
+    }
+
+    public void increaseTorpidityBy(int torpidityIncrease) {
+        tamingAttributes.increaseTorpidityBy(torpidityIncrease);
+    }
+
+    public void decreaseTorpidityBy(int torpidityDecrease) {
+        tamingAttributes.decreaseTorpidityBy(torpidityDecrease);
+    }
+
+    public boolean setSuccessfullyTamed(UUID newOwner) {
+        return tamingAttributes.setSuccessfullyTamed(newOwner);
     }
 
 }
