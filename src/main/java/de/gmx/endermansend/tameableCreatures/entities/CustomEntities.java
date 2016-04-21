@@ -7,9 +7,8 @@ import net.minecraft.server.v1_9_R1.EntityTypes;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 public class CustomEntities {
 
@@ -53,19 +52,8 @@ public class CustomEntities {
 
         public static void registerCustomEntities() {
 
-            for (TameableEntityType entity : values()) {
-                try {
-                    Method a = EntityTypes.class.getDeclaredMethod("a", new Class<?>[]{Class.class, String.class, int.class});
-                    a.setAccessible(true);
-                    a.invoke(null, entity.getCustomClass(), entity.getName(), entity.getId());
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+            for (TameableEntityType entity : values())
+                a(entity.getCustomClass(), entity.getName(), entity.getId());
 
             for (BiomeBase biomeBase : BiomeBase.i) {
 
@@ -94,6 +82,40 @@ public class CustomEntities {
                 }
             }
 
+        }
+
+        /**
+         * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
+         * A convenience method.
+         *
+         * @param clazz The class
+         * @param f     The string representation of the private static field
+         * @return The object found
+         * @throws NoSuchFieldException   If unable to get the object
+         * @throws IllegalAccessException If unable to get the object
+         */
+        private static Object getPrivateStatic(Class clazz, String f) throws NoSuchFieldException, IllegalAccessException {
+            Field field = clazz.getDeclaredField(f);
+            field.setAccessible(true);
+            return field.get(null);
+        }
+
+        /**
+         * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
+         * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
+         */
+        private static void a(Class paramClass, String paramString, int paramInt) {
+            try {
+                ((Map) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+                ((Map) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+                ((Map) getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
+                ((Map) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
+                ((Map) getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
         }
 
     }
