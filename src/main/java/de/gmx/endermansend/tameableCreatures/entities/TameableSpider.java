@@ -24,7 +24,7 @@ public class TameableSpider extends EntitySpider implements Tameable {
 
         if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof Player)) {
             super.e(sideMot, forMot);
-            // TODO: Find out what this.W has been renamed to so that npc entities can walk over half slabs
+            this.P = 0.5F;
             return;
         }
 
@@ -46,6 +46,8 @@ public class TameableSpider extends EntitySpider implements Tameable {
         }
 
         this.aO = this.aM = this.yaw;
+
+        this.P = 1.0F;
 
         sideMot = ((EntityLiving) passenger).bd * 0.5F;
         forMot = ((EntityLiving) passenger).be;
