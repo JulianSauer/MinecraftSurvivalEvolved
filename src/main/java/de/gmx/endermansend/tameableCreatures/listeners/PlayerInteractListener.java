@@ -16,8 +16,7 @@ public class PlayerInteractListener implements Listener {
 
         if (entity.isEmpty()) {
             entity.setPassenger(player);
-        } else if (entity.getPassenger().equals(player))
-            entity.eject();
+        }
 
     }
 

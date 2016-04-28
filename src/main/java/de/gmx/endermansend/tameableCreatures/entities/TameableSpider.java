@@ -17,6 +17,8 @@ public class TameableSpider extends EntitySpider implements Tameable {
     public TameableSpider(World world) {
         super(world);
         tamingAttributes = new TamingAttributes();
+        this.setCustomName("Tameable Spider");
+        // Julian ist selber doof.
     }
 
     @Override
