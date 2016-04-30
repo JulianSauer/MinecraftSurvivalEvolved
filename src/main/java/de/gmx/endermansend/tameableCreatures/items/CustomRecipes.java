@@ -28,6 +28,8 @@ public class CustomRecipes {
 
         ShapelessRecipe recipe = new ShapelessRecipe(tranquilizerArrow);
         recipe.addIngredient(Material.ARROW);
+        recipe.addIngredient(Material.POTION);
+        Bukkit.addRecipe(recipe);
     }
 
 }
