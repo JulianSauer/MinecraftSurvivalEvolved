@@ -16,14 +16,14 @@ public class TameableSpider extends EntitySpider implements Tameable {
 
     public TameableSpider(World world) {
         super(world);
-        tamingAttributes = new TamingAttributes();
+        tamingAttributes = new TamingAttributes(100, 20, 1, 1, true);
         this.setCustomName("Tameable Spider");
     }
 
     @Override
     public void e(float sideMot, float forMot) {
 
-        if(isUnconscious())
+        if (isUnconscious())
             return;
 
         if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof Player)) {
@@ -87,16 +87,12 @@ public class TameableSpider extends EntitySpider implements Tameable {
         return tamingAttributes.getOwner();
     }
 
-    public void increaseTorpidityBy(int torpidityIncrease) {
-        tamingAttributes.increaseTorpidityBy(torpidityIncrease);
+    public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
+        tamingAttributes.increaseTorpidityBy(torpidityIncrease, lastDamager);
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {
         tamingAttributes.decreaseTorpidityBy(torpidityDecrease);
-    }
-
-    public boolean setSuccessfullyTamed(UUID newOwner) {
-        return tamingAttributes.setSuccessfullyTamed(newOwner);
     }
 
 }

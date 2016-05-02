@@ -17,10 +17,8 @@ public interface Tameable {
 
     UUID getOwner();
 
-    void increaseTorpidityBy(int torpidityIncrease);
+    void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager);
 
     void decreaseTorpidityBy(int torpidityDecrease);
-
-    boolean setSuccessfullyTamed(UUID newOwner);
 
 }

@@ -11,6 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TameableCreatures extends JavaPlugin {
 
+    static TameableCreatures instance;
+
     @Override
     public void onEnable() {
 
@@ -26,6 +28,8 @@ public class TameableCreatures extends JavaPlugin {
         pluginManager.registerEvents(new BowShootListener(this), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
 
+
+        instance = this;
         getLogger().info("Enabled");
 
     }
@@ -33,6 +37,10 @@ public class TameableCreatures extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabled");
+    }
+
+    public static TameableCreatures getInstance() {
+        return instance;
     }
 
 }

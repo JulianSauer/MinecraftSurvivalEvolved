@@ -32,7 +32,7 @@ public class EntityDamageByEntityListener implements Listener {
         if (!tameableEntity.isTameable() || tameableEntity.isTamed())
             return;
 
-        tameableEntity.increaseTorpidityBy((int) (torpidity * 5));
+        tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
     }
 
