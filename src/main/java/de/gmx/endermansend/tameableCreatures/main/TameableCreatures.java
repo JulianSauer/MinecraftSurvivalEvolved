@@ -2,6 +2,8 @@ package de.gmx.endermansend.tameableCreatures.main;
 
 import de.gmx.endermansend.tameableCreatures.entities.CustomEntities;
 import de.gmx.endermansend.tameableCreatures.items.CustomRecipes;
+import de.gmx.endermansend.tameableCreatures.listeners.BowShootListener;
+import de.gmx.endermansend.tameableCreatures.listeners.EntityDamageByEntityListener;
 import de.gmx.endermansend.tameableCreatures.listeners.PlayerInteractListener;
 import de.gmx.endermansend.tameableCreatures.listeners.PrepareItemCraftListener;
 import org.bukkit.plugin.PluginManager;
@@ -21,6 +23,8 @@ public class TameableCreatures extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerInteractListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
+        pluginManager.registerEvents(new BowShootListener(this), this);
+        pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
 
         getLogger().info("Enabled");
 

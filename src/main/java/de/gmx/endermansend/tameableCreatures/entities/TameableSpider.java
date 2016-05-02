@@ -23,6 +23,9 @@ public class TameableSpider extends EntitySpider implements Tameable {
     @Override
     public void e(float sideMot, float forMot) {
 
+        if(isUnconscious())
+            return;
+
         if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof Player)) {
             super.e(sideMot, forMot);
             this.P = 0.5F;
