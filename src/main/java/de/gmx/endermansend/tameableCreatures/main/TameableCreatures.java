@@ -25,7 +25,7 @@ public class TameableCreatures extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerInteractListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
-        pluginManager.registerEvents(new BowShootListener(this), this);
+        pluginManager.registerEvents(new BowShootListener(), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
 
 

@@ -1,7 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
 import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -20,6 +19,7 @@ public class TamingAttributes {
     private int fortitude;
     private int torporDepletion;
     private int tamingProgress;
+    private int maxTamingProgress;
     private int tamingProgressInterval;
 
     private UUID owner;
@@ -39,6 +39,7 @@ public class TamingAttributes {
         torporDepletion = 1;
         tamingProgress = 0;
         tamingProgressInterval = 0;
+        maxTamingProgress = 100;
         unconsciousnessUpdateInterval = 100L;
     }
 
@@ -71,6 +72,18 @@ public class TamingAttributes {
         return torpidity;
     }
 
+    public int getMaxTorpidity() {
+        return maxTorpidity;
+    }
+
+    public int getTamingProgress() {
+        return tamingProgress;
+    }
+
+    public int getMaxTamingProgress() {
+        return maxTamingProgress;
+    }
+
     public UUID getOwner() {
         if (tamed)
             return owner;
@@ -92,7 +105,7 @@ public class TamingAttributes {
         updateConsciousness();
     }
 
-    public boolean setSuccessfullyTamed() {
+    private boolean setSuccessfullyTamed() {
 
         if (!isTamed() && isTameable() && tamer != null) {
             tamed = true;

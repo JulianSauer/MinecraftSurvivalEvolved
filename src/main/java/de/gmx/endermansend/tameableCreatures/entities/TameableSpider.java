@@ -83,6 +83,18 @@ public class TameableSpider extends EntitySpider implements Tameable {
         return tamingAttributes.getTorpidity();
     }
 
+    public int getMaxTorpidity() {
+        return tamingAttributes.getMaxTorpidity();
+    }
+
+    public int getTamingProgress() {
+        return tamingAttributes.getTamingProgress();
+    }
+
+    public int getMaxTamingProgress() {
+        return tamingAttributes.getMaxTamingProgress();
+    }
+
     public UUID getOwner() {
         return tamingAttributes.getOwner();
     }

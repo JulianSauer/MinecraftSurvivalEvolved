@@ -14,12 +14,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class BowShootListener implements Listener {
 
-    private TameableCreatures main;
-
-    public BowShootListener(TameableCreatures main) {
-        this.main = main;
-    }
-
     @EventHandler
     public void onBowShoot(EntityShootBowEvent e) {
 
@@ -31,7 +25,7 @@ public class BowShootListener implements Listener {
 
             if (arrowMeta.hasDisplayName()) {
                 if (arrowMeta.getDisplayName().equals("Tranquilizer Arrow")) {
-                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(main, true));
+                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(TameableCreatures.getInstance(), true));
                 }
             }
 

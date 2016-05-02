@@ -36,7 +36,9 @@ public class PlayerInteractListener implements Listener {
         if (name == null)
             name = entity.getName();
 
-        Inventory tamingGUI = Bukkit.createInventory(player, 16, name);
+        Tameable tameableEntity = (Tameable) entity;
+
+        Inventory tamingGUI = Bukkit.createInventory(player, 16, name + " Torpidity: " + tameableEntity.getTorpidity() + "/" + tameableEntity.getMaxTorpidity() + " Taming: " + tameableEntity.getTamingProgress() + "/" + tameableEntity.getMaxTamingProgress());
         player.openInventory(tamingGUI);
 
     }

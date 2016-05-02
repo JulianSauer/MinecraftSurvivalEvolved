@@ -15,6 +15,12 @@ public interface Tameable {
 
     int getTorpidity();
 
+    int getMaxTorpidity();
+
+    int getTamingProgress();
+
+    int getMaxTamingProgress();
+
     UUID getOwner();
 
     void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager);
