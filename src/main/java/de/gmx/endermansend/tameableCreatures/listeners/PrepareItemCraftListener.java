@@ -13,9 +13,12 @@ public class PrepareItemCraftListener implements Listener {
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {
 
-        if (!(e.getInventory() instanceof CraftingInventory))
+        ItemMeta itemMeta = e.getRecipe().getResult().getItemMeta();
+        if (!(e.getInventory() instanceof CraftingInventory)
+                || !itemMeta.hasDisplayName()
+                || !(itemMeta.getDisplayName().equals("Tranquilizer Arrow"))) {
             return;
-
+        }
         CraftingInventory craftingInventory = e.getInventory();
 
         ItemStack[] inventorySlots = craftingInventory.getMatrix();
