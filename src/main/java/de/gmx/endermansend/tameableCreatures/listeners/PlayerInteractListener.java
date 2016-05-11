@@ -2,6 +2,7 @@ package de.gmx.endermansend.tameableCreatures.listeners;
 
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,15 +15,18 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEntityEvent e) {
 
-        if (!(e.getRightClicked() instanceof Tameable))
+        Entity entity = e.getRightClicked();
+        if (!(entity instanceof CraftEntity))
+            return;
+        if (!(((CraftEntity) entity).getHandle() instanceof Tameable))
             return;
 
-        Tameable tameableEntity = (Tameable) e.getRightClicked();
-        Entity entity = e.getRightClicked();
+        Tameable tameableEntity = (Tameable) ((CraftEntity) entity).getHandle();
+
         Player player = e.getPlayer();
 
         if (tameableEntity.isUnconscious()) {
-            openTamingGUI(player, entity);
+            openTamingGUI(player, entity, tameableEntity);
         } else if (tameableEntity.isTamed() && tameableEntity.getOwner().equals(player.getUniqueId())) {
             if (entity.isEmpty())
                 entity.setPassenger(player);
@@ -30,15 +34,13 @@ public class PlayerInteractListener implements Listener {
 
     }
 
-    private void openTamingGUI(Player player, Entity entity) {
+    private void openTamingGUI(Player player, Entity entity, Tameable tameableEntity) {
 
         String name = entity.getCustomName();
         if (name == null)
             name = entity.getName();
 
-        Tameable tameableEntity = (Tameable) entity;
-
-        Inventory tamingGUI = Bukkit.createInventory(player, 16, name + " Torpidity: " + tameableEntity.getTorpidity() + "/" + tameableEntity.getMaxTorpidity() + " Taming: " + tameableEntity.getTamingProgress() + "/" + tameableEntity.getMaxTamingProgress());
+        Inventory tamingGUI = Bukkit.createInventory(player, 18, name + " Torpidity: " + tameableEntity.getTorpidity() + "/" + tameableEntity.getMaxTorpidity() + " Taming: " + tameableEntity.getTamingProgress() + "/" + tameableEntity.getMaxTamingProgress());
         player.openInventory(tamingGUI);
 
     }
