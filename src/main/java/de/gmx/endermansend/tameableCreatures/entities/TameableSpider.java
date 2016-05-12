@@ -4,15 +4,20 @@ import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityLiving;
 import net.minecraft.server.v1_9_R1.EntitySpider;
 import net.minecraft.server.v1_9_R1.World;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-public class TameableSpider extends EntitySpider implements Tameable {
+public class TameableSpider extends EntitySpider implements Tameable, InventoryHolder {
 
     private TamingAttributes tamingAttributes;
+
+    private Inventory inventory;
 
     public TameableSpider(World world) {
         super(world);
@@ -107,4 +112,9 @@ public class TameableSpider extends EntitySpider implements Tameable {
         tamingAttributes.decreaseTorpidityBy(torpidityDecrease);
     }
 
+    public Inventory getInventory() {
+        if (inventory == null)
+            inventory = Bukkit.createInventory(this, 18, this.getName());
+        return inventory;
+    }
 }
