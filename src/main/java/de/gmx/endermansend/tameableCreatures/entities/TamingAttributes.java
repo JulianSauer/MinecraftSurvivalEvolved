@@ -1,6 +1,9 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
 import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -9,6 +12,8 @@ import java.util.UUID;
  * Implements generic functionality for taming that can be used to implement Tameable.
  */
 public class TamingAttributes {
+
+    private TameableSpider tameableEntity;
 
     private boolean tamed;
     private boolean tameable;
@@ -28,7 +33,10 @@ public class TamingAttributes {
     private UnconsciousnessTimer unconsciousnessTimer;
     private long unconsciousnessUpdateInterval;
 
-    public TamingAttributes() {
+    public TamingAttributes(TameableSpider tameableEntity) {
+
+        this.tameableEntity = tameableEntity;
+
         tamed = false;
         tameable = true;
         unconscious = false;
@@ -43,15 +51,15 @@ public class TamingAttributes {
         unconsciousnessUpdateInterval = 100L;
     }
 
-    public TamingAttributes(int maxTorpidity, int fortitude, int torporDepletion) {
-        this();
+    public TamingAttributes(TameableSpider tameableEntity, int maxTorpidity, int fortitude, int torporDepletion) {
+        this(tameableEntity);
         this.maxTorpidity = maxTorpidity;
         this.fortitude = fortitude;
         this.torporDepletion = torporDepletion;
     }
 
-    public TamingAttributes(int maxTorpidity, int fortitude, int torporDepletion, int tamingProgressInterval, boolean tameable) {
-        this(maxTorpidity, fortitude, torporDepletion);
+    public TamingAttributes(TameableSpider tameableEntity, int maxTorpidity, int fortitude, int torporDepletion, int tamingProgressInterval, boolean tameable) {
+        this(tameableEntity, maxTorpidity, fortitude, torporDepletion);
         this.tameable = tameable;
         this.tamingProgressInterval = tamingProgressInterval;
     }
@@ -126,12 +134,40 @@ public class TamingAttributes {
 
         if (isUnconscious() && torpidity <= 0) {
             unconscious = false;
+            if (unconsciousnessTimer != null)
+                unconsciousnessTimer.cancel();
         } else if (!isUnconscious() && torpidity >= fortitude) {
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(TameableCreatures.getInstance(), 0, unconsciousnessUpdateInterval);
         }
 
+    }
+
+    /**
+     * Tries to eat food from the inventory.
+     *
+     * @return True if food was found.
+     */
+    private boolean updateHunger() {
+
+        Inventory inventory = tameableEntity.getInventory();
+
+        if (!inventory.contains(Material.RAW_BEEF, 1))
+            return false;
+
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item.getType() == Material.RAW_BEEF) {
+                item.setAmount(item.getAmount() - 1);
+                if (item.getAmount() <= 0)
+                    inventory.setItem(i, new ItemStack(Material.AIR, 0));
+                else
+                    inventory.setItem(i, item);
+                return true;
+            }
+        }
+        return false;
     }
 
     class UnconsciousnessTimer extends BukkitRunnable {
@@ -154,10 +190,16 @@ public class TamingAttributes {
          * Updates the progress if the entity is still tameable until it is tamed.
          */
         private void updateTamingProcess() {
+            System.out.println(tamingProgress);
+
             if (!isTameable() || isTamed())
                 return;
-            tamingProgress += tamingProgressInterval;
-            if (tamingProgress >= 100) {
+
+            if (updateHunger())
+                tamingProgress += tamingProgressInterval;
+            else
+                tamingProgress = (tamingProgress - tamingProgressInterval) < 0 ? 0 : tamingProgress - tamingProgressInterval;
+            if (tamingProgress >= 10) {
                 setSuccessfullyTamed();
             }
 

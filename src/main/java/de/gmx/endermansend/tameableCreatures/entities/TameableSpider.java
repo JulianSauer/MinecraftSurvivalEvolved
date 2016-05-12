@@ -21,7 +21,7 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
     public TameableSpider(World world) {
         super(world);
-        tamingAttributes = new TamingAttributes(100, 20, 1, 1, true);
+        tamingAttributes = new TamingAttributes(this, 100, 20, 1, 1, true);
         this.setCustomName("Tameable Spider");
     }
 
