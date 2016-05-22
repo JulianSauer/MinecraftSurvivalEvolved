@@ -1,9 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
-import net.minecraft.server.v1_9_R1.Entity;
-import net.minecraft.server.v1_9_R1.EntityLiving;
-import net.minecraft.server.v1_9_R1.EntitySpider;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -26,12 +23,12 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
     }
 
     @Override
-    public void e(float sideMot, float forMot) {
+    public void g(float sideMot, float forMot) {
 
         if (isUnconscious())
             return;
 
-        if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof Player)) {
+        if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof EntityPlayer)) {
             super.e(sideMot, forMot);
             this.P = 0.5F;
             return;
@@ -42,17 +39,7 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
         this.lastYaw = this.yaw = passenger.yaw;
         this.pitch = passenger.pitch * 0.5F;
 
-        try {
-            Method b = EntitySpider.class.getDeclaredMethod("b", float.class, float.class);
-            b.setAccessible(true);
-            b.invoke(this.yaw, this.pitch);
-        } catch (NoSuchMethodException ex) {
-            ex.printStackTrace();
-        } catch (InvocationTargetException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        }
+        this.setYawPitch(this.yaw, this.pitch);
 
         this.aO = this.aM = this.yaw;
 
@@ -68,7 +55,7 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
         float speed = 0.35F;
         this.i(speed);
-        super.e(sideMot, forMot);
+        super.g(sideMot, forMot);
 
     }
 
