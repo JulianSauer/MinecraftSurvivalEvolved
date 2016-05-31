@@ -2,12 +2,9 @@ package de.gmx.endermansend.tameableCreatures.entities;
 
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 public class TameableSpider extends EntitySpider implements Tameable, InventoryHolder {
@@ -29,7 +26,8 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
             return;
 
         if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof EntityPlayer)) {
-            super.e(sideMot, forMot);
+            if(!this.isTamed())
+                super.g(sideMot, forMot);
             this.P = 0.5F;
             return;
         }
