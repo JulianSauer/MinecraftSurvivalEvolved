@@ -134,9 +134,12 @@ public class TamingAttributes {
 
         if (isUnconscious() && torpidity <= 0) {
             unconscious = false;
-            if (unconsciousnessTimer != null)
+            if (unconsciousnessTimer != null) {
                 unconsciousnessTimer.cancel();
+                System.out.println("Entity is no longer unconscious");
+            }
         } else if (!isUnconscious() && torpidity >= fortitude) {
+            System.out.println("Entity is unconscious");
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(TameableCreatures.getInstance(), 0, unconsciousnessUpdateInterval);
@@ -190,7 +193,6 @@ public class TamingAttributes {
          * Updates the progress if the entity is still tameable until it is tamed.
          */
         private void updateTamingProcess() {
-            System.out.println(tamingProgress);
 
             if (!isTameable() || isTamed())
                 return;
