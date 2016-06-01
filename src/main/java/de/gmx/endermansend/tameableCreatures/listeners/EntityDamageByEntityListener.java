@@ -7,14 +7,13 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
 
-public class EntityDamageByEntityListener implements Listener {
+public class EntityDamageByEntityListener extends BasicListener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
@@ -26,7 +25,7 @@ public class EntityDamageByEntityListener implements Listener {
         if (isTranqEvent(entity, damager)) {
 
             Arrow arrow = (Arrow) e.getDamager();
-            Tameable tameableEntity = (Tameable) ((CraftEntity) entity).getHandle();
+            Tameable tameableEntity = getTameableEntityFromEntity(entity);
             Player player = (Player) arrow.getShooter();
 
             double torpidity = e.getDamage();
@@ -39,8 +38,7 @@ public class EntityDamageByEntityListener implements Listener {
 
         } else if (isMountedAttack(entity, damager)) {
             EntityInsentient tameableEntity = (EntityInsentient) ((CraftEntity) damager.getVehicle()).getHandle();
-            tameableEntity.B(((CraftEntity) entity).getHandle());
-            e.setDamage(0);
+            e.setDamage(getTameableEntityFromVehicle(damager).getDamage());
         }
 
     }
@@ -57,8 +55,7 @@ public class EntityDamageByEntityListener implements Listener {
         if (!(damager instanceof Player))
             return false;
         Player player = (Player) damager;
-        Entity vehicle = player.getVehicle();
-        if (vehicle == null || !(vehicle instanceof CraftEntity) || !(((CraftEntity) vehicle).getHandle() instanceof Tameable))
+        if (getTameableEntityFromVehicle(player) == null)
             return false;
         return true;
 
@@ -73,10 +70,10 @@ public class EntityDamageByEntityListener implements Listener {
      */
     private boolean isTranqEvent(Entity entity, Entity damager) {
 
-        if (!(entity instanceof CraftEntity) || !(damager instanceof Arrow))
+        if (!(damager instanceof Arrow))
             return false;
         Arrow arrow = (Arrow) damager;
-        if (!(((CraftEntity) entity).getHandle() instanceof Tameable) || !(arrow.getShooter() instanceof Player))
+        if (getTameableEntityFromEntity(entity) == null || !(arrow.getShooter() instanceof Player))
             return false;
 
         List<MetadataValue> titleData = arrow.getMetadata("Tranquilizer Arrow");

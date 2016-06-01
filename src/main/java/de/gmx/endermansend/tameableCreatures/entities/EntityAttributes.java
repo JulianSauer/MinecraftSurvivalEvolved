@@ -84,6 +84,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
 
         addPreferredFood(Material.RAW_BEEF);
         addMineableBlock(Material.LOG);
+        addMineableBlock(Material.LOG_2);
         addMineableBlock(Material.LEAVES);
 
     }
@@ -202,11 +203,10 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     private void updateLevel(int levelIncrease) {
         if (level == null)
             level = (int) (Math.random() * levelCap + 1);
-        if (levelIncrease > 0) {
+        if (levelIncrease > 0)
             level += levelIncrease;
-            if (!tamed)
-                setName(tameableEntity.getName() + " (" + level + ")");
-        }
+        if (!tamed)
+            setName(tameableEntity.getName() + " (" + level + ")");
     }
 
     /**

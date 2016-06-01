@@ -6,14 +6,13 @@ import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class PlayerInteractListener implements Listener {
+public class PlayerInteractListener extends BasicListener {
 
-    boolean enableTestRiding = false;
+    boolean enableTestRiding = true;
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEntityEvent e) {
@@ -24,12 +23,9 @@ public class PlayerInteractListener implements Listener {
         }
 
         Entity entity = e.getRightClicked();
-        if (!(entity instanceof CraftEntity))
+        Tameable tameableEntity = getTameableEntityFromEntity(entity);
+        if (tameableEntity == null)
             return;
-        if (!(((CraftEntity) entity).getHandle() instanceof Tameable))
-            return;
-
-        Tameable tameableEntity = (Tameable) ((CraftEntity) entity).getHandle();
 
         Player player = e.getPlayer();
 
