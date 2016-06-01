@@ -5,17 +5,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TameableSpider extends EntitySpider implements Tameable, InventoryHolder {
 
-    private TamingAttributes tamingAttributes;
+    private EntityAttributes entityAttributes;
 
     private Inventory inventory;
 
     public TameableSpider(World world) {
         super(world);
-        tamingAttributes = new TamingAttributes(this, 100, 20, 1, 1, true);
+        entityAttributes = new EntityAttributes(this, 100, 20, 1, 1, true);
         this.setCustomName("Tameable Spider");
     }
 
@@ -58,43 +59,67 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
     }
 
     public boolean isTamed() {
-        return tamingAttributes.isTamed();
+        return entityAttributes.isTamed();
     }
 
     public boolean isTameable() {
-        return tamingAttributes.isTameable();
+        return entityAttributes.isTameable();
     }
 
     public boolean isUnconscious() {
-        return tamingAttributes.isUnconscious();
+        return entityAttributes.isUnconscious();
     }
 
     public int getTorpidity() {
-        return tamingAttributes.getTorpidity();
+        return entityAttributes.getTorpidity();
     }
 
     public int getMaxTorpidity() {
-        return tamingAttributes.getMaxTorpidity();
+        return entityAttributes.getMaxTorpidity();
     }
 
     public int getTamingProgress() {
-        return tamingAttributes.getTamingProgress();
+        return entityAttributes.getTamingProgress();
     }
 
     public int getMaxTamingProgress() {
-        return tamingAttributes.getMaxTamingProgress();
+        return entityAttributes.getMaxTamingProgress();
+    }
+
+    public int getLevel() {
+        return entityAttributes.getLevel();
     }
 
     public UUID getOwner() {
-        return tamingAttributes.getOwner();
+        return entityAttributes.getOwner();
+    }
+
+    public void setName(String name) {
+        entityAttributes.setName(name);
+    }
+
+    public double getDamage() {
+        return entityAttributes.getDamage();
+    }
+
+    public float[] getXp() {
+        return new float[]{entityAttributes.getCurrentXp(), entityAttributes.getXpUntilLevelUp()};
+    }
+
+    public List<Material> getPreferredFood() {
+        return entityAttributes.getPreferredFood();
+    }
+
+    public List<Material> getMineableBlocks() {
+        return entityAttributes.getMineableBlocks();
     }
 
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
-        tamingAttributes.increaseTorpidityBy(torpidityIncrease, lastDamager);
+        entityAttributes.increaseTorpidityBy(torpidityIncrease, lastDamager);
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {
-        tamingAttributes.decreaseTorpidityBy(torpidityDecrease);
+        entityAttributes.decreaseTorpidityBy(torpidityDecrease);
     }
 
     public Inventory getInventory() {

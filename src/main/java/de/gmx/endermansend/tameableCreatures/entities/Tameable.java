@@ -1,5 +1,8 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
+import net.minecraft.server.v1_9_R1.Material;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,7 +24,24 @@ public interface Tameable {
 
     int getMaxTamingProgress();
 
+    int getLevel();
+
     UUID getOwner();
+
+    String getName();
+
+    void setName(String name);
+
+    double getDamage();
+
+    /**
+     * @return [0]: Current xp [1]: xp until level up
+     */
+    float[] getXp();
+
+    List<Material> getPreferredFood();
+
+    List<Material> getMineableBlocks();
 
     void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager);
 
