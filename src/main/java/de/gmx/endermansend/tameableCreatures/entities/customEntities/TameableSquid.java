@@ -3,9 +3,7 @@ package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
 import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import net.minecraft.server.v1_9_R1.EntitySquid;
-import net.minecraft.server.v1_9_R1.Material;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class TameableSquid extends EntitySquid implements Tameable, InventoryHolder {
-
 
     private AttributeHandler attributeHandler;
 
@@ -29,24 +26,36 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
     }
 
     @Override
-    public void g(float sideMot, float forMot) {
+    public void n() {
 
         if (isUnconscious())
             return;
 
         if (!ridingHandler.isMounted()) {
-            super.g(sideMot, forMot);
+            super.n();
             return;
         }
+        Entity passenger = this.passengers.get(0);
 
-        float[] temp = ridingHandler.calculateMovement(sideMot, forMot);
-        sideMot = temp[0];
-        forMot = temp[1];
+        this.lastYaw = this.yaw = passenger.yaw;
+        this.pitch = passenger.pitch * 0.5F;
 
+        this.aO = this.aM = this.yaw;
+
+        this.P = 1.0F;
+
+        motX = ((EntityLiving) passenger).bd * 0.5F;
+        motZ = ((EntityLiving) passenger).be;
+
+        if (motZ <= 0.0F) {
+            motZ *= 0.25F;
+        }
+        motX *= 0.75F;
+
+        float speed = 0.35F;
+        this.i(speed);
         this.setYawPitch(this.yaw, this.pitch);
-        super.g(sideMot, forMot);
-
-        ridingHandler.jump();
+        this.move(motX, motY, motZ);
 
     }
 
@@ -119,6 +128,5 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
             inventory = Bukkit.createInventory(this, 18, this.getName());
         return inventory;
     }
-
 
 }
