@@ -1,5 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.main;
 
+import de.gmx.endermansend.tameableCreatures.config.ConfigHandler;
 import de.gmx.endermansend.tameableCreatures.entities.EntityRegistry;
 import de.gmx.endermansend.tameableCreatures.items.CustomRecipes;
 import de.gmx.endermansend.tameableCreatures.listeners.*;
@@ -10,8 +11,14 @@ public class TameableCreatures extends JavaPlugin {
 
     static TameableCreatures instance;
 
+    static ConfigHandler configHandler;
+
     @Override
     public void onEnable() {
+
+        instance = this;
+
+        configHandler = new ConfigHandler();
 
         EntityRegistry.registerCustomEntities();
 
@@ -39,6 +46,10 @@ public class TameableCreatures extends JavaPlugin {
 
     public static TameableCreatures getInstance() {
         return instance;
+    }
+
+    public static ConfigHandler getConfigHandler() {
+        return configHandler;
     }
 
 }

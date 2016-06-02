@@ -1,0 +1,37 @@
+"Cave Spider":
+  LevelCap: 120
+  LevelMultiplier: 0.02
+  Tameable: true
+  # Base values for attributes
+  # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+  Damage: 4.0
+  MaxTorpidity: 120
+  Fortitude: 20
+  MaxTamingProgress: 100
+  XpUntilLevelUp: 20
+  # Blocks that can be mined with this entity
+  MineableBlocks:
+  - "STONE"
+  # Food needed for taming/feeding
+  PreferredFood:
+  - "RAW_BEEF"
+Spider:
+  LevelCap: 120
+  LevelMultiplier: 0.03
+  Tameable: true
+  # Base values for attributes
+  # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+  Damage: 3.0
+  MaxTorpidity: 100
+  Fortitude: 20
+  MaxTamingProgress: 100
+  XpUntilLevelUp: 20
+  # Blocks that can be mined with this entity
+  MineableBlocks:
+  - "LOG"
+  - "LOG_2"
+  - "LEAVES"
+  - "LEAVES_2"
+  # Food needed for taming/feeding
+  PreferredFood:
+  - "RAW_BEEF"

@@ -1,6 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 
-import de.gmx.endermansend.tameableCreatures.entities.EntityAttributes;
+import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
 import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
 import net.minecraft.server.v1_9_R1.EntityCaveSpider;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class TameableCaveSpider extends EntityCaveSpider implements Tameable, InventoryHolder {
 
-    private EntityAttributes entityAttributes;
+    private AttributeHandler attributeHandler;
 
     private RidingHandler ridingHandler;
 
@@ -23,7 +23,7 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
 
     public TameableCaveSpider(World world) {
         super(world);
-        entityAttributes = new EntityAttributes(this, 100, 20, 1, 1, true);
+        attributeHandler = new AttributeHandler(this);
         ridingHandler = new RidingHandler(this);
     }
 
@@ -50,67 +50,67 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
     }
 
     public boolean isTamed() {
-        return entityAttributes.isTamed();
+        return attributeHandler.isTamed();
     }
 
     public boolean isTameable() {
-        return entityAttributes.isTameable();
+        return attributeHandler.isTameable();
     }
 
     public boolean isUnconscious() {
-        return entityAttributes.isUnconscious();
+        return attributeHandler.isUnconscious();
     }
 
     public int getTorpidity() {
-        return entityAttributes.getTorpidity();
+        return attributeHandler.getTorpidity();
     }
 
     public int getMaxTorpidity() {
-        return entityAttributes.getMaxTorpidity();
+        return attributeHandler.getMaxTorpidity();
     }
 
     public int getTamingProgress() {
-        return entityAttributes.getTamingProgress();
+        return attributeHandler.getTamingProgress();
     }
 
     public int getMaxTamingProgress() {
-        return entityAttributes.getMaxTamingProgress();
+        return attributeHandler.getMaxTamingProgress();
     }
 
     public int getLevel() {
-        return entityAttributes.getLevel();
+        return attributeHandler.getLevel();
     }
 
     public UUID getOwner() {
-        return entityAttributes.getOwner();
+        return attributeHandler.getOwner();
     }
 
     public void setName(String name) {
-        entityAttributes.setName(name);
+        attributeHandler.setName(name);
     }
 
     public double getDamage() {
-        return entityAttributes.getDamage();
+        return attributeHandler.getDamage();
     }
 
     public float[] getXp() {
-        return new float[]{entityAttributes.getCurrentXp(), entityAttributes.getXpUntilLevelUp()};
+        return new float[]{attributeHandler.getCurrentXp(), attributeHandler.getXpUntilLevelUp()};
     }
 
     public List<Material> getPreferredFood() {
-        return entityAttributes.getPreferredFood();
+        return attributeHandler.getPreferredFood();
     }
 
     public List<Material> getMineableBlocks() {
-        return entityAttributes.getMineableBlocks();
+        return attributeHandler.getMineableBlocks();
     }
 
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
-        entityAttributes.increaseTorpidityBy(torpidityIncrease, lastDamager);
+        attributeHandler.increaseTorpidityBy(torpidityIncrease, lastDamager);
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {
-        entityAttributes.decreaseTorpidityBy(torpidityDecrease);
+        attributeHandler.decreaseTorpidityBy(torpidityDecrease);
     }
 
     public Inventory getInventory() {

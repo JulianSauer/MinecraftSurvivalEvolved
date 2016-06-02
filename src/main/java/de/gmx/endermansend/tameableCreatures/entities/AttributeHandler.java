@@ -8,98 +8,59 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Implements generic functionality for entities that can be used to implement Tameable.
  */
-public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
+public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
     private T tameableEntity;
 
-    // Current status
+    private BaseStats baseStats;
+
+    // Current stats
     private boolean unconscious;
 
     private int torpidity;
     private int tamingProgress;
-
-    // Level dependent
     private Integer level;
-    private int maxTorpidity;
-    private int fortitude;
-    private int maxTamingProgress;
 
     private float currentXp;
-
-    private double damage;
-
-    // General stats
-    private boolean tamed;
-    private boolean tameable;
-
-    private int levelCap;
-    private int tamingProgressInterval;
-    private int torporDepletion;
-
-    private float levelMultiplier; // Increases maxTorpidity, fortitude, maxTamingProgress & damage in percent
-    private float xpUntilLevelUp;
 
     private String name;
 
     private UUID owner;
     private UUID tamer;
 
-    private List<Material> preferredFood;
-    private List<Material> mineableBlocks;
+    // General stats
+    private boolean tamed;
 
+    private int tamingProgressInterval;
+    private int torporDepletion;
 
     private UnconsciousnessTimer unconsciousnessTimer;
     private long unconsciousnessUpdateInterval;
 
-    public EntityAttributes(T tameableEntity) {
+    public AttributeHandler(T tameableEntity) {
 
         this.tameableEntity = tameableEntity;
 
+        baseStats = new BaseStats(tameableEntity.getName());
+
         tamed = false;
-        tameable = true;
         unconscious = false;
 
         torpidity = 0;
-        maxTorpidity = 100;
-        fortitude = 20;
         torporDepletion = 1;
         tamingProgress = 0;
         tamingProgressInterval = 0;
-        maxTamingProgress = 100;
         unconsciousnessUpdateInterval = 100L;
-        levelCap = 120;
-        levelMultiplier = 0.01F;
-        damage = 3;
         currentXp = 0;
-        xpUntilLevelUp = 20;
 
         updateLevel(0);
 
-        addPreferredFood(Material.RAW_BEEF);
-        addMineableBlock(Material.LOG);
-        addMineableBlock(Material.LOG_2);
-        addMineableBlock(Material.LEAVES);
-
-    }
-
-    public EntityAttributes(T tameableEntity, int maxTorpidity, int fortitude, int torporDepletion) {
-        this(tameableEntity);
-        this.maxTorpidity = maxTorpidity;
-        this.fortitude = fortitude;
-        this.torporDepletion = torporDepletion;
-    }
-
-    public EntityAttributes(T tameableEntity, int maxTorpidity, int fortitude, int torporDepletion, int tamingProgressInterval, boolean tameable) {
-        this(tameableEntity, maxTorpidity, fortitude, torporDepletion);
-        this.tameable = tameable;
-        this.tamingProgressInterval = tamingProgressInterval;
     }
 
     public boolean isTamed() {
@@ -107,7 +68,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     public boolean isTameable() {
-        return tameable;
+        return baseStats.isTameable() && !tamed;
     }
 
     public boolean isUnconscious() {
@@ -119,11 +80,11 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     public int getMaxTorpidity() {
-        return (int) calculateLevelDependentStatFor(maxTamingProgress);
+        return (int) calculateLevelDependentStatFor(baseStats.getMaxTamingProgress());
     }
 
     public double getDamage() {
-        return calculateLevelDependentStatFor(damage);
+        return calculateLevelDependentStatFor(baseStats.getDamage());
     }
 
     public int getTamingProgress() {
@@ -135,7 +96,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     private int getFortitude() {
-        return (int) calculateLevelDependentStatFor(fortitude);
+        return (int) calculateLevelDependentStatFor(baseStats.getFortitude());
     }
 
     public float getCurrentXp() {
@@ -143,7 +104,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     public float getXpUntilLevelUp() {
-        return xpUntilLevelUp;
+        return baseStats.getXpUntilLevelUp();
     }
 
     public String getName() {
@@ -156,7 +117,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     public int getMaxTamingProgress() {
-        return (int) calculateLevelDependentStatFor(maxTamingProgress);
+        return (int) calculateLevelDependentStatFor(baseStats.getMaxTamingProgress());
     }
 
     public UUID getOwner() {
@@ -166,23 +127,11 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
     }
 
     public List<Material> getPreferredFood() {
-        return preferredFood;
+        return baseStats.getPreferredFood();
     }
 
     public List<Material> getMineableBlocks() {
-        return mineableBlocks;
-    }
-
-    private void addPreferredFood(Material food) {
-        if (preferredFood == null)
-            preferredFood = new ArrayList<Material>();
-        preferredFood.add(food);
-    }
-
-    private void addMineableBlock(Material block) {
-        if (mineableBlocks == null)
-            mineableBlocks = new ArrayList<Material>();
-        mineableBlocks.add(block);
+        return baseStats.getMineableBlocks();
     }
 
     /**
@@ -192,7 +141,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
      * @return Level dependent value of the entity
      */
     private double calculateLevelDependentStatFor(double baseValue) {
-        return (1 + level * levelMultiplier) * baseValue;
+        return (1 + level * baseStats.getLevelMultiplier()) * baseValue;
     }
 
     /**
@@ -202,7 +151,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
      */
     private void updateLevel(int levelIncrease) {
         if (level == null)
-            level = (int) (Math.random() * levelCap + 1);
+            level = (int) (Math.random() * baseStats.getLevelCap() + 1);
         if (levelIncrease > 0)
             level += levelIncrease;
         if (!tamed)
@@ -216,11 +165,11 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
      */
     public void increaseXp(float xpIncrease) {
         currentXp += xpIncrease;
-        float currentXpForLevelUp = (float) calculateLevelDependentStatFor(xpUntilLevelUp);
+        float currentXpForLevelUp = (float) calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp());
         while (currentXp >= currentXpForLevelUp) {
             currentXp -= currentXpForLevelUp;
             updateLevel(1);
-            currentXpForLevelUp = (float) calculateLevelDependentStatFor(xpUntilLevelUp);
+            currentXpForLevelUp = (float) calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp());
         }
     }
 
@@ -252,9 +201,8 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
      */
     private boolean setSuccessfullyTamed() {
 
-        if (!isTamed() && isTameable() && tamer != null) {
+        if (isTameable() && tamer != null) {
             tamed = true;
-            tameable = false;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
             return true;
@@ -298,7 +246,7 @@ public class EntityAttributes<T extends EntityInsentient & InventoryHolder> {
 
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
-            if (preferredFood.contains(item.getType())) {
+            if (baseStats.getPreferredFood().contains(item.getType())) {
                 item.setAmount(item.getAmount() - 1);
                 if (item.getAmount() <= 0)
                     inventory.setItem(i, new ItemStack(Material.AIR, 0));
