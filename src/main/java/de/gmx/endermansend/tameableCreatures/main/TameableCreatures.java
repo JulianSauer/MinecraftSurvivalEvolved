@@ -13,7 +13,7 @@ public class TameableCreatures extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        EntityRegistry.TameableEntityType.registerCustomEntities();
+        EntityRegistry.registerCustomEntities();
 
         CustomRecipes customRecipes = new CustomRecipes();
         customRecipes.setUpNarcotics();

@@ -47,9 +47,8 @@ public class PlayerInteractListener extends BasicListener {
 
         Entity entity = e.getRightClicked();
         Player player = e.getPlayer();
-        if (!(entity instanceof CraftEntity))
-            return;
-        if (!(((CraftEntity) entity).getHandle() instanceof Tameable))
+
+        if(getTameableEntityFromEntity(entity) == null)
             return;
         if (entity.isEmpty())
             entity.setPassenger(player);

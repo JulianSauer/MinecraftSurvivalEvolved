@@ -1,10 +1,8 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
+import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableCaveSpider;
 import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableSpider;
-import net.minecraft.server.v1_9_R1.BiomeBase;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
-import net.minecraft.server.v1_9_R1.EntitySpider;
-import net.minecraft.server.v1_9_R1.EntityTypes;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Field;
@@ -15,7 +13,8 @@ public class EntityRegistry {
 
     public enum TameableEntityType {
 
-        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, TameableSpider.class);
+        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, TameableSpider.class),
+        CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, TameableCaveSpider.class);
 
         private String name;
         private int id;
@@ -51,74 +50,77 @@ public class EntityRegistry {
             return this.customClass;
         }
 
-        public static void registerCustomEntities() {
+    }
 
-            for (TameableEntityType entity : values())
-                a(entity.getCustomClass(), entity.getName(), entity.getId());
+    /**
+     * Registers all entities found in TameableEntityType
+     */
+    public static void registerCustomEntities() {
 
-            for (BiomeBase biomeBase : BiomeBase.i) {
+        for (TameableEntityType entity : TameableEntityType.values())
+            a(entity.getCustomClass(), entity.getName(), entity.getId());
 
-                if (biomeBase == null)
-                    break;
+        for (BiomeBase biomeBase : BiomeBase.i) {
 
-                for (String field : new String[]{"u", "v", "w", "x"}) {
-                    try {
+            if (biomeBase == null)
+                break;
 
-                        Field list = BiomeBase.class.getDeclaredField(field);
-                        list.setAccessible(true);
-                        List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) list.get(biomeBase);
+            for (String field : new String[]{"u", "v", "w", "x"}) {
+                try {
 
-                        for (BiomeBase.BiomeMeta meta : mobList) {
-                            for (TameableEntityType entity : values()) {
-                                if (entity.getNMSClass().equals(meta.b))
-                                    meta.b = entity.getCustomClass();
-                            }
+                    Field list = BiomeBase.class.getDeclaredField(field);
+                    list.setAccessible(true);
+                    List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) list.get(biomeBase);
+
+                    for (BiomeBase.BiomeMeta meta : mobList) {
+                        for (TameableEntityType entity : TameableEntityType.values()) {
+                            if (entity.getNMSClass().equals(meta.b))
+                                meta.b = entity.getCustomClass();
                         }
-
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
                     }
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
             }
-
         }
 
-        /**
-         * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
-         * A convenience method.
-         *
-         * @param clazz The class
-         * @param f     The string representation of the private static field
-         * @return The object found
-         * @throws NoSuchFieldException   If unable to get the object
-         * @throws IllegalAccessException If unable to get the object
-         */
-        private static Object getPrivateStatic(Class clazz, String f) throws NoSuchFieldException, IllegalAccessException {
-            Field field = clazz.getDeclaredField(f);
-            field.setAccessible(true);
-            return field.get(null);
-        }
+    }
 
-        /**
-         * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
-         * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
-         */
-        private static void a(Class paramClass, String paramString, int paramInt) {
-            try {
-                ((Map) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
-                ((Map) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
-                ((Map) getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
-                ((Map) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
-                ((Map) getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-        }
+    /**
+     * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
+     * A convenience method.
+     *
+     * @param clazz The class
+     * @param f     The string representation of the private static field
+     * @return The object found
+     * @throws NoSuchFieldException   If unable to get the object
+     * @throws IllegalAccessException If unable to get the object
+     */
+    private static Object getPrivateStatic(Class clazz, String f) throws NoSuchFieldException, IllegalAccessException {
+        Field field = clazz.getDeclaredField(f);
+        field.setAccessible(true);
+        return field.get(null);
+    }
 
+    /**
+     * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
+     * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
+     */
+    private static void a(Class paramClass, String paramString, int paramInt) {
+        try {
+            ((Map) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+            ((Map) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+            ((Map) getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
+            ((Map) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
+            ((Map) getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
 }
