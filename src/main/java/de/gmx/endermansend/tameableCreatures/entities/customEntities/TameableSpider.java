@@ -1,10 +1,13 @@
-package de.gmx.endermansend.tameableCreatures.entities;
+package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 
+import de.gmx.endermansend.tameableCreatures.entities.EntityAttributes;
+import de.gmx.endermansend.tameableCreatures.entities.Tameable;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +57,25 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
         float speed = 0.35F;
         this.i(speed);
         super.g(sideMot, forMot);
+
+        Field jump = null;
+        try {
+            jump = EntityLiving.class.getDeclaredField("bc");
+            jump.setAccessible(true);
+        } catch (NoSuchFieldException ex) {
+            ex.printStackTrace();
+        }
+
+        if(jump != null && this.onGround) {
+            try {
+                if(jump.getBoolean(passenger)) {
+                    double jumpHeight = 0.5D;
+                    this.motY = jumpHeight;
+                }
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
+        }
 
     }
 

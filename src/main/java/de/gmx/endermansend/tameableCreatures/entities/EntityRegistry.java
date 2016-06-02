@@ -1,5 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
+import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableSpider;
 import net.minecraft.server.v1_9_R1.BiomeBase;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.EntitySpider;
@@ -10,7 +11,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-public class CustomEntities {
+public class EntityRegistry {
 
     public enum TameableEntityType {
 

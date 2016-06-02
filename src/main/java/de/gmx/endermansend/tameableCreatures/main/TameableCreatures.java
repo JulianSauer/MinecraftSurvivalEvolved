@@ -1,6 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.main;
 
-import de.gmx.endermansend.tameableCreatures.entities.CustomEntities;
+import de.gmx.endermansend.tameableCreatures.entities.EntityRegistry;
 import de.gmx.endermansend.tameableCreatures.items.CustomRecipes;
 import de.gmx.endermansend.tameableCreatures.listeners.*;
 import org.bukkit.plugin.PluginManager;
@@ -13,7 +13,7 @@ public class TameableCreatures extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        CustomEntities.TameableEntityType.registerCustomEntities();
+        EntityRegistry.TameableEntityType.registerCustomEntities();
 
         CustomRecipes customRecipes = new CustomRecipes();
         customRecipes.setUpNarcotics();

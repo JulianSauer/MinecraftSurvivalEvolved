@@ -1,7 +1,7 @@
 package de.gmx.endermansend.tameableCreatures.listeners;
 
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import de.gmx.endermansend.tameableCreatures.entities.TameableSpider;
+import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableSpider;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
