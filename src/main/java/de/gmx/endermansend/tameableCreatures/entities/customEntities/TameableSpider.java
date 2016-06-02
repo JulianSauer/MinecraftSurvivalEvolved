@@ -1,13 +1,15 @@
 package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 
 import de.gmx.endermansend.tameableCreatures.entities.EntityAttributes;
+import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.Material;
+import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,11 +17,14 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
     private EntityAttributes entityAttributes;
 
+    private RidingHandler ridingHandler;
+
     private Inventory inventory;
 
     public TameableSpider(World world) {
         super(world);
         entityAttributes = new EntityAttributes(this, 100, 20, 1, 1, true);
+        ridingHandler = new RidingHandler(this);
     }
 
     @Override
@@ -28,54 +33,19 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
         if (isUnconscious())
             return;
 
-        if (this.passengers == null || this.passengers.size() != 1 || !(this.passengers.get(0) instanceof EntityPlayer)) {
-            if(!this.isTamed())
-                super.g(sideMot, forMot);
-            this.P = 0.5F;
+        if (!ridingHandler.isMounted()) {
+            super.g(sideMot, forMot);
             return;
         }
 
-        Entity passenger = this.passengers.get(0);
-
-        this.lastYaw = this.yaw = passenger.yaw;
-        this.pitch = passenger.pitch * 0.5F;
+        float[] temp = ridingHandler.calculateMovement(sideMot, forMot);
+        sideMot = temp[0];
+        forMot = temp[1];
 
         this.setYawPitch(this.yaw, this.pitch);
-
-        this.aO = this.aM = this.yaw;
-
-        this.P = 1.0F;
-
-        sideMot = ((EntityLiving) passenger).bd * 0.5F;
-        forMot = ((EntityLiving) passenger).be;
-
-        if (forMot <= 0.0F) {
-            forMot *= 0.25F;
-        }
-        sideMot *= 0.75F;
-
-        float speed = 0.35F;
-        this.i(speed);
         super.g(sideMot, forMot);
 
-        Field jump = null;
-        try {
-            jump = EntityLiving.class.getDeclaredField("bc");
-            jump.setAccessible(true);
-        } catch (NoSuchFieldException ex) {
-            ex.printStackTrace();
-        }
-
-        if(jump != null && this.onGround) {
-            try {
-                if(jump.getBoolean(passenger)) {
-                    double jumpHeight = 0.5D;
-                    this.motY = jumpHeight;
-                }
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
-            }
-        }
+        ridingHandler.jump();
 
     }
 
@@ -148,4 +118,5 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
             inventory = Bukkit.createInventory(this, 18, this.getName());
         return inventory;
     }
+
 }
