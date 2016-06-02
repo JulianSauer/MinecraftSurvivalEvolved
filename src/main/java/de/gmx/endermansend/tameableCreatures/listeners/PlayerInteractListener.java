@@ -31,7 +31,7 @@ public class PlayerInteractListener extends BasicListener {
 
         if (tameableEntity.isUnconscious()) {
             openTamingGUI(player, entity, (TameableSpider) tameableEntity);
-        } else if (tameableEntity.isTamed() && tameableEntity.getOwner().equals(player.getUniqueId())) {
+        } else if (tameableEntity.tamed() && tameableEntity.getOwners().equals(player.getUniqueId())) {
             if (entity.isEmpty())
                 entity.setPassenger(player);
         }

@@ -49,7 +49,7 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
 
     }
 
-    public boolean isTamed() {
+    public boolean tamed() {
         return attributeHandler.isTamed();
     }
 
@@ -81,7 +81,7 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
         return attributeHandler.getLevel();
     }
 
-    public UUID getOwner() {
+    public UUID getOwners() {
         return attributeHandler.getOwner();
     }
 

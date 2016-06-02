@@ -1,7 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
-import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableCaveSpider;
-import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableSpider;
+import de.gmx.endermansend.tameableCreatures.entities.customEntities.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.entity.EntityType;
 
@@ -14,7 +13,10 @@ public class EntityRegistry {
     public enum TameableEntityType {
 
         SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, TameableSpider.class),
-        CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, TameableCaveSpider.class);
+        GIANT("Giant", 53, EntityType.GIANT, EntityGiantZombie.class, TameableGiant.class),
+        CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, TameableCaveSpider.class),
+        SQUID("Squid", 94, EntityType.SQUID, EntitySquid.class, TameableSquid.class),
+        WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, TameableWolf.class);
 
         private String name;
         private int id;

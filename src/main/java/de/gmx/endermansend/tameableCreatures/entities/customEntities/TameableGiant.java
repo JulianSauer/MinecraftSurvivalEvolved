@@ -3,7 +3,7 @@ package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
 import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.EntityGiantZombie;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.List;
 import java.util.UUID;
 
-public class TameableSpider extends EntitySpider implements Tameable, InventoryHolder {
+public class TameableGiant extends EntityGiantZombie implements Tameable, InventoryHolder {
 
     private AttributeHandler attributeHandler;
 
@@ -21,7 +21,7 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
     private Inventory inventory;
 
-    public TameableSpider(World world) {
+    public TameableGiant(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
         ridingHandler = new RidingHandler(this);

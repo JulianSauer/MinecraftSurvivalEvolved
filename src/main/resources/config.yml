@@ -15,6 +15,26 @@
   # Food needed for taming/feeding
   PreferredFood:
   - "RAW_BEEF"
+Giant:
+  LevelCap: 120
+  LevelMultiplier: 0.02
+  Tameable: true
+  # Base values for attributes
+  # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+  Damage: 10.0
+  MaxTorpidity: 500
+  Fortitude: 20
+  MaxTamingProgress: 100
+  XpUntilLevelUp: 20
+  # Blocks that can be mined with this entity
+  MineableBlocks:
+  - "LOG"
+  - "LOG_2"
+  - "LEAVES"
+  - "LEAVES_2"
+  # Food needed for taming/feeding
+  PreferredFood:
+  - "GOLD_INGOT"
 Spider:
   LevelCap: 120
   LevelMultiplier: 0.03
@@ -32,6 +52,40 @@ Spider:
   - "LOG_2"
   - "LEAVES"
   - "LEAVES_2"
+  # Food needed for taming/feeding
+  PreferredFood:
+  - "RAW_BEEF"
+Squid:
+  LevelCap: 120
+  LevelMultiplier: 0.03
+  Tameable: true
+  # Base values for attributes
+  # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+  Damage: 2.0
+  MaxTorpidity: 60
+  Fortitude: 20
+  MaxTamingProgress: 100
+  XpUntilLevelUp: 20
+  # Blocks that can be mined with this entity
+  MineableBlocks:
+  - "SAND"
+  # Food needed for taming/feeding
+  PreferredFood:
+  - "RAW_FISH"
+Wolf:
+  LevelCap: 120
+  LevelMultiplier: 0.03
+  Tameable: true
+  # Base values for attributes
+  # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+  Damage: 3.0
+  MaxTorpidity: 120
+  Fortitude: 20
+  MaxTamingProgress: 100
+  XpUntilLevelUp: 20
+  # Blocks that can be mined with this entity
+  MineableBlocks:
+  - "DIRT"
   # Food needed for taming/feeding
   PreferredFood:
   - "RAW_BEEF"

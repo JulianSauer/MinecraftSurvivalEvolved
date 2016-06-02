@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public interface Tameable {
 
-    boolean isTamed();
+    boolean tamed();
 
     boolean isTameable();
 
@@ -26,7 +26,7 @@ public interface Tameable {
 
     int getLevel();
 
-    UUID getOwner();
+    UUID getOwners();
 
     String getName();
 

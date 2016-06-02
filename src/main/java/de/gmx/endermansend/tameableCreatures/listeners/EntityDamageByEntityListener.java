@@ -31,7 +31,7 @@ public class EntityDamageByEntityListener extends BasicListener {
             double torpidity = e.getDamage();
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
-            if (!tameableEntity.isTameable() || tameableEntity.isTamed())
+            if (!tameableEntity.isTameable() || tameableEntity.tamed())
                 return;
 
             tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId());
