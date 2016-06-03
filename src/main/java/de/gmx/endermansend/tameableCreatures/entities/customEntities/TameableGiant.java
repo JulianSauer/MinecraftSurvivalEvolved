@@ -93,6 +93,10 @@ public class TameableGiant extends EntityGiantZombie implements Tameable, Invent
         return attributeHandler.getDamage();
     }
 
+    public float getSpeed() {
+        return attributeHandler.getSpeed();
+    }
+
     public float[] getXp() {
         return new float[]{attributeHandler.getCurrentXp(), attributeHandler.getXpUntilLevelUp()};
     }

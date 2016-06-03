@@ -29,6 +29,10 @@ public class GetValuesFromConfig {
         return config.getDoubleFromConfig(entity + ".Damage");
     }
 
+    public float speedFor(String entity) {
+        return (float) config.getDoubleFromConfig(entity + ".Speed");
+    }
+
     public int maxToripidityFor(String entity) {
         return config.getIntFromConfig(entity + ".MaxTorpidity");
     }

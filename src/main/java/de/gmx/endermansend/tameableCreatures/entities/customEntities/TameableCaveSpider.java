@@ -93,6 +93,10 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
         return attributeHandler.getDamage();
     }
 
+    public float getSpeed() {
+        return attributeHandler.getSpeed();
+    }
+
     public float[] getXp() {
         return new float[]{attributeHandler.getCurrentXp(), attributeHandler.getXpUntilLevelUp()};
     }

@@ -93,6 +93,10 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
         return attributeHandler.getDamage();
     }
 
+    public float getSpeed() {
+        return attributeHandler.getSpeed();
+    }
+
     public float[] getXp() {
         return new float[]{attributeHandler.getCurrentXp(), attributeHandler.getXpUntilLevelUp()};
     }

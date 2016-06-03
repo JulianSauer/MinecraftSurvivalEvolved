@@ -63,8 +63,8 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
         }
         sideMot *= 0.75F;
 
-        float speed = 0.35F;
-        entity.i(speed);
+        float speed = entity.getSpeed();
+        entity.l(speed);
         return new float[]{sideMot, forMot};
     }
 

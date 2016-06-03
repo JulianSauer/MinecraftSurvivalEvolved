@@ -87,6 +87,12 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         return calculateLevelDependentStatFor(baseStats.getDamage());
     }
 
+    public float getSpeed() {
+        float speedMultiplier = baseStats.getLevelMultiplier();
+        speedMultiplier /= 2;
+        return (float) calculateLevelDependentStatFor(baseStats.getSpeed(), speedMultiplier);
+    }
+
     public int getTamingProgress() {
         return tamingProgress;
     }
@@ -141,7 +147,18 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * @return Level dependent value of the entity
      */
     private double calculateLevelDependentStatFor(double baseValue) {
-        return (1 + level * baseStats.getLevelMultiplier()) * baseValue;
+        return calculateLevelDependentStatFor(baseValue, baseStats.getLevelMultiplier());
+    }
+
+    /**
+     * Calculates the value for an attribute with a custom multiplier.
+     *
+     * @param baseValue  Normal value of the entity
+     * @param multiplier Level multiplier of the entity
+     * @return Multiplier dependet value of the entity
+     */
+    private double calculateLevelDependentStatFor(double baseValue, float multiplier) {
+        return (1 + level * multiplier) * baseValue;
     }
 
     /**

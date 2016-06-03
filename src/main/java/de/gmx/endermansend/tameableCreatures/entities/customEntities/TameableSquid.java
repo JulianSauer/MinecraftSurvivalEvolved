@@ -52,8 +52,8 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
         }
         motX *= 0.75F;
 
-        float speed = 0.35F;
-        this.i(speed);
+        float speed = this.getSpeed();
+        this.l(speed);
         this.setYawPitch(this.yaw, this.pitch);
         this.move(motX, motY, motZ);
 
@@ -101,6 +101,10 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
 
     public double getDamage() {
         return attributeHandler.getDamage();
+    }
+
+    public float getSpeed() {
+        return attributeHandler.getSpeed();
     }
 
     public float[] getXp() {

@@ -32,6 +32,8 @@ public interface Tameable {
 
     void setName(String name);
 
+    float getSpeed();
+
     double getDamage();
 
     /**

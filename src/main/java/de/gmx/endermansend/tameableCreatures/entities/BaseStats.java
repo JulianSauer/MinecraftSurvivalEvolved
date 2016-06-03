@@ -20,6 +20,7 @@ public class BaseStats {
     private int xpUntilLevelUp;
 
     private float levelMultiplier;
+    private float speed;
 
     private double damage;
 
@@ -38,6 +39,7 @@ public class BaseStats {
         xpUntilLevelUp = config.get.xpUntilLevelUpFor(entity);
         levelMultiplier = config.get.levelMultiplierFor(entity);
         damage = config.get.damageFor(entity);
+        speed = config.get.speedFor(entity);
         preferredFood = config.get.preferredFoodFor(entity);
         mineableBlocks = config.get.mineableBlocksFor(entity);
 
@@ -69,6 +71,10 @@ public class BaseStats {
 
     public float getLevelMultiplier() {
         return levelMultiplier;
+    }
+
+    public float getSpeed() {
+        return speed;
     }
 
     public double getDamage() {
