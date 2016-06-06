@@ -38,7 +38,7 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
             return;
         }
 
-        double[] mot = ridingHandler.calculateSwimming();
+        float[] mot = ridingHandler.calculateSwimming();
         motX = mot[0];
         motY = mot[1];
         motZ = mot[2];

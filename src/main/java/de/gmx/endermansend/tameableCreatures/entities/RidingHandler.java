@@ -66,28 +66,31 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
     }
 
     /**
-     * Calculates correct yaw pitch and speed for this entity. Entity#setYawPitch(float f, float f1) has to be called
-     * afterwards. The move(double d0, double d1, double d2) method of the entity has to be called with the return
-     * value of this method.
+     * Calculates correct yaw, pitch, speed and movement vector for this entity. Entity#setYawPitch(float f, float f1)
+     * has to be called afterwards. The Entity#move(double d0, double d1, double d2) method of the entity has to be called with
+     * the return value of this method.
      *
      * @return [0]: updated motX, [1]: updated motY, [2]: updated motZ
      */
-    public double[] calculateSwimming() {
+    public float[] calculateSwimming() {
 
         float[] mot = calculateMovement();
-        double x = mot[0];
-        double z = mot[1];
+        float z = mot[0];
+        float y = 0;
+        float x = mot[1];
 
-        float rad;
-        if (entity.yaw < 0)
-            rad = (float) Math.toRadians(entity.yaw + 360);
-        else
-            rad = (float) Math.toRadians(entity.yaw);
+        mot = rotate(x, y, entity.pitch * 1.5F);
+        x = mot[0];
+        y = -mot[1];
+        mot = rotate(x, -z, entity.yaw + 90);
+        x = mot[0];
+        z = mot[1];
 
-        return new double[]{
-                x * MathHelper.cos(rad) - z * MathHelper.sin(rad),
-                entity.motY,
-                x * MathHelper.sin(rad) + z * MathHelper.cos(rad)
+        float speed = entity.getSpeed();
+        return new float[]{
+                x * speed,
+                y * speed,
+                z * speed
         };
     }
 
@@ -106,6 +109,24 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
                 ex.printStackTrace();
             }
         }
+
+    }
+
+    private float toRadians(float angle) {
+        if (entity.yaw < 0)
+            return (float) Math.toRadians(angle + 360);
+        else if (entity.yaw > 360)
+            return (float) Math.toRadians(angle - 360);
+        else
+            return (float) Math.toRadians(angle);
+    }
+
+    private float[] rotate(float x, float y, float angle) {
+        angle = toRadians(angle);
+        return new float[]{
+                x * MathHelper.cos(angle) - y * MathHelper.sin(angle),
+                x * MathHelper.sin(angle) + y * MathHelper.cos(angle)
+        };
 
     }
 
