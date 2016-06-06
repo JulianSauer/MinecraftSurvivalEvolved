@@ -4,12 +4,15 @@ import de.gmx.endermansend.tameableCreatures.config.ConfigHandler;
 import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
 import org.bukkit.Material;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Loads base stats of entities from config.
  */
 public class BaseStats {
+
+    private static HashMap<String, BaseStats> cache;
 
     private boolean tameable;
 
@@ -27,7 +30,7 @@ public class BaseStats {
     private List<Material> preferredFood;
     private List<Material> mineableBlocks;
 
-    public BaseStats(String entity) {
+    private BaseStats(String entity) {
 
         ConfigHandler config = TameableCreatures.getConfigHandler();
 
@@ -42,6 +45,26 @@ public class BaseStats {
         speed = config.get.speedFor(entity);
         preferredFood = config.get.preferredFoodFor(entity);
         mineableBlocks = config.get.mineableBlocksFor(entity);
+
+    }
+
+    /**
+     * Returns an object containing basic attributes of an entity from disk/cache.
+     *
+     * @param entity Name of the entity
+     * @return BaseStats for this entity
+     */
+    public BaseStats getBaseStatsFor(String entity) {
+
+        if (cache == null)
+            cache = new HashMap<String, BaseStats>();
+        BaseStats ret = cache.get(entity);
+        if (ret == null) {
+            ret = new BaseStats(entity);
+            cache.put(entity, ret);
+        }
+
+        return ret;
 
     }
 
