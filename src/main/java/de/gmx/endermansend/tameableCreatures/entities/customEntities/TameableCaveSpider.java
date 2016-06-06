@@ -38,9 +38,9 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
             return;
         }
 
-        float[] temp = ridingHandler.calculateMovement(sideMot, forMot);
-        sideMot = temp[0];
-        forMot = temp[1];
+        float[] mot = ridingHandler.calculateMovement();
+        sideMot = mot[0];
+        forMot = mot[1];
 
         this.setYawPitch(this.yaw, this.pitch);
         super.g(sideMot, forMot);

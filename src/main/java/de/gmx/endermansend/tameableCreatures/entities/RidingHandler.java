@@ -1,9 +1,6 @@
 package de.gmx.endermansend.tameableCreatures.entities;
 
-import net.minecraft.server.v1_9_R1.Entity;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
-import net.minecraft.server.v1_9_R1.EntityLiving;
-import net.minecraft.server.v1_9_R1.EntityPlayer;
+import net.minecraft.server.v1_9_R1.*;
 
 import java.lang.reflect.Field;
 
@@ -41,11 +38,11 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
      * afterwards. The super#g(float sideMot, float forMot) method of the entity has to be called with the return
      * value of this method.
      *
-     * @param sideMot
-     * @param forMot
      * @return [0]: updated sideMot, [1]: updated forMot
      */
-    public float[] calculateMovement(float sideMot, float forMot) {
+    public float[] calculateMovement() {
+
+        float sideMot, forMot;
         Entity passenger = entity.passengers.get(0);
 
         entity.lastYaw = entity.yaw = passenger.yaw;
@@ -66,6 +63,32 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
         float speed = entity.getSpeed();
         entity.l(speed);
         return new float[]{sideMot, forMot};
+    }
+
+    /**
+     * Calculates correct yaw pitch and speed for this entity. Entity#setYawPitch(float f, float f1) has to be called
+     * afterwards. The move(double d0, double d1, double d2) method of the entity has to be called with the return
+     * value of this method.
+     *
+     * @return [0]: updated motX, [1]: updated motY, [2]: updated motZ
+     */
+    public double[] calculateSwimming() {
+
+        float[] mot = calculateMovement();
+        double x = mot[0];
+        double z = mot[1];
+
+        float rad;
+        if (entity.yaw < 0)
+            rad = (float) Math.toRadians(entity.yaw + 360);
+        else
+            rad = (float) Math.toRadians(entity.yaw);
+
+        return new double[]{
+                x * MathHelper.cos(rad) - z * MathHelper.sin(rad),
+                entity.motY,
+                x * MathHelper.sin(rad) + z * MathHelper.cos(rad)
+        };
     }
 
     /**

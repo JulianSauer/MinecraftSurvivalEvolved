@@ -3,7 +3,9 @@ package de.gmx.endermansend.tameableCreatures.entities.customEntities;
 import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
 import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
 import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.EntitySquid;
+import net.minecraft.server.v1_9_R1.Material;
+import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -35,25 +37,12 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
             super.n();
             return;
         }
-        Entity passenger = this.passengers.get(0);
 
-        this.lastYaw = this.yaw = passenger.yaw;
-        this.pitch = passenger.pitch * 0.5F;
+        double[] mot = ridingHandler.calculateSwimming();
+        motX = mot[0];
+        motY = mot[1];
+        motZ = mot[2];
 
-        this.aO = this.aM = this.yaw;
-
-        this.P = 1.0F;
-
-        motX = ((EntityLiving) passenger).bd * 0.5F;
-        motZ = ((EntityLiving) passenger).be;
-
-        if (motZ <= 0.0F) {
-            motZ *= 0.25F;
-        }
-        motX *= 0.75F;
-
-        float speed = this.getSpeed();
-        this.l(speed);
         this.setYawPitch(this.yaw, this.pitch);
         this.move(motX, motY, motZ);
 
