@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.gmx.endermansend.tameableCreatures</groupId>
-    <artifactId>MSE-TameableCreatures</artifactId>
-    <version>0.1</version>
+    <groupId>de.gmx.endermansend.minecraftSurvivalEvolved</groupId>
+    <artifactId>MinecraftSurvivalEvolved</artifactId>
+    <version>0.2</version>
 
     <repositories>
         <repository>
@@ -19,12 +19,12 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
+            <version>1.9.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
+            <version>1.9.2-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

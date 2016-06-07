@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.listeners;
+package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
-import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
+import de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class BowShootListener implements Listener {
 
             if (arrowMeta.hasDisplayName()) {
                 if (arrowMeta.getDisplayName().equals("Tranquilizer Arrow")) {
-                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(TameableCreatures.getInstance(), true));
+                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(Plugin.getInstance(), true));
                 }
             }
 

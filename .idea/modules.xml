@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TameableCreatures.iml" filepath="$PROJECT_DIR$/TameableCreatures.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MinecraftSurvivalEvolved.iml" filepath="$PROJECT_DIR$/MinecraftSurvivalEvolved.iml" />
     </modules>
   </component>
 </project>

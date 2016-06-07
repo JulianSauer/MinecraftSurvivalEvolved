@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.entities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
-import de.gmx.endermansend.tameableCreatures.entities.customEntities.*;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.entity.EntityType;
 

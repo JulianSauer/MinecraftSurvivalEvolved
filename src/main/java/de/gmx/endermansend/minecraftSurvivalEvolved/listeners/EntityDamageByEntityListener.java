@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.listeners;
+package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
-import de.gmx.endermansend.tameableCreatures.entities.Tameable;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Arrow;

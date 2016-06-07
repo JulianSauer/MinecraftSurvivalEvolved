@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.entities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
-import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
+import de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -244,7 +244,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
             System.out.println("Entity is unconscious");
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
-            unconsciousnessTimer.runTaskTimerAsynchronously(TameableCreatures.getInstance(), 0, unconsciousnessUpdateInterval);
+            unconsciousnessTimer.runTaskTimerAsynchronously(Plugin.getInstance(), 0, unconsciousnessUpdateInterval);
         }
 
     }

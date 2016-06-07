@@ -1,8 +1,7 @@
-package de.gmx.endermansend.tameableCreatures.listeners;
+package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
-import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import de.gmx.endermansend.tameableCreatures.entities.customEntities.TameableSpider;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities.TameableSpider;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

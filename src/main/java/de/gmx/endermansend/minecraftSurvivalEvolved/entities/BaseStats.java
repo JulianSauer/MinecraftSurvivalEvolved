@@ -1,7 +1,7 @@
-package de.gmx.endermansend.tameableCreatures.entities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
-import de.gmx.endermansend.tameableCreatures.config.ConfigHandler;
-import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
+import de.gmx.endermansend.minecraftSurvivalEvolved.config.ConfigHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class BaseStats {
 
     private BaseStats(String entity) {
 
-        ConfigHandler config = TameableCreatures.getConfigHandler();
+        ConfigHandler config = Plugin.getConfigHandler();
 
         tameable = config.get.tameableFor(entity);
         fortitude = config.get.fortitudeFor(entity);

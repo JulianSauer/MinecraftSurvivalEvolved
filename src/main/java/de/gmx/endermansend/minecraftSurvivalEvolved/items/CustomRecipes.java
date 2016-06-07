@@ -1,4 +1,4 @@
-package de.gmx.endermansend.tameableCreatures.items;
+package de.gmx.endermansend.minecraftSurvivalEvolved.items;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.config;
+package de.gmx.endermansend.minecraftSurvivalEvolved.config;
 
-import de.gmx.endermansend.tameableCreatures.main.TameableCreatures;
+import de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -12,7 +12,7 @@ public class ConfigHandler {
 
     public GetValuesFromConfig get;
 
-    private TameableCreatures plugin;
+    private Plugin plugin;
     private Logger logger;
     private FileConfiguration config;
 
@@ -20,7 +20,7 @@ public class ConfigHandler {
 
         get = new GetValuesFromConfig(this);
 
-        plugin = TameableCreatures.getInstance();
+        plugin = Plugin.getInstance();
         this.logger = this.plugin.getLogger();
 
         if (!loadConfig())

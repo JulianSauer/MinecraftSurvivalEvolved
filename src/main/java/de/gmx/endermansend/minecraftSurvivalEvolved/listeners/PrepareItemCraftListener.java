@@ -1,4 +1,4 @@
-package de.gmx.endermansend.tameableCreatures.listeners;
+package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

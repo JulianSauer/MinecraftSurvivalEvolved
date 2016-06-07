@@ -1,15 +1,15 @@
-package de.gmx.endermansend.tameableCreatures.main;
+package de.gmx.endermansend.minecraftSurvivalEvolved.main;
 
-import de.gmx.endermansend.tameableCreatures.config.ConfigHandler;
-import de.gmx.endermansend.tameableCreatures.entities.EntityRegistry;
-import de.gmx.endermansend.tameableCreatures.items.CustomRecipes;
-import de.gmx.endermansend.tameableCreatures.listeners.*;
+import de.gmx.endermansend.minecraftSurvivalEvolved.config.ConfigHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.EntityRegistry;
+import de.gmx.endermansend.minecraftSurvivalEvolved.items.CustomRecipes;
+import de.gmx.endermansend.minecraftSurvivalEvolved.listeners.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class TameableCreatures extends JavaPlugin {
+public class Plugin extends JavaPlugin {
 
-    static TameableCreatures instance;
+    static Plugin instance;
 
     static ConfigHandler configHandler;
 
@@ -44,7 +44,7 @@ public class TameableCreatures extends JavaPlugin {
         getLogger().info("Disabled");
     }
 
-    public static TameableCreatures getInstance() {
+    public static Plugin getInstance() {
         return instance;
     }
 

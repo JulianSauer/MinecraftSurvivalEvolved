@@ -1,9 +1,9 @@
-package de.gmx.endermansend.tameableCreatures.entities.customEntities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
-import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
-import de.gmx.endermansend.tameableCreatures.entities.Tameable;
-import net.minecraft.server.v1_9_R1.EntityWolf;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.AttributeHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.RidingHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
+import net.minecraft.server.v1_9_R1.EntitySquid;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.List;
 import java.util.UUID;
 
-public class TameableWolf extends EntityWolf implements Tameable, InventoryHolder {
+public class TameableSquid extends EntitySquid implements Tameable, InventoryHolder {
 
     private AttributeHandler attributeHandler;
 
@@ -21,31 +21,36 @@ public class TameableWolf extends EntityWolf implements Tameable, InventoryHolde
 
     private Inventory inventory;
 
-    public TameableWolf(World world) {
+    public TameableSquid(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
         ridingHandler = new RidingHandler(this);
     }
 
     @Override
-    public void g(float sideMot, float forMot) {
+    public void n() {
 
         if (isUnconscious())
             return;
 
         if (!ridingHandler.isMounted()) {
-            super.g(sideMot, forMot);
+            super.n();
             return;
         }
 
-        float[] mot = ridingHandler.calculateMovement();
-        sideMot = mot[0];
-        forMot = mot[1];
+        float[] mot = ridingHandler.calculateSwimming();
+        motX = mot[0];
+        motY = mot[1];
+        motZ = mot[2];
+
+        if(!this.inWater) {
+            motX *= 0.1;
+            motY *= 0.1;
+            motZ *= 0.1;
+        }
 
         this.setYawPitch(this.yaw, this.pitch);
-        super.g(sideMot, forMot);
-
-        ridingHandler.jump();
+        this.move(motX, motY, motZ);
 
     }
 

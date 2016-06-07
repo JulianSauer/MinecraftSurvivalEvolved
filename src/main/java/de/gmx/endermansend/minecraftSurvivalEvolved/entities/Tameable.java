@@ -1,4 +1,4 @@
-package de.gmx.endermansend.tameableCreatures.entities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
 import net.minecraft.server.v1_9_R1.Material;
 

@@ -22,10 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="MinecraftSurvivalEvolved" />
         <module name="TameableCreatures" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="MinecraftSurvivalEvolved" target="1.5" />
       <module name="TameableCreatures" target="1.5" />
     </bytecodeTargetLevel>
   </component>

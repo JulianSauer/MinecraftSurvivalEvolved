@@ -1,6 +1,6 @@
-package de.gmx.endermansend.tameableCreatures.listeners;
+package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
-import de.gmx.endermansend.tameableCreatures.entities.Tameable;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 

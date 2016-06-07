@@ -1,8 +1,8 @@
-package de.gmx.endermansend.tameableCreatures.entities.customEntities;
+package de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.gmx.endermansend.tameableCreatures.entities.AttributeHandler;
-import de.gmx.endermansend.tameableCreatures.entities.RidingHandler;
-import de.gmx.endermansend.tameableCreatures.entities.Tameable;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.AttributeHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.RidingHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
 import net.minecraft.server.v1_9_R1.EntitySpider;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;

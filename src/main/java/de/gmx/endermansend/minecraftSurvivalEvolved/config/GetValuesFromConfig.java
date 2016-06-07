@@ -1,4 +1,4 @@
-package de.gmx.endermansend.tameableCreatures.config;
+package de.gmx.endermansend.minecraftSurvivalEvolved.config;
 
 import org.bukkit.Material;
 
