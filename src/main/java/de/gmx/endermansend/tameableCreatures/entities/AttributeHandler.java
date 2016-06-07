@@ -47,7 +47,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
         this.tameableEntity = tameableEntity;
 
-        baseStats = new BaseStats(tameableEntity.getName());
+        baseStats = BaseStats.getBaseStatsFor(tameableEntity.getName());
 
         tamed = false;
         unconscious = false;

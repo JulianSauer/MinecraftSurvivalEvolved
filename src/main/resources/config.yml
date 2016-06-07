@@ -1,6 +1,6 @@
 "Cave Spider":
   LevelCap: 120
-  LevelMultiplier: 0.02
+  LevelMultiplier: 0.1
   Tameable: true
   # Base values for attributes
   # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
@@ -23,7 +23,7 @@ Giant:
   # Base values for attributes
   # Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
   Damage: 10.0
-  Speed: 0.01
+  Speed: 0.1
   MaxTorpidity: 500
   Fortitude: 20
   MaxTamingProgress: 100
