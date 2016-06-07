@@ -57,6 +57,10 @@ public class TameableWolf extends EntityWolf implements Tameable, InventoryHolde
         return attributeHandler.isTameable();
     }
 
+    public boolean isAlpha() {
+        return attributeHandler.isAlpha();
+    }
+
     public boolean isUnconscious() {
         return attributeHandler.isUnconscious();
     }

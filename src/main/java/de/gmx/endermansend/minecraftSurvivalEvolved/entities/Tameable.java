@@ -14,6 +14,8 @@ public interface Tameable {
 
     boolean isTameable();
 
+    boolean isAlpha();
+
     boolean isUnconscious();
 
     int getTorpidity();

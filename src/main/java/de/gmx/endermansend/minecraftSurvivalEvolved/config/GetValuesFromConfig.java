@@ -25,6 +25,10 @@ public class GetValuesFromConfig {
         return config.getBooleanFromConfig(entity + ".Tameable");
     }
 
+    public float alphaProbabilityFor(String entity) {
+        return (float) config.getDoubleFromConfig(entity + ".AlphaProbability");
+    }
+
     public double damageFor(String entity) {
         return config.getDoubleFromConfig(entity + ".Damage");
     }

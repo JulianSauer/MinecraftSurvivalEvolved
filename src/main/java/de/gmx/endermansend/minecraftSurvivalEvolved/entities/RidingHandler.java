@@ -26,6 +26,10 @@ public class RidingHandler<T extends EntityInsentient & Tameable> {
      * @return True if entity is mounted by a player
      */
     public boolean isMounted() {
+
+        if (entity.isAlpha())
+            return false;
+
         if (entity.passengers == null || entity.passengers.size() != 1 || !(entity.passengers.get(0) instanceof EntityPlayer)) {
             if (!entity.tamed())
                 return false;

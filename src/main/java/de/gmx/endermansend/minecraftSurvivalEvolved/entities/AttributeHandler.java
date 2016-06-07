@@ -39,6 +39,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
     private int tamingProgressInterval;
     private int torporDepletion;
+    private int alphaPredatorMultiplier; // attributes multiplied by this value; set to 1 if not an alpha
 
     private UnconsciousnessTimer unconsciousnessTimer;
     private long unconsciousnessUpdateInterval;
@@ -48,6 +49,11 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         this.tameableEntity = tameableEntity;
 
         baseStats = BaseStats.getBaseStatsFor(tameableEntity.getName());
+        if (Math.random() < baseStats.getAlphaProbability()) {
+            alphaPredatorMultiplier = 4;
+        } else {
+            alphaPredatorMultiplier = 1;
+        }
 
         tamed = false;
         unconscious = false;
@@ -64,18 +70,30 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public boolean isTamed() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return tamed;
     }
 
+    public boolean isAlpha() {
+        return (alphaPredatorMultiplier != 1);
+    }
+
     public boolean isTameable() {
-        return baseStats.isTameable() && !tamed;
+        return baseStats.isTameable() && !tamed && this.isAlpha();
     }
 
     public boolean isUnconscious() {
-        return unconscious;
+        return unconscious && !this.isAlpha();
     }
 
     public int getTorpidity() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return torpidity;
     }
 
@@ -94,6 +112,10 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public int getTamingProgress() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return tamingProgress;
     }
 
@@ -123,20 +145,32 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public int getMaxTamingProgress() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return (int) calculateLevelDependentStatFor(baseStats.getMaxTamingProgress());
     }
 
     public UUID getOwner() {
-        if (tamed)
+        if (tamed && !this.isAlpha())
             return owner;
         return null;
     }
 
     public List<Material> getPreferredFood() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return baseStats.getPreferredFood();
     }
 
     public List<Material> getMineableBlocks() {
+        if (this.isAlpha())
+            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
+                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
+                    + tameableEntity.locZ + ")");
         return baseStats.getMineableBlocks();
     }
 
@@ -158,7 +192,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * @return Multiplier dependet value of the entity
      */
     private double calculateLevelDependentStatFor(double baseValue, float multiplier) {
-        return (1 + level * multiplier) * baseValue;
+        return (1 + level * multiplier) * baseValue * alphaPredatorMultiplier;
     }
 
     /**
@@ -171,8 +205,12 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
             level = (int) (Math.random() * baseStats.getLevelCap() + 1);
         if (levelIncrease > 0)
             level += levelIncrease;
-        if (!tamed)
-            setName(tameableEntity.getName() + " (" + level + ")");
+        if (!tamed) {
+            if (this.isAlpha())
+                setName("Alpha " + tameableEntity.getName() + " (" + level + ")");
+            else
+                setName(tameableEntity.getName() + " (" + level + ")");
+        }
     }
 
     /**
@@ -197,11 +235,15 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * @param lastDamager       Player is saved in case the entity becomes unconscious and is succesfully tamed
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
+
+        if (this.isAlpha())
+            return;
         tamer = lastDamager;
         torpidity += torpidityIncrease;
         if (torpidity > getMaxTorpidity())
             torpidity = getMaxTorpidity();
         updateConsciousness();
+
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {
@@ -218,7 +260,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      */
     private boolean setSuccessfullyTamed() {
 
-        if (isTameable() && tamer != null) {
+        if (isTameable() && tamer != null && !this.isAlpha()) {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
@@ -233,6 +275,9 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * Updates the consciousness of the entity.
      */
     private void updateConsciousness() {
+
+        if (this.isAlpha())
+            return;
 
         if (isUnconscious() && torpidity <= 0) {
             unconscious = false;
@@ -256,10 +301,10 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      */
     private boolean updateHunger() {
 
-        Inventory inventory = tameableEntity.getInventory();
-
-        if (!inventory.contains(Material.RAW_BEEF, 1))
+        if (this.isAlpha())
             return false;
+
+        Inventory inventory = tameableEntity.getInventory();
 
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
@@ -296,7 +341,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
          */
         private void updateTamingProcess() {
 
-            if (!isTameable() || isTamed())
+            if (!isTameable() || isTamed() || isAlpha())
                 return;
 
             if (updateHunger())

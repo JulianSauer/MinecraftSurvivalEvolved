@@ -57,6 +57,10 @@ public class TameableCaveSpider extends EntityCaveSpider implements Tameable, In
         return attributeHandler.isTameable();
     }
 
+    public boolean isAlpha() {
+        return attributeHandler.isAlpha();
+    }
+
     public boolean isUnconscious() {
         return attributeHandler.isUnconscious();
     }

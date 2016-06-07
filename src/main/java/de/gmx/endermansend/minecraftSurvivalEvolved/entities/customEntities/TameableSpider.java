@@ -57,6 +57,10 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
         return attributeHandler.isTameable();
     }
 
+    public boolean isAlpha() {
+        return attributeHandler.isAlpha();
+    }
+
     public boolean isUnconscious() {
         return attributeHandler.isUnconscious();
     }

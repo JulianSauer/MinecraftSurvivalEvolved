@@ -62,6 +62,10 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
         return attributeHandler.isTameable();
     }
 
+    public boolean isAlpha() {
+        return attributeHandler.isAlpha();
+    }
+
     public boolean isUnconscious() {
         return attributeHandler.isUnconscious();
     }

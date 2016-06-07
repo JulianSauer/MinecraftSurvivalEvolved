@@ -23,6 +23,7 @@ public class BaseStats {
     private int xpUntilLevelUp;
 
     private float levelMultiplier;
+    private float alphaProbability;
     private float speed;
 
     private double damage;
@@ -41,6 +42,7 @@ public class BaseStats {
         maxTorpidity = config.get.maxToripidityFor(entity);
         xpUntilLevelUp = config.get.xpUntilLevelUpFor(entity);
         levelMultiplier = config.get.levelMultiplierFor(entity);
+        alphaProbability = config.get.alphaProbabilityFor(entity);
         damage = config.get.damageFor(entity);
         speed = config.get.speedFor(entity);
         preferredFood = config.get.preferredFoodFor(entity);
@@ -94,6 +96,10 @@ public class BaseStats {
 
     public float getLevelMultiplier() {
         return levelMultiplier;
+    }
+
+    public float getAlphaProbability() {
+        return alphaProbability;
     }
 
     public float getSpeed() {
