@@ -43,6 +43,12 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
         motY = mot[1];
         motZ = mot[2];
 
+        if(!this.inWater) {
+            motX *= 0.1;
+            motY *= 0.1;
+            motZ *= 0.1;
+        }
+
         this.setYawPitch(this.yaw, this.pitch);
         this.move(motX, motY, motZ);
 
