@@ -1,9 +1,6 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
-import net.minecraft.server.v1_9_R1.Entity;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
-import net.minecraft.server.v1_9_R1.EntityLiving;
-import net.minecraft.server.v1_9_R1.EntityPlayer;
+import net.minecraft.server.v1_9_R1.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -41,10 +38,12 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
             return;
 
         if (!isMounted()) {
+            entity.l(entity.getSpeed() * 2);
             entity.callSuperMovement(args);
             return;
         }
 
+        entity.l(entity.getSpeed());
         entity.callSuperMovement(calculateMovement());
         jump();
     }
@@ -127,8 +126,6 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
         }
         sideMot *= 0.75F;
 
-        float speed = entity.getSpeed();
-        entity.l(speed);
         setYawPitch(entity.yaw, entity.pitch);
         return new float[]{sideMot, forMot};
 

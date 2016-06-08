@@ -5,6 +5,7 @@ import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -18,14 +19,14 @@ public class EntityDamageByEntityListener extends BasicListener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 
-        Entity entity = e.getEntity();
+        Entity target = e.getEntity();
 
         Entity damager = e.getDamager();
 
-        if (isTranqEvent(entity, damager)) {
+        if (isTranqEvent(target, damager)) {
 
             Arrow arrow = (Arrow) e.getDamager();
-            Tameable tameableEntity = getTameableEntityFromEntity(entity);
+            Tameable tameableEntity = getTameableEntityFromEntity(target);
             Player player = (Player) arrow.getShooter();
 
             double torpidity = e.getDamage();
@@ -36,9 +37,12 @@ public class EntityDamageByEntityListener extends BasicListener {
 
             tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
-        } else if (isMountedAttack(entity, damager)) {
-            EntityInsentient tameableEntity = (EntityInsentient) ((CraftEntity) damager.getVehicle()).getHandle();
+        } else if (isMountedAttack(damager)) {
             e.setDamage(getTameableEntityFromVehicle(damager).getDamage());
+
+        } else if (isNPCAttackEvent(damager)) {
+            e.setDamage(getTameableEntityFromEntity(damager).getDamage());
+
         }
 
     }
@@ -46,11 +50,10 @@ public class EntityDamageByEntityListener extends BasicListener {
     /**
      * Checks if a player is attacking another entity while riding a tamed creature.
      *
-     * @param entity  Target of the attack
      * @param damager Attacking player
      * @return True if player is riding a tamed entity
      */
-    private boolean isMountedAttack(Entity entity, Entity damager) {
+    private boolean isMountedAttack(Entity damager) {
 
         if (!(damager instanceof Player))
             return false;
@@ -64,16 +67,16 @@ public class EntityDamageByEntityListener extends BasicListener {
     /**
      * Checks if a player shoots tranq arrows at a tameable entity.
      *
-     * @param entity  Target of the attack
+     * @param target  Target of the attack
      * @param damager Shot arrow
      * @return True if a tranq arrow is used against a tameable entity
      */
-    private boolean isTranqEvent(Entity entity, Entity damager) {
+    private boolean isTranqEvent(Entity target, Entity damager) {
 
         if (!(damager instanceof Arrow))
             return false;
         Arrow arrow = (Arrow) damager;
-        if (getTameableEntityFromEntity(entity) == null || !(arrow.getShooter() instanceof Player))
+        if (getTameableEntityFromEntity(target) == null || !(arrow.getShooter() instanceof Player))
             return false;
 
         List<MetadataValue> titleData = arrow.getMetadata("Tranquilizer Arrow");
@@ -82,6 +85,16 @@ public class EntityDamageByEntityListener extends BasicListener {
             return metaValue.asBoolean();
         return false;
 
+    }
+
+    /**
+     * Checks if an NPC is attacking.
+     *
+     * @param damager Attacking NPC
+     * @return True if the damager is not a player
+     */
+    private boolean isNPCAttackEvent(Entity damager) {
+        return (damager instanceof LivingEntity && !(damager instanceof Player) && getTameableEntityFromEntity(damager) != null);
     }
 
 }
