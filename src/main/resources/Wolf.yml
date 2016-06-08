@@ -1,0 +1,7 @@
+Speed: 0.2
+# Blocks that can be mined with this entity
+MineableBlocks:
+- "DIRT"
+# Food needed for taming/feeding
+PreferredFood:
+- "RAW_BEEF"

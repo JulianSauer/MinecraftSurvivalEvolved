@@ -1,0 +1,6 @@
+# Blocks that can be mined with this entity
+MineableBlocks:
+- "SAND"
+# Food needed for taming/feeding
+PreferredFood:
+- "RAW_FISH"

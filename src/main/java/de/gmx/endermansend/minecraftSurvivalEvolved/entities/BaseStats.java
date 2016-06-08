@@ -35,6 +35,9 @@ public class BaseStats {
 
         ConfigHandler config = Plugin.getConfigHandler();
 
+        // Prevent spaces in .yml files
+        entity = entity.replace(" ", "");
+
         tameable = config.get.tameableFor(entity);
         fortitude = config.get.fortitudeFor(entity);
         levelCap = config.get.levelCapFor(entity);

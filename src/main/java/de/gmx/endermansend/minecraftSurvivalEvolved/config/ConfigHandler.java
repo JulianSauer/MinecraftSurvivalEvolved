@@ -5,23 +5,31 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ConfigHandler {
 
     public GetValuesFromConfig get;
 
-    private Plugin plugin;
+    // File name, config file
+    private static Map<String, FileConfiguration> cache;
+
+    private CustomConfig defaultEntityFile;
+
     private Logger logger;
-    private FileConfiguration config;
+    private FileConfiguration defaultEntity;
 
     public ConfigHandler() {
 
+        cache = new HashMap<String, FileConfiguration>();
+        defaultEntityFile = new CustomConfig("DefaultEntity.yml");
+
         get = new GetValuesFromConfig(this);
 
-        plugin = Plugin.getInstance();
-        this.logger = this.plugin.getLogger();
+        this.logger = Plugin.getInstance().getLogger();
 
         if (!loadConfig())
             createDefaultConfig();
@@ -29,121 +37,158 @@ public class ConfigHandler {
     }
 
     /**
-     * Saves the config after values have been change. This method is not used and hasn't been tested yet.
+     * Tries to convert the value found under the given path to a boolean. If it cannot be found in EntityName.yml or
+     * DefaultEntity.yml, an error message will be printed and a default one will be used.
+     *
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    public void saveConfig() {
-        logger.info("Saving config");
-        plugin.saveConfig();
-        logger.info("Config saved");
+    protected boolean getBooleanFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isBoolean(path))
+            return customConfig.getBoolean(path);
+
+        if (!defaultEntity.isSet(path) || !defaultEntity.isBoolean(path))
+            noValueFound(path);
+        return defaultEntity.getBoolean(path);
     }
 
     /**
-     * Tries to convert the value found under the given path to a boolean. If it cannot be found in config.yml, an
-     * error message will be printed and a default one will be used.
+     * Tries to convert the value found under the given path to an int. If it cannot be found in EntityName.yml or
+     * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param path Path to the variable
-     * @return Value found in config.yml (default value if none is found)
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected boolean getBooleanFromConfig(String path) {
-        if (!config.isSet(path) || !config.isBoolean(path))
+    protected int getIntFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isInt(path))
+            return customConfig.getInt(path);
+
+        if (!defaultEntity.isSet(path) || !defaultEntity.isInt(path))
             noValueFound(path);
-        return config.getBoolean(path);
+        return defaultEntity.getInt(path);
     }
 
     /**
-     * Tries to convert the value found under the given path to an int. If it cannot be found in config.yml, an error
-     * message will be printed and a default one will be used.
+     * Tries to convert the value found under the given path to a double. If it cannot be found in EntityName.yml or
+     * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param path Path to the variable
-     * @return Value found in config.yml (default value if none is found)
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected int getIntFromConfig(String path) {
-        if (!config.isSet(path) || !config.isInt(path))
+    protected double getDoubleFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isDouble(path))
+            return customConfig.getDouble(path);
+
+        if (!defaultEntity.isSet(path) || !defaultEntity.isDouble(path))
             noValueFound(path);
-        return config.getInt(path);
+        return defaultEntity.getDouble(path);
     }
 
     /**
-     * Tries to convert the value found under the given path to a double. If it cannot be found in config.yml, an error
-     * message will be printed and a default one will be used.
+     * Tries to convert the value found under the given path to a String. If it cannot be found in EntityName.yml or
+     * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param path Path to the variable
-     * @return Value found in config.yml (default value if none is found)
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected double getDoubleFromConfig(String path) {
-        if (!config.isSet(path) || !config.isDouble(path))
-            noValueFound(path);
-        return config.getDouble(path);
-    }
+    protected String getStringFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isString(path))
+            return customConfig.getString(path);
 
-    /**
-     * Tries to convert the value found under the given path to a String. If it cannot be found in config.yml, an error
-     * message will be printed and a default one will be used.
-     *
-     * @param path Path to the variable
-     * @return Value found in config.yml (default value if none is found)
-     */
-    protected String getStringFromConfig(String path) {
-        if (!config.isSet(path) || !config.isString(path))
+        if (!defaultEntity.isSet(path) || !defaultEntity.isString(path))
             noValueFound(path);
-        return config.getString(path);
+        return defaultEntity.getString(path);
     }
 
     /**
      * Tries to convert the values found under the given path to a list of Strings. If it cannot be found in
-     * config.yml, an error message will be printed and a default one is be used.
+     * EntityName.yml or DefaultEntity.yml, an error message will be printed and a default one is be used.
      *
-     * @param path Path to the variable
-     * @return Value found in config.yml (default value if none is found)
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected List<String> getStringListFromConfig(String path) {
-        List list = config.getStringList(path);
-        if (!config.isSet(path) || !config.isList(path))
-            noListFound(path);
-        else if (list.isEmpty())
+    protected List<String> getStringListFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isList(path)) {
+            List list = customConfig.getStringList(path);
+            if (!list.isEmpty())
+                return list;
+        }
+
+        List list = defaultEntity.getStringList(path);
+        if (!defaultEntity.isSet(path) || !defaultEntity.isList(path))
             noListFound(path);
         return list;
     }
 
     /**
      * Tries to convert the values found under the given path to a ConfigurationSection. If it cannot be found in
-     * config.yml, an error message will be printed and a default one is used.
+     * EntityName.yml or DefaultEntity.yml, an error message will be printed and a default one is used.
      *
-     * @param path Path to the variable
-     * @return ConfigurationSection found in config.yml (default value if none is found)
+     * @param entity Name of the .yml file
+     * @param path   Path to the variable
+     * @return ConfigurationSection found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected ConfigurationSection getConfigurationSectionFromConfig(String path) {
-        if (!config.isSet(path) || !config.isConfigurationSection(path))
+    protected ConfigurationSection getConfigurationSectionFromConfig(String entity, String path) {
+        FileConfiguration customConfig = getConfigFor(entity);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isConfigurationSection(path))
+            return customConfig.getConfigurationSection(path);
+
+        if (!defaultEntity.isSet(path) || !defaultEntity.isConfigurationSection(path))
             noValueFound(path);
-        return config.getConfigurationSection(path);
+        return defaultEntity.getConfigurationSection(path);
     }
 
     /**
-     * Checks if the given section exists.
+     * Returns the specified .yml file from cache or disk.
      *
-     * @param section Name of the section in the config.yml file
-     * @return True if the section exists
+     * @param entity Name of the .yml file
+     * @return Config file or null if it doesn't exist
      */
-    protected boolean SectionExists(String section) {
-        return config.isSet(section);
+    private FileConfiguration getConfigFor(String entity) {
+        if (cache.containsKey(entity)) {
+            return cache.get(entity);
+        } else {
+            FileConfiguration customConfig = new CustomConfig(entity + ".yml").getConfig();
+            cache.put(entity, customConfig);
+            return customConfig;
+        }
     }
 
     /**
      * Saves the default configuration file and stores it's content to config.
      */
     private void createDefaultConfig() {
+        logger.info("Initializing config files");
+        defaultEntityFile.saveDefaultConfig();
+        defaultEntity = defaultEntityFile.getConfig();
 
-        logger.info("Creating default config");
-        plugin.saveDefaultConfig();
+        String[] defaultMobs = {"CaveSpider", "Giant", "Spider", "Squid", "Wolf"};
+        CustomConfig tempConfig;
+        for (String entity : defaultMobs) {
+            if (this.configExistsFor(entity))
+                continue;
 
-        config = plugin.getConfig();
+            tempConfig = new CustomConfig(entity + ".yml");
+            tempConfig.saveDefaultConfig();
+            cache.put(entity, tempConfig.getConfig());
+        }
+
         logger.info("Config loaded");
-
     }
 
     /**
-     * Tries to load the config.yml from disk. This method returns false if no matching file was found. In this case a
-     * default config should be loaded.
+     * Tries to load the DefaultEntity.yml from disk. This method returns false if no matching file was found. In this
+     * case a default config should be loaded.
      *
      * @return True if the config could be loaded
      */
@@ -151,8 +196,8 @@ public class ConfigHandler {
 
         logger.info("Loading config");
 
-        if (this.configExists()) {
-            config = plugin.getConfig();
+        if (this.configExistsFor("DefaultEntity")) {
+            defaultEntity = defaultEntityFile.getConfig();
             logger.info("Config loaded");
             return true;
         }
@@ -169,7 +214,7 @@ public class ConfigHandler {
     private void noValueFound(String path) {
         logger.warning("Value is missing or of wrong type: " + path);
         logger.warning("Using default value");
-        logger.warning("Delete config.yml to get a default one");
+        logger.warning("Delete DefaultEntity.yml to get a default one");
     }
 
     /**
@@ -178,23 +223,24 @@ public class ConfigHandler {
      * @param path Path to the missing value
      */
     private void noListFound(String path) {
-        logger.warning("Could not find list in config.yml: " + path);
-        logger.warning("Delete config.yml to get a default one");
+        logger.warning("Could not find list in DefaultEntity.yml: " + path);
+        logger.warning("Delete DefaultEntity.yml to get a default one");
     }
 
     /**
-     * Checks if a config.yml exists in the plugin folder.
+     * Checks if a .yml file exists in the plugin folder.
      *
-     * @return True if a config.yml was found
+     * @param entity Name of the .yml file
+     * @return True if a DefaultEntity.yml was found
      */
-    private boolean configExists() {
+    private boolean configExistsFor(String entity) {
 
-        File[] files = plugin.getDataFolder().listFiles();
+        File[] files = Plugin.getInstance().getDataFolder().listFiles();
         if (files == null)
             return false;
 
         for (File file : files) {
-            if (file.getName().equals("config.yml")) {
+            if (file.getName().equals(entity + ".yml")) {
                 return true;
             }
         }

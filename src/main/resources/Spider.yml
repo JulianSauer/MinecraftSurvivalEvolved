@@ -1,0 +1,9 @@
+# Blocks that can be mined with this entity
+MineableBlocks:
+- "LOG"
+- "LOG_2"
+- "LEAVES"
+- "LEAVES_2"
+# Food needed for taming/feeding
+PreferredFood:
+- "RAW_BEEF"

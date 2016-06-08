@@ -1,0 +1,11 @@
+Damage: 10.0
+MaxTorpidity: 500
+# Blocks that can be mined with this entity
+MineableBlocks:
+- "LOG"
+- "LOG_2"
+- "LEAVES"
+- "LEAVES_2"
+# Food needed for taming/feeding
+PreferredFood:
+- "GOLD_INGOT"
