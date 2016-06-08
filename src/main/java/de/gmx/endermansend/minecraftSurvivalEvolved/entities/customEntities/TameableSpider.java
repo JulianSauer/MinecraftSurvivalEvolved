@@ -1,6 +1,7 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.AttributeHandler;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.MovementHandlerInterface;
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.RidingHandler;
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
 import net.minecraft.server.v1_9_R1.EntitySpider;
@@ -17,36 +18,26 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
     private AttributeHandler attributeHandler;
 
-    private RidingHandler ridingHandler;
+    private MovementHandlerInterface movementHandler;
 
     private Inventory inventory;
 
     public TameableSpider(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
-        ridingHandler = new RidingHandler(this);
+        movementHandler = new RidingHandler(this);
     }
 
     @Override
     public void g(float sideMot, float forMot) {
 
-        if (isUnconscious())
-            return;
+        movementHandler.handleMovement(new float[]{sideMot, forMot});
 
-        if (!ridingHandler.isMounted()) {
-            super.g(sideMot, forMot);
-            return;
-        }
+    }
 
-        float[] mot = ridingHandler.calculateMovement();
-        sideMot = mot[0];
-        forMot = mot[1];
-
-        this.setYawPitch(this.yaw, this.pitch);
-        super.g(sideMot, forMot);
-
-        ridingHandler.jump();
-
+    public void callSuperMovement(float[] args) {
+        if (args.length == 2)
+            super.g(args[0], args[1]);
     }
 
     public boolean tamed() {

@@ -51,4 +51,6 @@ public interface Tameable {
 
     void decreaseTorpidityBy(int torpidityDecrease);
 
+    void callSuperMovement(float[] args);
+
 }

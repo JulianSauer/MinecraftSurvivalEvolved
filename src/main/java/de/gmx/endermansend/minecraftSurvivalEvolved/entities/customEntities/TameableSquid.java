@@ -1,8 +1,6 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.gmx.endermansend.minecraftSurvivalEvolved.entities.AttributeHandler;
-import de.gmx.endermansend.minecraftSurvivalEvolved.entities.RidingHandler;
-import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
+import de.gmx.endermansend.minecraftSurvivalEvolved.entities.*;
 import net.minecraft.server.v1_9_R1.EntitySquid;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;
@@ -17,41 +15,25 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
 
     private AttributeHandler attributeHandler;
 
-    private RidingHandler ridingHandler;
+    private MovementHandlerInterface movementHandler;
 
     private Inventory inventory;
 
     public TameableSquid(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
-        ridingHandler = new RidingHandler(this);
+        movementHandler = new SwimmingHandler(this);
     }
 
     @Override
     public void n() {
 
-        if (isUnconscious())
-            return;
+        movementHandler.handleMovement(new float[]{});
 
-        if (!ridingHandler.isMounted()) {
-            super.n();
-            return;
-        }
+    }
 
-        float[] mot = ridingHandler.calculateSwimming();
-        motX = mot[0];
-        motY = mot[1];
-        motZ = mot[2];
-
-        if(!this.inWater) {
-            motX *= 0.1;
-            motY *= 0.1;
-            motZ *= 0.1;
-        }
-
-        this.setYawPitch(this.yaw, this.pitch);
-        this.move(motX, motY, motZ);
-
+    public void callSuperMovement(float[] args) {
+        super.n();
     }
 
     public boolean tamed() {
