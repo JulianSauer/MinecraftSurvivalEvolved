@@ -23,7 +23,7 @@ public class BaseStats {
     private int xpUntilLevelUp;
 
     private float levelMultiplier;
-    private float alphaProbability;
+    private int alphaProbability;
     private float speed;
 
     private double damage;
@@ -98,7 +98,7 @@ public class BaseStats {
         return levelMultiplier;
     }
 
-    public float getAlphaProbability() {
+    public int getAlphaProbability() {
         return alphaProbability;
     }
 

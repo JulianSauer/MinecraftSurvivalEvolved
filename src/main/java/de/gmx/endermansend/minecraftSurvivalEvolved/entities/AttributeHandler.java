@@ -49,7 +49,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         this.tameableEntity = tameableEntity;
 
         baseStats = BaseStats.getBaseStatsFor(tameableEntity.getName());
-        if (Math.random() < baseStats.getAlphaProbability()) {
+        if (Plugin.getRandomInt(101) <= baseStats.getAlphaProbability()) {
             alphaPredatorMultiplier = 4;
         } else {
             alphaPredatorMultiplier = 1;
@@ -202,7 +202,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      */
     private void updateLevel(int levelIncrease) {
         if (level == null)
-            level = (int) (Math.random() * baseStats.getLevelCap() + 1);
+            level = Plugin.getRandomInt(baseStats.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
         if (!tamed) {

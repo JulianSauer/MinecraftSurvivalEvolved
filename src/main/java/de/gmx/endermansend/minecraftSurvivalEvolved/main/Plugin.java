@@ -7,11 +7,15 @@ import de.gmx.endermansend.minecraftSurvivalEvolved.listeners.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Random;
+
 public class Plugin extends JavaPlugin {
 
-    static Plugin instance;
+    private static Plugin instance;
 
-    static ConfigHandler configHandler;
+    private static ConfigHandler configHandler;
+
+    private static Random random;
 
     @Override
     public void onEnable() {
@@ -35,6 +39,7 @@ public class Plugin extends JavaPlugin {
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
 
         instance = this;
+        random = new Random();
         getLogger().info("Enabled");
 
     }
@@ -50,6 +55,10 @@ public class Plugin extends JavaPlugin {
 
     public static ConfigHandler getConfigHandler() {
         return configHandler;
+    }
+
+    public static int getRandomInt(int upperLimit) {
+        return random.nextInt(upperLimit);
     }
 
 }
