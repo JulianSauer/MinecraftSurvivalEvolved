@@ -2,3 +2,4 @@ name: MinecraftSurvivalEvolved
 version: 0.1
 author: EndermansEnd
 main: de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin
+load: STARTUP
