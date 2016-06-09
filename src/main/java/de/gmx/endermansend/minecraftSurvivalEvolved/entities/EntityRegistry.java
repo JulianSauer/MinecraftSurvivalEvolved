@@ -1,10 +1,10 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
+import de.gmx.endermansend.minecraftSurvivalEvolved.Utils.ReflectionHelper;
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.entity.EntityType;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class EntityRegistry {
     public static void registerCustomEntities() {
 
         for (TameableEntityType entity : TameableEntityType.values())
-            a(entity.getCustomClass(), entity.getName(), entity.getId());
+            writeEntityToMaps(entity.getCustomClass(), entity.getName(), entity.getId());
 
         for (BiomeBase biomeBase : BiomeBase.i) {
 
@@ -68,23 +68,13 @@ public class EntityRegistry {
                 break;
 
             for (String field : new String[]{"u", "v", "w", "x"}) {
-                try {
+                List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) ReflectionHelper.getPrivateVariableValue(BiomeBase.class, biomeBase, field);
 
-                    Field list = BiomeBase.class.getDeclaredField(field);
-                    list.setAccessible(true);
-                    List<BiomeBase.BiomeMeta> mobList = (List<BiomeBase.BiomeMeta>) list.get(biomeBase);
-
-                    for (BiomeBase.BiomeMeta meta : mobList) {
-                        for (TameableEntityType entity : TameableEntityType.values()) {
-                            if (entity.getNMSClass().equals(meta.b))
-                                meta.b = entity.getCustomClass();
-                        }
+                for (BiomeBase.BiomeMeta meta : mobList) {
+                    for (TameableEntityType entity : TameableEntityType.values()) {
+                        if (entity.getNMSClass().equals(meta.b))
+                            meta.b = entity.getCustomClass();
                     }
-
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -92,37 +82,14 @@ public class EntityRegistry {
     }
 
     /**
-     * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
-     * A convenience method.
-     *
-     * @param clazz The class
-     * @param f     The string representation of the private static field
-     * @return The object found
-     * @throws NoSuchFieldException   If unable to get the object
-     * @throws IllegalAccessException If unable to get the object
+     * Writes to the maps in EntityTypes to register an entity.
      */
-    private static Object getPrivateStatic(Class clazz, String f) throws NoSuchFieldException, IllegalAccessException {
-        Field field = clazz.getDeclaredField(f);
-        field.setAccessible(true);
-        return field.get(null);
-    }
-
-    /**
-     * Source: https://github.com/Europia79/Extraction/blob/master/modules/v1_8_R3/src/mc/euro/extraction/nms/v1_8_R3/CustomEntityType.java
-     * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
-     */
-    private static void a(Class paramClass, String paramString, int paramInt) {
-        try {
-            ((Map) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
-            ((Map) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
-            ((Map) getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
-            ((Map) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
-            ((Map) getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+    private static void writeEntityToMaps(Class paramClass, String paramString, int paramInt) {
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "c")).put(paramString, paramClass);
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "d")).put(paramClass, paramString);
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
     }
 
 }

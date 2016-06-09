@@ -1,6 +1,10 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
-import net.minecraft.server.v1_9_R1.*;
+import de.gmx.endermansend.minecraftSurvivalEvolved.Utils.ReflectionHelper;
+import net.minecraft.server.v1_9_R1.Entity;
+import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_9_R1.EntityLiving;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,16 +20,8 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
         this.entity = entity;
 
         // Accessing private fields of entities
-        try {
-            jump = EntityLiving.class.getDeclaredField("bc");
-            jump.setAccessible(true);
-            setYawPitch = Entity.class.getDeclaredMethod("setYawPitch", float.class, float.class);
-            setYawPitch.setAccessible(true);
-        } catch (NoSuchFieldException ex) {
-            ex.printStackTrace();
-        } catch (NoSuchMethodException ex) {
-            ex.printStackTrace();
-        }
+        jump = ReflectionHelper.getPrivateVariable(EntityLiving.class, "bc");
+        setYawPitch = ReflectionHelper.getPrivateMethod(Entity.class, "setYawPitch", float.class, float.class);
     }
 
     /**
@@ -92,9 +88,7 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
     protected void setYawPitch(float f, float f1) {
         try {
             setYawPitch.invoke(entity, f, f1);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
