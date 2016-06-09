@@ -1,8 +1,11 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.entities;
 
+import de.gmx.endermansend.minecraftSurvivalEvolved.holograms.HologramHandler;
 import de.gmx.endermansend.minecraftSurvivalEvolved.main.Plugin;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +36,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
     private UUID owner;
     private UUID tamer;
+    private String tamerName;
 
     // General stats
     private boolean tamed;
@@ -42,9 +46,12 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     private int alphaPredatorMultiplier; // attributes multiplied by this value; set to 1 if not an alpha
 
     private UnconsciousnessTimer unconsciousnessTimer;
+    private boolean currentlyRunning;
     private long unconsciousnessUpdateInterval;
 
     public AttributeHandler(T tameableEntity) {
+
+        currentlyRunning = false;
 
         this.tameableEntity = tameableEntity;
 
@@ -61,7 +68,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         torpidity = 0;
         torporDepletion = 1;
         tamingProgress = 0;
-        tamingProgressInterval = 0;
+        tamingProgressInterval = 1;
         unconsciousnessUpdateInterval = 100L;
         currentXp = 0;
 
@@ -70,11 +77,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public boolean isTamed() {
-        if (this.isAlpha())
-            throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
-                    + tameableEntity.getName() + " at x:" + tameableEntity.locX + " y:" + tameableEntity.locY + " z:"
-                    + tameableEntity.locZ + ")");
-        return tamed;
+        return tamed && !this.isAlpha();
     }
 
     public boolean isAlpha() {
@@ -82,7 +85,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public boolean isTameable() {
-        return baseStats.isTameable() && !tamed && this.isAlpha();
+        return baseStats.isTameable() && !tamed && !this.isAlpha();
     }
 
     public boolean isUnconscious() {
@@ -98,7 +101,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public int getMaxTorpidity() {
-        return (int) calculateLevelDependentStatFor(baseStats.getMaxTamingProgress());
+        return (int) calculateLevelDependentStatFor(baseStats.getMaxTorpidity());
     }
 
     public double getDamage() {
@@ -234,11 +237,12 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * @param torpidityIncrease
      * @param lastDamager       Player is saved in case the entity becomes unconscious and is succesfully tamed
      */
-    public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
+    public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager, String lastDamagerName) {
 
         if (this.isAlpha())
             return;
         tamer = lastDamager;
+        tamerName = lastDamagerName;
         torpidity += torpidityIncrease;
         if (torpidity > getMaxTorpidity())
             torpidity = getMaxTorpidity();
@@ -281,12 +285,10 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
         if (isUnconscious() && torpidity <= 0) {
             unconscious = false;
-            if (unconsciousnessTimer != null) {
+            if (unconsciousnessTimer != null && currentlyRunning) {
                 unconsciousnessTimer.cancel();
-                System.out.println("Entity is no longer unconscious");
             }
         } else if (!isUnconscious() && torpidity >= getFortitude()) {
-            System.out.println("Entity is unconscious");
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(Plugin.getInstance(), 0, unconsciousnessUpdateInterval);
@@ -308,6 +310,8 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
+            if (item == null)
+                continue;
             if (baseStats.getPreferredFood().contains(item.getType())) {
                 item.setAmount(item.getAmount() - 1);
                 if (item.getAmount() <= 0)
@@ -322,9 +326,35 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
     class UnconsciousnessTimer extends BukkitRunnable {
 
+        UUID hologram;
+
+        public UnconsciousnessTimer() {
+            World world = tameableEntity.getWorld().getWorld();
+            Location location = new Location(world,
+                    tameableEntity.locX, tameableEntity.locY + 0.5, tameableEntity.locZ);
+            hologram = HologramHandler.spawnHologramAt(location, getHologramText());
+            currentlyRunning = true;
+        }
+
         public void run() {
+            currentlyRunning = true;
+            if (!tameableEntity.isAlive())
+                this.cancel();
+
             decreaseTorpidityBy(torporDepletion);
             updateTamingProcess();
+            if (!HologramHandler.updateHologram(hologram, getHologramText()))
+                this.cancel();
+        }
+
+        /**
+         * Stops thread and despawns the hologram.
+         */
+        @Override
+        public void cancel() {
+            HologramHandler.despawnHologram(hologram);
+            currentlyRunning = false;
+            super.cancel();
         }
 
         /**
@@ -341,17 +371,29 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
          */
         private void updateTamingProcess() {
 
-            if (!isTameable() || isTamed() || isAlpha())
+            if (!isTameable())
                 return;
 
             if (updateHunger())
                 tamingProgress += tamingProgressInterval;
             else
                 tamingProgress = (tamingProgress - tamingProgressInterval) < 0 ? 0 : tamingProgress - tamingProgressInterval;
-            if (tamingProgress >= 10) { // TODO: Replace with getMaxTamingProgress()
+
+            System.out.println(tamingProgress + "/" + getMaxTamingProgress());
+            if (tamingProgress >= getMaxTamingProgress()) {
+                System.out.println("succesfuly");
                 setSuccessfullyTamed();
             }
 
+        }
+
+        private String[] getHologramText() {
+            return new String[]{
+                    "Progress: " + getTamingProgress() + "/" + getMaxTamingProgress(),
+                    "Torpidity: " + getTorpidity() + "/" + getMaxTorpidity(),
+                    "Tameable by: " + tamerName,
+                    "Health: " + (int) tameableEntity.getHealth() + "/" + (int) tameableEntity.getMaxHealth()
+            };
         }
 
     }

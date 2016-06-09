@@ -47,7 +47,7 @@ public interface Tameable {
 
     List<Material> getMineableBlocks();
 
-    void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager);
+    void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager, String lastDamagerName);
 
     void decreaseTorpidityBy(int torpidityDecrease);
 

@@ -2,6 +2,7 @@ package de.gmx.endermansend.minecraftSurvivalEvolved.main;
 
 import de.gmx.endermansend.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.EntityRegistry;
+import de.gmx.endermansend.minecraftSurvivalEvolved.holograms.HologramHandler;
 import de.gmx.endermansend.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.gmx.endermansend.minecraftSurvivalEvolved.listeners.*;
 import org.bukkit.plugin.PluginManager;
@@ -46,6 +47,7 @@ public class Plugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        HologramHandler.despawnAllHolograms();
         getLogger().info("Disabled");
     }
 

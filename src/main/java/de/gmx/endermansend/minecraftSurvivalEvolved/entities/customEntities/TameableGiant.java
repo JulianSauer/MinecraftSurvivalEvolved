@@ -104,8 +104,8 @@ public class TameableGiant extends EntityGiantZombie implements Tameable, Invent
         return attributeHandler.getMineableBlocks();
     }
 
-    public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
-        attributeHandler.increaseTorpidityBy(torpidityIncrease, lastDamager);
+    public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager, String lastDamagerName) {
+        attributeHandler.increaseTorpidityBy(torpidityIncrease, lastDamager, lastDamagerName);
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {

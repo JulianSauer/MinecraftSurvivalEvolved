@@ -1,8 +1,6 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -32,10 +30,10 @@ public class EntityDamageByEntityListener extends BasicListener {
             double torpidity = e.getDamage();
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
-            if (!tameableEntity.isTameable() || tameableEntity.tamed())
+            if (!tameableEntity.isTameable())
                 return;
 
-            tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId());
+            tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId(), player.getName());
 
         } else if (isMountedAttack(damager)) {
             e.setDamage(getTameableEntityFromVehicle(damager).getDamage());

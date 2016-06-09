@@ -5,6 +5,7 @@ import de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities.Tame
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -14,7 +15,7 @@ public class PlayerInteractListener extends BasicListener {
     boolean enableTestRiding = true;
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEntityEvent e) {
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
 
         if (enableTestRiding) {
             testRide(e);
@@ -37,6 +38,15 @@ public class PlayerInteractListener extends BasicListener {
 
     }
 
+    @EventHandler
+    public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent e) {
+
+        // Cancel event if a hologram is clicked
+        if (!e.getRightClicked().isVisible())
+            e.setCancelled(true);
+
+    }
+
     /**
      * Allows entity riding without taming the entity first.
      *
@@ -47,7 +57,7 @@ public class PlayerInteractListener extends BasicListener {
         Entity entity = e.getRightClicked();
         Player player = e.getPlayer();
 
-        if(getTameableEntityFromEntity(entity) == null)
+        if (getTameableEntityFromEntity(entity) == null)
             return;
         if (entity.isEmpty())
             entity.setPassenger(player);
