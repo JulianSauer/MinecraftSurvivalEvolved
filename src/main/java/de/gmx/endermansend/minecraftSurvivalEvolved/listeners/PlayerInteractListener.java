@@ -1,7 +1,6 @@
 package de.gmx.endermansend.minecraftSurvivalEvolved.listeners;
 
 import de.gmx.endermansend.minecraftSurvivalEvolved.entities.Tameable;
-import de.gmx.endermansend.minecraftSurvivalEvolved.entities.customEntities.TameableSpider;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,9 +9,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class PlayerInteractListener extends BasicListener {
+public class PlayerInteractListener<T extends Tameable & InventoryHolder> extends BasicListener {
 
-    boolean enableTestRiding = true;
+    boolean enableTestRiding = false;
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
@@ -29,8 +28,8 @@ public class PlayerInteractListener extends BasicListener {
 
         Player player = e.getPlayer();
 
-        if (tameableEntity.isUnconscious()) {
-            openTamingGUI(player, entity, (TameableSpider) tameableEntity);
+        if (tameableEntity.isUnconscious() && tameableEntity instanceof InventoryHolder) {
+            openTamingGUI(player, entity, (T) tameableEntity);
         } else if (tameableEntity.tamed() && tameableEntity.getOwners().equals(player.getUniqueId())) {
             if (entity.isEmpty())
                 entity.setPassenger(player);
@@ -64,7 +63,7 @@ public class PlayerInteractListener extends BasicListener {
 
     }
 
-    private <T extends Tameable & InventoryHolder> void openTamingGUI(Player player, Entity entity, T tameable) {
+    private void openTamingGUI(Player player, Entity entity, T tameable) {
 
         String name = entity.getCustomName();
         if (name == null)
