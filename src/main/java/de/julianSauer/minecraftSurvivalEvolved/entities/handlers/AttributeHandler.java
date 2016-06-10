@@ -197,7 +197,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
      * @return Multiplier dependet value of the entity
      */
     private double calculateLevelDependentStatFor(double baseValue, float multiplier) {
-        return (1 + level * multiplier) * baseValue * alphaPredatorMultiplier;
+        return (1 + (level - 1) * multiplier) * baseValue * alphaPredatorMultiplier;
     }
 
     /**

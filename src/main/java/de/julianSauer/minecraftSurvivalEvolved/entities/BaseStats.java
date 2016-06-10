@@ -51,6 +51,9 @@ public class BaseStats {
         preferredFood = config.get.preferredFoodFor(entity);
         mineableBlocks = config.get.mineableBlocksFor(entity);
 
+        if(levelCap <= 0)
+            throw new NumberFormatException("Level cap has to be higher than " + levelCap);
+
     }
 
     /**

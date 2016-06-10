@@ -31,6 +31,7 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
      * @param args
      */
     public void handleMovement(float[] args) {
+        
         if (entity.isUnconscious())
             return;
 
@@ -70,14 +71,11 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
      */
     protected boolean isMounted() {
 
-        if (entity.isAlpha())
-            return false;
-
-        if (entity.passengers == null || entity.passengers.size() != 1 || !(entity.passengers.get(0) instanceof EntityPlayer)) {
-            if (!entity.tamed())
-                return false;
-        }
-        return true;
+        return !(entity.isAlpha()
+                || entity.passengers == null
+                || entity.passengers.size() < 1
+                || !(entity.passengers.get(0) instanceof EntityPlayer)
+        );
     }
 
     /**
