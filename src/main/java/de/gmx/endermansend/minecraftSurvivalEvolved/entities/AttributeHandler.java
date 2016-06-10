@@ -379,9 +379,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
             else
                 tamingProgress = (tamingProgress - tamingProgressInterval) < 0 ? 0 : tamingProgress - tamingProgressInterval;
 
-            System.out.println(tamingProgress + "/" + getMaxTamingProgress());
             if (tamingProgress >= getMaxTamingProgress()) {
-                System.out.println("succesfuly");
                 setSuccessfullyTamed();
             }
 

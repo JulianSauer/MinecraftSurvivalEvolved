@@ -125,11 +125,9 @@ public class HologramHandler {
         if (activeHolograms == null)
             return;
 
-        System.out.println(activeHolograms.size());
         activeHolograms.values().stream()
                 .forEach(armorStands -> armorStands.stream()
                         .forEach(armorStand -> armorStand.remove()));
-        System.out.println(activeHolograms.size());
         activeHolograms.clear();
     }
 
