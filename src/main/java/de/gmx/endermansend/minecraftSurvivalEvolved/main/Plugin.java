@@ -35,6 +35,7 @@ public class Plugin extends JavaPlugin {
         pluginManager.registerEvents(new BlockDamageListener(), this);
         pluginManager.registerEvents(new BowShootListener(), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
+        pluginManager.registerEvents(new EntityDeathListener(), this);
         pluginManager.registerEvents(new EntitySpawnListener(), this);
         pluginManager.registerEvents(new PlayerInteractListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
