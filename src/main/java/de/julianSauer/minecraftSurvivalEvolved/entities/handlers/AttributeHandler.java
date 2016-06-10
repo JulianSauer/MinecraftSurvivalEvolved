@@ -7,6 +7,7 @@ import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -270,6 +271,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
+            tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.AMBIENT_CAVE, 10, 10);
             return true;
         } else {
             return false;
@@ -326,15 +328,18 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         return false;
     }
 
+    private Location getLocation() {
+        return new Location(tameableEntity.getWorld().getWorld(), tameableEntity.locX, tameableEntity.locY, tameableEntity.locZ);
+    }
+
     class UnconsciousnessTimer extends BukkitRunnable {
 
         UUID hologram;
 
         public UnconsciousnessTimer() {
             World world = tameableEntity.getWorld().getWorld();
-            Location location = new Location(world,
-                    tameableEntity.locX, tameableEntity.locY + 0.5, tameableEntity.locZ);
-            hologram = HologramHandler.spawnHologramAt(location, getHologramText());
+            setName("");
+            hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
             currentlyRunning = true;
         }
 
@@ -355,6 +360,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         @Override
         public void cancel() {
             HologramHandler.despawnHologram(hologram);
+            updateLevel(0); // Resets the name
             currentlyRunning = false;
             super.cancel();
         }
