@@ -1,10 +1,10 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.MathHelper;
 
-public class SwimmingHandler<T extends EntityInsentient & Tameable> extends RidingHandler {
+public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends RidingHandler {
 
     public SwimmingHandler(T entity) {
         super(entity);
@@ -18,11 +18,11 @@ public class SwimmingHandler<T extends EntityInsentient & Tameable> extends Ridi
     @Override
     public void handleMovement(float[] args) {
 
-        if (((Tameable) entity).isUnconscious())
+        if (((MSEEntity) entity).isUnconscious())
             return;
 
         if (!isMounted()) {
-            ((Tameable) entity).callSuperMovement(new float[]{});
+            ((MSEEntity) entity).callSuperMovement(new float[]{});
             return;
         }
 
@@ -63,7 +63,7 @@ public class SwimmingHandler<T extends EntityInsentient & Tameable> extends Ridi
         x = mot[0];
         z = mot[1];
 
-        float speed = ((Tameable) entity).getSpeed();
+        float speed = ((MSEEntity) entity).getSpeed();
         return new float[]{
                 x * speed,
                 y * speed,

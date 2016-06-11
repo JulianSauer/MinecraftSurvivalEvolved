@@ -1,20 +1,19 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.AttributeHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MovementHandlerInterface;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.SwimmingHandler;
-import net.minecraft.server.v1_9_R1.EntitySquid;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.RidingHandler;
+import net.minecraft.server.v1_9_R1.EntityCaveSpider;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TameableSquid extends EntitySquid implements Tameable, InventoryHolder {
+public class MCECaveSpider extends EntityCaveSpider implements MSEEntity {
 
     private AttributeHandler attributeHandler;
 
@@ -24,22 +23,23 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
 
     private float pitchWhileTaming;
 
-    public TameableSquid(World world) {
+    public MCECaveSpider(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
-        movementHandler = new SwimmingHandler(this);
+        movementHandler = new RidingHandler(this);
         pitchWhileTaming = 0;
     }
 
     @Override
-    public void n() {
+    public void g(float sideMot, float forMot) {
 
-        movementHandler.handleMovement(new float[]{});
+        movementHandler.handleMovement(new float[]{sideMot, forMot});
 
     }
 
     public void callSuperMovement(float[] args) {
-        super.n();
+        if (args.length == 2)
+            super.g(args[0], args[1]);
     }
 
     public boolean tamed() {

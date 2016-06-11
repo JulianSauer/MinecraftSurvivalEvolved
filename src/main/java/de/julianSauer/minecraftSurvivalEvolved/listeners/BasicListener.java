@@ -1,22 +1,22 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Listener;
 
 public class BasicListener implements Listener {
 
-    public Tameable getTameableEntityFromEntity(Entity entity) {
+    public MSEEntity getMSEEntityFromEntity(Entity entity) {
         if (entity instanceof CraftEntity)
-            if (((CraftEntity) entity).getHandle() instanceof Tameable)
-                return (Tameable) ((CraftEntity) entity).getHandle();
+            if (((CraftEntity) entity).getHandle() instanceof MSEEntity)
+                return (MSEEntity) ((CraftEntity) entity).getHandle();
         return null;
     }
 
-    public Tameable getTameableEntityFromVehicle(Entity entity) {
+    public MSEEntity getMSEEntityFromVehicle(Entity entity) {
         if (entity.getVehicle() != null)
-            return getTameableEntityFromEntity(entity.getVehicle());
+            return getMSEEntityFromEntity(entity.getVehicle());
         return null;
     }
 

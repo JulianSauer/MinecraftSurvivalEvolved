@@ -14,8 +14,6 @@ public interface Tameable {
 
     boolean isTameable();
 
-    boolean isAlpha();
-
     boolean isUnconscious();
 
     int getTorpidity();
@@ -26,26 +24,11 @@ public interface Tameable {
 
     int getMaxTamingProgress();
 
-    int getLevel();
-
     UUID getOwners();
-
-    String getName();
-
-    void setName(String name);
-
-    float getSpeed();
 
     void setPitchWhileTaming(float pitch);
 
     float getPitchWhileTaming();
-
-    double getDamage();
-
-    /**
-     * @return [0]: Current xp [1]: xp until level up
-     */
-    float[] getXp();
 
     List<Material> getPreferredFood();
 

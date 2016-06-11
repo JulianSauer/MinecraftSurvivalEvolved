@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.utils.ReflectionHelper;
 import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class RidingHandler<T extends EntityInsentient & Tameable> implements MovementHandlerInterface {
+public class RidingHandler<T extends EntityInsentient & MSEEntity> implements MovementHandlerInterface {
 
     protected T entity;
     private Field jump = null;

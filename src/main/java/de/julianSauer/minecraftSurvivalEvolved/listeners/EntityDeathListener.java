@@ -1,10 +1,9 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.Arrays;
 
@@ -18,11 +17,11 @@ public class EntityDeathListener extends BasicListener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
 
-        Tameable entity = getTameableEntityFromEntity(e.getEntity());
-        if (entity == null || !(entity instanceof InventoryHolder))
+        MSEEntity mseEntity = getMSEEntityFromEntity(e.getEntity());
+        if (mseEntity == null)
             return;
 
-        Inventory entityInventory = ((InventoryHolder) entity).getInventory();
+        Inventory entityInventory = mseEntity.getInventory();
         e.getDrops().addAll(Arrays.asList(entityInventory.getContents()));
         entityInventory.clear();
 

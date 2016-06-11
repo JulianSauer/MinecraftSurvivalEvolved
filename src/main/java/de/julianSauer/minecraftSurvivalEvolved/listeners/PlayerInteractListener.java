@@ -1,15 +1,14 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
-public class PlayerInteractListener<T extends Tameable & InventoryHolder> extends BasicListener {
+public class PlayerInteractListener extends BasicListener {
 
     boolean enableTestRiding = false;
 
@@ -22,15 +21,15 @@ public class PlayerInteractListener<T extends Tameable & InventoryHolder> extend
         }
 
         Entity entity = e.getRightClicked();
-        Tameable tameableEntity = getTameableEntityFromEntity(entity);
-        if (tameableEntity == null)
+        MSEEntity mseEntity = getMSEEntityFromEntity(entity);
+        if (mseEntity == null)
             return;
 
         Player player = e.getPlayer();
 
-        if (tameableEntity.isUnconscious() && tameableEntity instanceof InventoryHolder) {
-            openTamingGUI(player, entity, (T) tameableEntity);
-        } else if (tameableEntity.tamed() && tameableEntity.getOwners().equals(player.getUniqueId())) {
+        if (mseEntity.isUnconscious()) {
+            openTamingGUI(player, entity, mseEntity);
+        } else if (mseEntity.tamed() && mseEntity.getOwners().equals(player.getUniqueId())) {
             if (entity.isEmpty())
                 entity.setPassenger(player);
         }
@@ -56,20 +55,20 @@ public class PlayerInteractListener<T extends Tameable & InventoryHolder> extend
         Entity entity = e.getRightClicked();
         Player player = e.getPlayer();
 
-        if (getTameableEntityFromEntity(entity) == null)
+        if (getMSEEntityFromEntity(entity) == null)
             return;
         if (entity.isEmpty())
             entity.setPassenger(player);
 
     }
 
-    private void openTamingGUI(Player player, Entity entity, T tameable) {
+    private void openTamingGUI(Player player, Entity entity, MSEEntity mse) {
 
         String name = entity.getCustomName();
         if (name == null)
             name = entity.getName();
 
-        Inventory tamingGUI = tameable.getInventory();
+        Inventory tamingGUI = mse.getInventory();
         player.openInventory(tamingGUI);
 
     }

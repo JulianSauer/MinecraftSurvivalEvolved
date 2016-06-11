@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -24,22 +24,22 @@ public class EntityDamageByEntityListener extends BasicListener {
         if (isTranqEvent(target, damager)) {
 
             Arrow arrow = (Arrow) e.getDamager();
-            Tameable tameableEntity = getTameableEntityFromEntity(target);
+            MSEEntity mseEntity = getMSEEntityFromEntity(target);
             Player player = (Player) arrow.getShooter();
 
             double torpidity = e.getDamage();
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
-            if (!tameableEntity.isTameable())
+            if (!mseEntity.isTameable())
                 return;
 
-            tameableEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId(), player.getName());
+            mseEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId(), player.getName());
 
         } else if (isMountedAttack(damager)) {
-            e.setDamage(getTameableEntityFromVehicle(damager).getDamage());
+            e.setDamage(getMSEEntityFromVehicle(damager).getDamage());
 
         } else if (isNPCAttackEvent(damager)) {
-            e.setDamage(getTameableEntityFromEntity(damager).getDamage());
+            e.setDamage(getMSEEntityFromEntity(damager).getDamage());
 
         }
 
@@ -56,7 +56,7 @@ public class EntityDamageByEntityListener extends BasicListener {
         if (!(damager instanceof Player))
             return false;
         Player player = (Player) damager;
-        if (getTameableEntityFromVehicle(player) == null)
+        if (getMSEEntityFromVehicle(player) == null)
             return false;
         return true;
 
@@ -74,7 +74,7 @@ public class EntityDamageByEntityListener extends BasicListener {
         if (!(damager instanceof Arrow))
             return false;
         Arrow arrow = (Arrow) damager;
-        if (getTameableEntityFromEntity(target) == null || !(arrow.getShooter() instanceof Player))
+        if (getMSEEntityFromEntity(target) == null || !(arrow.getShooter() instanceof Player))
             return false;
 
         List<MetadataValue> titleData = arrow.getMetadata("Tranquilizer Arrow");
@@ -92,7 +92,7 @@ public class EntityDamageByEntityListener extends BasicListener {
      * @return True if the damager is not a player
      */
     private boolean isNPCAttackEvent(Entity damager) {
-        return (damager instanceof LivingEntity && !(damager instanceof Player) && getTameableEntityFromEntity(damager) != null);
+        return (damager instanceof LivingEntity && !(damager instanceof Player) && getMSEEntityFromEntity(damager) != null);
     }
 
 }

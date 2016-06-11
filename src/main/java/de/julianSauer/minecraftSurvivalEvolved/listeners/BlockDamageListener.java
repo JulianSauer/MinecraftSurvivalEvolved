@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 
@@ -9,9 +9,9 @@ public class BlockDamageListener extends BasicListener {
     @EventHandler
     public void onBlockDamage(BlockDamageEvent e) {
 
-        Tameable tameableEntity = getTameableEntityFromVehicle(e.getPlayer());
-        if (tameableEntity != null) {
-            if (tameableEntity.getMineableBlocks().contains(e.getBlock().getType()))
+        MSEEntity mseEntity = getMSEEntityFromVehicle(e.getPlayer());
+        if (mseEntity != null) {
+            if (mseEntity.getMineableBlocks().contains(e.getBlock().getType()))
                 e.setInstaBreak(true);
         }
 

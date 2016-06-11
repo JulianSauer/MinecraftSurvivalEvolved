@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -15,9 +15,9 @@ public class EntitySpawnListener extends BasicListener {
 
         // Adds particle effect to alpha entities
         Entity entity = e.getEntity();
-        Tameable tameableEntity = getTameableEntityFromEntity(entity);
-        if (tameableEntity == null
-                || !tameableEntity.isAlpha()
+        MSEEntity mseEntity = getMSEEntityFromEntity(entity);
+        if (mseEntity == null
+                || !mseEntity.isAlpha()
                 || !(entity instanceof LivingEntity))
             return;
 

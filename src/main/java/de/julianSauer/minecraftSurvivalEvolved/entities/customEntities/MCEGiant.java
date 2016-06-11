@@ -1,20 +1,19 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.AttributeHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MovementHandlerInterface;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.RidingHandler;
-import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.EntityGiantZombie;
 import net.minecraft.server.v1_9_R1.Material;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TameableSpider extends EntitySpider implements Tameable, InventoryHolder {
+public class MCEGiant extends EntityGiantZombie implements MSEEntity {
 
     private AttributeHandler attributeHandler;
 
@@ -24,7 +23,7 @@ public class TameableSpider extends EntitySpider implements Tameable, InventoryH
 
     private float pitchWhileTaming;
 
-    public TameableSpider(World world) {
+    public MCEGiant(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
         movementHandler = new RidingHandler(this);

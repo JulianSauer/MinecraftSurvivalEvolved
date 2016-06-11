@@ -1,14 +1,13 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
-import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.utils.RandomGenerator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.*;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 /**
  * Implements generic functionality for entities that can be used to implement Tameable.
  */
-public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
+public class AttributeHandler<T extends EntityInsentient & MSEEntity> {
 
     private T tameableEntity;
 
@@ -331,12 +330,12 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
                     inventory.setItem(i, item);
 
                 // Eat animation
-                ((Tameable) tameableEntity).setPitchWhileTaming(-30F);
+                tameableEntity.setPitchWhileTaming(-30F);
                 tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
                 (new BukkitRunnable() {
                     @Override
                     public void run() {
-                        ((Tameable) tameableEntity).setPitchWhileTaming(0F);
+                        tameableEntity.setPitchWhileTaming(0F);
                         this.cancel();
                     }
                 }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
