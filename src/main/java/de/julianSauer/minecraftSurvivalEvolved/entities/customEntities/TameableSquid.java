@@ -22,10 +22,13 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
 
     private Inventory inventory;
 
+    private float pitchWhileTaming;
+
     public TameableSquid(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
         movementHandler = new SwimmingHandler(this);
+        pitchWhileTaming = 0;
     }
 
     @Override
@@ -85,6 +88,14 @@ public class TameableSquid extends EntitySquid implements Tameable, InventoryHol
 
     public double getDamage() {
         return attributeHandler.getDamage();
+    }
+
+    public float getPitchWhileTaming() {
+        return pitchWhileTaming;
+    }
+
+    public void setPitchWhileTaming(float pitch) {
+        this.pitchWhileTaming = pitch;
     }
 
     public float getSpeed() {

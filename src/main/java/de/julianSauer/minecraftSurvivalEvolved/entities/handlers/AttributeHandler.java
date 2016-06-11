@@ -1,14 +1,12 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
+import de.julianSauer.minecraftSurvivalEvolved.entities.Tameable;
 import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.utils.RandomGenerator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -48,6 +46,8 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     private int torporDepletion;
     private int alphaPredatorMultiplier; // attributes multiplied by this value; set to 1 if not an alpha
 
+    private String entityType;
+
     private UnconsciousnessTimer unconsciousnessTimer;
     private boolean currentlyRunning;
     private long unconsciousnessUpdateInterval;
@@ -57,6 +57,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         currentlyRunning = false;
 
         this.tameableEntity = tameableEntity;
+        entityType = tameableEntity.getName();
 
         baseStats = BaseStats.getBaseStatsFor(tameableEntity.getName());
         if (RandomGenerator.getRandomInt(101) <= baseStats.getAlphaProbability()) {
@@ -142,12 +143,20 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
     }
 
     public String getName() {
+        System.out.println("get name: " + name);
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
         tameableEntity.setCustomName(name);
+    }
+
+    public String getDefaultname() {
+        if (this.isAlpha())
+            return "Alpha " + entityType + " (" + level + ")";
+        else
+            return entityType + " (" + level + ")";
     }
 
     public int getMaxTamingProgress() {
@@ -212,10 +221,7 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
         if (levelIncrease > 0)
             level += levelIncrease;
         if (!tamed) {
-            if (this.isAlpha())
-                setName("Alpha " + tameableEntity.getName() + " (" + level + ")");
-            else
-                setName(tameableEntity.getName() + " (" + level + ")");
+            setName(getDefaultname());
         }
     }
 
@@ -271,7 +277,8 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
-            tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.AMBIENT_CAVE, 10, 10);
+            tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
+            setName(getDefaultname());
             return true;
         } else {
             return false;
@@ -322,6 +329,18 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
                     inventory.setItem(i, new ItemStack(Material.AIR, 0));
                 else
                     inventory.setItem(i, item);
+
+                // Eat animation
+                ((Tameable) tameableEntity).setPitchWhileTaming(-30F);
+                tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+                (new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ((Tameable) tameableEntity).setPitchWhileTaming(0F);
+                        this.cancel();
+                    }
+                }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
+
                 return true;
             }
         }
@@ -395,10 +414,10 @@ public class AttributeHandler<T extends EntityInsentient & InventoryHolder> {
 
         private String[] getHologramText() {
             return new String[]{
-                    "Progress: " + getTamingProgress() + "/" + getMaxTamingProgress(),
-                    "Torpidity: " + getTorpidity() + "/" + getMaxTorpidity(),
-                    "Tameable by: " + tamerName,
-                    "Health: " + (int) tameableEntity.getHealth() + "/" + (int) tameableEntity.getMaxHealth()
+                    ChatColor.DARK_AQUA + getDefaultname(),
+                    ChatColor.DARK_AQUA + "Health: " + (int) tameableEntity.getHealth() + "/" + (int) tameableEntity.getMaxHealth(),
+                    ChatColor.DARK_PURPLE + HologramHandler.getProgressBar(getTorpidity(), getMaxTorpidity()),
+                    ChatColor.GOLD + HologramHandler.getProgressBar(getTamingProgress(), getMaxTamingProgress())
             };
         }
 

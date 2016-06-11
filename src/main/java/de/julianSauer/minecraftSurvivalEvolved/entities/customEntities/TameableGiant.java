@@ -22,10 +22,13 @@ public class TameableGiant extends EntityGiantZombie implements Tameable, Invent
 
     private Inventory inventory;
 
+    private float pitchWhileTaming;
+
     public TameableGiant(World world) {
         super(world);
         attributeHandler = new AttributeHandler(this);
         movementHandler = new RidingHandler(this);
+        pitchWhileTaming = 0;
     }
 
     @Override
@@ -86,6 +89,14 @@ public class TameableGiant extends EntityGiantZombie implements Tameable, Invent
 
     public double getDamage() {
         return attributeHandler.getDamage();
+    }
+
+    public float getPitchWhileTaming() {
+        return pitchWhileTaming;
+    }
+
+    public void setPitchWhileTaming(float pitch) {
+        this.pitchWhileTaming = pitch;
     }
 
     public float getSpeed() {

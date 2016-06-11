@@ -17,8 +17,11 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
     private Field jump = null;
     private Method setYawPitch;
 
+    private float lastViewingDirection;
+
     public RidingHandler(T entity) {
         this.entity = entity;
+        lastViewingDirection = 0;
 
         // Accessing private fields of entities
         jump = ReflectionHelper.getPrivateVariable(EntityLiving.class, "bc");
@@ -31,11 +34,27 @@ public class RidingHandler<T extends EntityInsentient & Tameable> implements Mov
      * @param args
      */
     public void handleMovement(float[] args) {
-        
-        if (entity.isUnconscious())
+
+        if (entity.isUnconscious()) {
+
+            // Prevent movement when unconscious
+            entity.lastYaw = entity.yaw = 0;
+            entity.pitch = entity.getPitchWhileTaming();
+            entity.aO = entity.aM = lastViewingDirection;
+            setYawPitch(entity.yaw, entity.pitch);
+            entity.motX = 0;
+            entity.motZ = 0;
             return;
+        }
+
+        lastViewingDirection = entity.aO;
 
         if (!isMounted()) {
+            if (entity.tamed()) {
+                entity.callSuperMovement(new float[]{0, 0});
+                return;
+            }
+
             entity.l(entity.getSpeed() * 2);
             entity.callSuperMovement(args);
             return;

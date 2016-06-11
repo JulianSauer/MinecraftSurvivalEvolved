@@ -36,6 +36,10 @@ public interface Tameable {
 
     float getSpeed();
 
+    void setPitchWhileTaming(float pitch);
+
+    float getPitchWhileTaming();
+
     double getDamage();
 
     /**
