@@ -162,7 +162,7 @@ public class HologramHandler {
         for (; i < progressInPercent; i++)
             bar += "=";
         for (; i <= barSize; i++)
-            bar += "  ";
+            bar += "-";
         return bar + "|";
 
     }
