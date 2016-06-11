@@ -133,41 +133,6 @@ public class HologramHandler {
     }
 
     /**
-     * Creates a default progress bar.
-     *
-     * @param currentValue Defines how much of the bar will be filled out
-     * @param maxValue     Defines 100%
-     * @return String representing a progress bar with a size of 10
-     */
-    public static String getProgressBar(float currentValue, float maxValue) {
-        return getProgressBar(currentValue, maxValue, 10);
-    }
-
-    /**
-     * Creates a progress bar.
-     *
-     * @param currentValue Defines how much of the bar will be filled out
-     * @param maxValue     Defines 100%
-     * @param barSize      Number of elements that the bar will contain
-     * @return String representing a progress bar
-     */
-    public static String getProgressBar(float currentValue, float maxValue, float barSize) {
-
-        if (currentValue > maxValue)
-            throw new NumberFormatException("Failed to calculate progress bar, current value can't be bigger than max value");
-
-        String bar = "|";
-        int progressInPercent = Math.round((currentValue / maxValue) * barSize);
-        int i = 0;
-        for (; i < progressInPercent; i++)
-            bar += "=";
-        for (; i <= barSize; i++)
-            bar += "-";
-        return bar + "|";
-
-    }
-
-    /**
      * Spawns a single invisible armor stand with a custom name.
      *
      * @param location Position of the armor stand

@@ -4,6 +4,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.utils.RandomGenerator;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.*;
@@ -278,6 +279,7 @@ public class AttributeHandler<T extends EntityInsentient & MSEEntity> {
             decreaseTorpidityBy(getMaxTorpidity());
             tameableEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
             setName(getDefaultname());
+            BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), entityType);
             return true;
         } else {
             return false;
@@ -415,8 +417,8 @@ public class AttributeHandler<T extends EntityInsentient & MSEEntity> {
             return new String[]{
                     ChatColor.DARK_AQUA + getDefaultname(),
                     ChatColor.DARK_AQUA + "Health: " + (int) tameableEntity.getHealth() + "/" + (int) tameableEntity.getMaxHealth(),
-                    ChatColor.DARK_PURPLE + HologramHandler.getProgressBar(getTorpidity(), getMaxTorpidity()),
-                    ChatColor.GOLD + HologramHandler.getProgressBar(getTamingProgress(), getMaxTamingProgress())
+                    ChatColor.DARK_PURPLE + BarHandler.getProgressBar(getTorpidity(), getMaxTorpidity()),
+                    ChatColor.GOLD + BarHandler.getProgressBar(getTamingProgress(), getMaxTamingProgress())
             };
         }
 
