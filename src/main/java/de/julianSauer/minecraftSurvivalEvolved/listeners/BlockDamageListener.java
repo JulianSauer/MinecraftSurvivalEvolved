@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 
@@ -11,7 +11,7 @@ public class BlockDamageListener extends BasicListener {
 
         MSEEntity mseEntity = getMSEEntityFromVehicle(e.getPlayer());
         if (mseEntity != null) {
-            if (mseEntity.getMineableBlocks().contains(e.getBlock().getType()))
+            if (mseEntity.getEntityStats().getBaseStats().getMineableBlocks().contains(e.getBlock().getType()))
                 e.setInstaBreak(true);
         }
 

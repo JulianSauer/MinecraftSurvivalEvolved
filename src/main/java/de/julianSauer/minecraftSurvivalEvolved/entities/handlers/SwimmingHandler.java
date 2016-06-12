@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.MathHelper;
 
@@ -18,7 +18,7 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
     @Override
     public void handleMovement(float[] args) {
 
-        if (((MSEEntity) entity).isUnconscious())
+        if (((MSEEntity) entity).getTamingHandler().isUnconscious())
             return;
 
         if (!isMounted()) {
@@ -63,7 +63,7 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
         x = mot[0];
         z = mot[1];
 
-        float speed = ((MSEEntity) entity).getSpeed();
+        float speed = ((MSEEntity) entity).getEntityStats().getSpeed();
         return new float[]{
                 x * speed,
                 y * speed,

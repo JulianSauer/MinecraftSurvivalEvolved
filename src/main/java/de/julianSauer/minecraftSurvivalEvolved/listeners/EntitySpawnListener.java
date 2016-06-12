@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,7 +17,7 @@ public class EntitySpawnListener extends BasicListener {
         Entity entity = e.getEntity();
         MSEEntity mseEntity = getMSEEntityFromEntity(entity);
         if (mseEntity == null
-                || !mseEntity.isAlpha()
+                || !mseEntity.getEntityStats().isAlpha()
                 || !(entity instanceof LivingEntity))
             return;
 

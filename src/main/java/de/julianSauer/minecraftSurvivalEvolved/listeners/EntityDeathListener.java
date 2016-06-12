@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;

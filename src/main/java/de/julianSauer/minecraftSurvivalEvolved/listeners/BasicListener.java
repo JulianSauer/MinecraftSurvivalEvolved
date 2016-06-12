@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Listener;

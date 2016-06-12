@@ -62,7 +62,7 @@ public class BaseStats {
      * @param entity Name of the entity
      * @return BaseStats for this entity
      */
-    public static BaseStats getBaseStatsFor(String entity) {
+    public static BaseStats getBaseAttributesFor(String entity) {
 
         if (cache == null)
             cache = new HashMap<String, BaseStats>();

@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -30,16 +30,16 @@ public class EntityDamageByEntityListener extends BasicListener {
             double torpidity = e.getDamage();
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
-            if (!mseEntity.isTameable())
+            if (!mseEntity.getEntityStats().getBaseStats().isTameable())
                 return;
 
-            mseEntity.increaseTorpidityBy((int) torpidity, player.getUniqueId(), player.getName());
+            mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
         } else if (isMountedAttack(damager)) {
-            e.setDamage(getMSEEntityFromVehicle(damager).getDamage());
+            e.setDamage(getMSEEntityFromVehicle(damager).getEntityStats().getDamage());
 
         } else if (isNPCAttackEvent(damager)) {
-            e.setDamage(getMSEEntityFromEntity(damager).getDamage());
+            e.setDamage(getMSEEntityFromEntity(damager).getEntityStats().getDamage());
 
         }
 

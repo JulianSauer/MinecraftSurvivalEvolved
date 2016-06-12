@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,9 +27,9 @@ public class PlayerInteractListener extends BasicListener {
 
         Player player = e.getPlayer();
 
-        if (mseEntity.isUnconscious()) {
+        if (mseEntity.getTamingHandler().isUnconscious()) {
             openTamingGUI(player, entity, mseEntity);
-        } else if (mseEntity.tamed() && mseEntity.getOwners().equals(player.getUniqueId())) {
+        } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
             if (entity.isEmpty())
                 entity.setPassenger(player);
         }

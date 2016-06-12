@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.utils.ReflectionHelper;
 import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
@@ -35,7 +35,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      */
     public void handleMovement(float[] args) {
 
-        if (entity.isUnconscious()) {
+        if (entity.getTamingHandler().isUnconscious()) {
 
             // Prevent movement when unconscious
             entity.lastYaw = entity.yaw = 0;
@@ -50,17 +50,17 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
         lastViewingDirection = entity.aO;
 
         if (!isMounted()) {
-            if (entity.tamed()) {
+            if (entity.getTamingHandler().isTamed()) {
                 entity.callSuperMovement(new float[]{0, 0});
                 return;
             }
 
-            entity.l(entity.getSpeed() * 2);
+            entity.l(entity.getEntityStats().getSpeed() * 2);
             entity.callSuperMovement(args);
             return;
         }
 
-        entity.l(entity.getSpeed());
+        entity.l(entity.getEntityStats().getSpeed());
         entity.callSuperMovement(calculateMovement());
         jump();
     }
@@ -90,7 +90,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      */
     protected boolean isMounted() {
 
-        return !(entity.isAlpha()
+        return !(entity.getEntityStats().isAlpha()
                 || entity.passengers == null
                 || entity.passengers.size() < 1
                 || !(entity.passengers.get(0) instanceof EntityPlayer)
