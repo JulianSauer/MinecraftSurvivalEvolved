@@ -1,6 +1,20 @@
 # Blocks that can be mined with this entity
 MineableBlocks:
 - "STONE"
+
 # Food needed for taming/feeding
+# The value specifies it's efficiency
 PreferredFood:
-- "RAW_BEEF"
+  NETHER_WARD: 30
+  RAW_BEEF: 20
+  PORK: 20
+  RAW_CHICKEN: 15
+  RABBIT: 15
+  MUTTON: 15
+  COOKED_MUTTON: 15
+  RAW_FISH: 10
+  COOKED_BEEF: 5
+  GRILLED_PORK: 5
+  COOKED_CHICKEN: 5
+  COOKED_FISH: 5
+  COOKED_RABBIT: 5

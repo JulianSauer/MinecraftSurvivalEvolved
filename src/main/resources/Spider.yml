@@ -4,6 +4,21 @@ MineableBlocks:
 - "LOG_2"
 - "LEAVES"
 - "LEAVES_2"
+
 # Food needed for taming/feeding
+# The value specifies it's efficiency
 PreferredFood:
-- "RAW_BEEF"
+  EGG: 30
+  NETHER_WARD: 25
+  RAW_BEEF: 20
+  PORK: 20
+  RAW_CHICKEN: 15
+  RABBIT: 15
+  MUTTON: 15
+  COOKED_MUTTON: 15
+  RAW_FISH: 10
+  COOKED_BEEF: 5
+  GRILLED_PORK: 5
+  COOKED_CHICKEN: 5
+  COOKED_FISH: 5
+  COOKED_RABBIT: 5

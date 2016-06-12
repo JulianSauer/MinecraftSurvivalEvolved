@@ -3,7 +3,9 @@ package de.julianSauer.minecraftSurvivalEvolved.config;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GetValuesFromConfig {
 
@@ -53,6 +55,14 @@ public class GetValuesFromConfig {
         return config.getIntFromConfig(entity, "XpUntilLevelUp");
     }
 
+    public int maxFoodFor(String entity) {
+        return config.getIntFromConfig(entity, "MaxFood");
+    }
+
+    public Map<String, Integer> foodSaturations() {
+        return config.getAllValuesFromConfig("Food");
+    }
+
     public List<Material> mineableBlocksFor(String entity) {
         ArrayList blocks = new ArrayList();
         for (String s : config.getStringListFromConfig(entity, "MineableBlocks")) {
@@ -63,12 +73,13 @@ public class GetValuesFromConfig {
         return blocks;
     }
 
-    public List<Material> preferredFoodFor(String entity) {
-        ArrayList preferredFood = new ArrayList();
-        for (String s : config.getStringListFromConfig(entity, "PreferredFood")) {
+    public Map<Material, Integer> preferredFoodFor(String entity) {
+        Map<Material, Integer> preferredFood = new HashMap<>();
+        Map<String, Object> temp = config.getConfigurationSectionFromConfig(entity, "PreferredFood").getValues(false);
+        for (String s : temp.keySet()) {
             Material tempMaterial = Material.getMaterial(s);
             if (tempMaterial != null)
-                preferredFood.add(tempMaterial);
+                preferredFood.put(tempMaterial, (Integer) temp.get(s));
         }
         return preferredFood;
     }

@@ -18,6 +18,7 @@ public class ConfigHandler {
     private static Map<String, FileConfiguration> cache;
 
     private CustomConfig defaultEntityFile;
+    private CustomConfig foodFile;
 
     private Logger logger;
     private FileConfiguration defaultEntity;
@@ -26,6 +27,8 @@ public class ConfigHandler {
 
         cache = new HashMap<String, FileConfiguration>();
         defaultEntityFile = new CustomConfig("DefaultEntity.yml");
+        foodFile = new CustomConfig("Food.yml");
+        cache.put("Food.yml", foodFile.getConfig());
 
         get = new GetValuesFromConfig(this);
 
@@ -40,12 +43,12 @@ public class ConfigHandler {
      * Tries to convert the value found under the given path to a boolean. If it cannot be found in EntityName.yml or
      * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected boolean getBooleanFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected boolean getBooleanFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isBoolean(path))
             return customConfig.getBoolean(path);
 
@@ -58,12 +61,12 @@ public class ConfigHandler {
      * Tries to convert the value found under the given path to an int. If it cannot be found in EntityName.yml or
      * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected int getIntFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected int getIntFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isInt(path))
             return customConfig.getInt(path);
 
@@ -76,12 +79,12 @@ public class ConfigHandler {
      * Tries to convert the value found under the given path to a double. If it cannot be found in EntityName.yml or
      * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected double getDoubleFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected double getDoubleFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isDouble(path))
             return customConfig.getDouble(path);
 
@@ -94,12 +97,12 @@ public class ConfigHandler {
      * Tries to convert the value found under the given path to a String. If it cannot be found in EntityName.yml or
      * DefaultEntity.yml, an error message will be printed and a default one will be used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected String getStringFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected String getStringFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isString(path))
             return customConfig.getString(path);
 
@@ -112,12 +115,12 @@ public class ConfigHandler {
      * Tries to convert the values found under the given path to a list of Strings. If it cannot be found in
      * EntityName.yml or DefaultEntity.yml, an error message will be printed and a default one is be used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return Value found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected List<String> getStringListFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected List<String> getStringListFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isList(path)) {
             List list = customConfig.getStringList(path);
             if (!list.isEmpty())
@@ -134,12 +137,12 @@ public class ConfigHandler {
      * Tries to convert the values found under the given path to a ConfigurationSection. If it cannot be found in
      * EntityName.yml or DefaultEntity.yml, an error message will be printed and a default one is used.
      *
-     * @param entity Name of the .yml file
-     * @param path   Path to the variable
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
      * @return ConfigurationSection found in EntityName.yml or DefaultEntity.yml (default value if none is found)
      */
-    protected ConfigurationSection getConfigurationSectionFromConfig(String entity, String path) {
-        FileConfiguration customConfig = getConfigFor(entity);
+    protected ConfigurationSection getConfigurationSectionFromConfig(String configName, String path) {
+        FileConfiguration customConfig = getConfigFor(configName);
         if (customConfig != null && customConfig.isSet(path) && customConfig.isConfigurationSection(path))
             return customConfig.getConfigurationSection(path);
 
@@ -149,17 +152,32 @@ public class ConfigHandler {
     }
 
     /**
+     * Tries to convert all values found under the Configuration to a map. If it cannot be found in the .yml file, an
+     * error message will be printed and a default one is used.
+     *
+     * @param configName Name of the .yml file
+     * @return Map of all values found in the configuration
+     */
+    protected Map getAllValuesFromConfig(String configName) {
+        FileConfiguration customConfig = getConfigFor(configName);
+        if (customConfig != null)
+            return customConfig.getValues(true);
+        noValueFound(configName + ".yml");
+        return new HashMap<>();
+    }
+
+    /**
      * Returns the specified .yml file from cache or disk.
      *
-     * @param entity Name of the .yml file
+     * @param configName Name of the .yml file
      * @return Config file or null if it doesn't exist
      */
-    private FileConfiguration getConfigFor(String entity) {
-        if (cache.containsKey(entity)) {
-            return cache.get(entity);
+    private FileConfiguration getConfigFor(String configName) {
+        if (cache.containsKey(configName)) {
+            return cache.get(configName);
         } else {
-            FileConfiguration customConfig = new CustomConfig(entity + ".yml").getConfig();
-            cache.put(entity, customConfig);
+            FileConfiguration customConfig = new CustomConfig(configName + ".yml").getConfig();
+            cache.put(configName, customConfig);
             return customConfig;
         }
     }
@@ -170,6 +188,7 @@ public class ConfigHandler {
     private void createDefaultConfig() {
         logger.info("Initializing config files");
         defaultEntityFile.saveDefaultConfig();
+        foodFile.saveDefaultConfig();
         defaultEntity = defaultEntityFile.getConfig();
 
         String[] defaultMobs = {"CaveSpider", "Giant", "Spider", "Squid", "Wolf"};

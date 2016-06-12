@@ -6,9 +6,10 @@ import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
-import org.bukkit.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -25,7 +26,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     private boolean unconscious;
     private boolean tamed;
 
-    private int tamingProgressInterval;
     private int torporDepletion;
     private int torpidity;
 
@@ -47,7 +47,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         torpidity = 0;
         torporDepletion = 1;
         tamingProgress = 0;
-        tamingProgressInterval = 1;
         unconsciousnessUpdateInterval = 100L;
 
     }
@@ -63,7 +62,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     public boolean isUnconscious() {
         return unconscious && !mceEntity.getEntityStats().isAlpha();
     }
-    
+
     public int getTamingProgress() {
         if (mceEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
@@ -169,12 +168,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     }
 
-    /**
-     * Tries to eat food from the inventory.
-     *
-     * @return True if food was found.
-     */
-    private boolean updateHunger() {
+
+    /*private boolean updateHunger() {
 
         if (mceEntity.getEntityStats().isAlpha())
             return false;
@@ -192,22 +187,12 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
                 else
                     inventory.setItem(i, item);
 
-                // Eat animation
-                mceEntity.setPitchWhileTaming(-30F);
-                mceEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
-                (new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        mceEntity.setPitchWhileTaming(0F);
-                        this.cancel();
-                    }
-                }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
 
                 return true;
             }
         }
         return false;
-    }
+    }*/
 
     class UnconsciousnessTimer extends BukkitRunnable {
 
@@ -217,6 +202,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             mceEntity.setCustomName("");
             hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
             threadCurrentlyRunning = true;
+            mceEntity.getEntityStats().startFoodTimer();
         }
 
         public void run() {
@@ -258,14 +244,30 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             if (!isTameable())
                 return;
 
-            if (updateHunger())
-                tamingProgress += tamingProgressInterval;
-            else
-                tamingProgress = (tamingProgress - tamingProgressInterval) < 0 ? 0 : tamingProgress - tamingProgressInterval;
-
-            if (tamingProgress >= getMaxTamingProgress()) {
-                setSuccessfullyTamed();
+            int tamingIncrease = mceEntity.getEntityStats().updateHunger();
+            System.out.println(getTamingProgress() + "+" + tamingIncrease + "/" + getMaxTamingProgress());
+            if (tamingIncrease > 0) {
+                eatAnimation();
             }
+            tamingProgress += tamingIncrease;
+            if (tamingProgress < 0)
+                tamingProgress = 0;
+            if (tamingProgress >= getMaxTamingProgress())
+                setSuccessfullyTamed();
+
+        }
+
+        private void eatAnimation() {
+
+            mceEntity.setPitchWhileTaming(-30F);
+            mceEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+            (new BukkitRunnable() {
+                @Override
+                public void run() {
+                    mceEntity.setPitchWhileTaming(0F);
+                    this.cancel();
+                }
+            }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
 
         }
 

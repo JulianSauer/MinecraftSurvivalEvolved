@@ -6,6 +6,9 @@ MineableBlocks:
 - "LOG_2"
 - "LEAVES"
 - "LEAVES_2"
+
 # Food needed for taming/feeding
+# The value specifies it's efficiency
 PreferredFood:
-- "GOLD_INGOT"
+  GOLD_INGOT: 25
+  GOLD_NUGGET: 2

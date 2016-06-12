@@ -2,6 +2,19 @@ Speed: 0.2
 # Blocks that can be mined with this entity
 MineableBlocks:
 - "DIRT"
+
 # Food needed for taming/feeding
+# The value specifies it's efficiency
 PreferredFood:
-- "RAW_BEEF"
+  MUTTON: 35
+  RAW_BEEF: 25
+  PORK: 25
+  RAW_CHICKEN: 20
+  RABBIT: 20
+  COOKED_MUTTON: 15
+  RAW_FISH: 15
+  COOKED_BEEF: 10
+  GRILLED_PORK: 10
+  COOKED_CHICKEN: 5
+  COOKED_FISH: 5
+  COOKED_RABBIT: 5
