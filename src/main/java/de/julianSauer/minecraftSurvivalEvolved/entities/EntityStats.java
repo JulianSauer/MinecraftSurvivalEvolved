@@ -191,7 +191,6 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
                 mceEntity.setHealth(mceEntity.getHealth() - 0.5F);
                 currentFoodValue = 0;
             }
-            System.out.println("current food: " + currentFoodValue);
 
         }
     }

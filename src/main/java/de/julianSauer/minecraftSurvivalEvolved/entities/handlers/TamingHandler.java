@@ -245,7 +245,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
                 return;
 
             int tamingIncrease = mceEntity.getEntityStats().updateHunger();
-            System.out.println(getTamingProgress() + "+" + tamingIncrease + "/" + getMaxTamingProgress());
             if (tamingIncrease > 0) {
                 eatAnimation();
             }

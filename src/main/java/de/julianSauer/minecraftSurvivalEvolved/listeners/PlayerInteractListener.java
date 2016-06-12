@@ -28,9 +28,11 @@ public class PlayerInteractListener extends BasicListener {
         Player player = e.getPlayer();
 
         if (mseEntity.getTamingHandler().isUnconscious()) {
-            openTamingGUI(player, entity, mseEntity);
+            openEntityInventory(player, entity, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
-            if (entity.isEmpty())
+            if (player.isSneaking())
+                openEntityInventory(player, entity, mseEntity);
+            else if (entity.isEmpty())
                 entity.setPassenger(player);
         }
 
@@ -62,7 +64,7 @@ public class PlayerInteractListener extends BasicListener {
 
     }
 
-    private void openTamingGUI(Player player, Entity entity, MSEEntity mse) {
+    private void openEntityInventory(Player player, Entity entity, MSEEntity mse) {
 
         String name = entity.getCustomName();
         if (name == null)
