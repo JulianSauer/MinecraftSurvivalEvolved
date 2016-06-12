@@ -53,7 +53,9 @@ public class BarHandler {
     public static String getProgressBar(float currentValue, float maxValue, float barSize) {
 
         if (currentValue > maxValue)
-            throw new NumberFormatException("Failed to calculate progress bar, current value can't be bigger than max value");
+            currentValue = maxValue;
+        else if (currentValue < 0)
+            currentValue = 0;
 
         String bar = "|";
         int progressInPercent = Math.round((currentValue / maxValue) * barSize);
