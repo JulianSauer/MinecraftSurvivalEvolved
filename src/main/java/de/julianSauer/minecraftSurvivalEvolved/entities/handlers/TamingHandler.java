@@ -168,32 +168,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     }
 
-
-    /*private boolean updateHunger() {
-
-        if (mceEntity.getEntityStats().isAlpha())
-            return false;
-
-        Inventory inventory = mceEntity.getInventory();
-
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
-            if (item == null)
-                continue;
-            if (mceEntity.getEntityStats().getBaseStats().getPreferredFood().contains(item.getType())) {
-                item.setAmount(item.getAmount() - 1);
-                if (item.getAmount() <= 0)
-                    inventory.setItem(i, new ItemStack(Material.AIR, 0));
-                else
-                    inventory.setItem(i, item);
-
-
-                return true;
-            }
-        }
-        return false;
-    }*/
-
     class UnconsciousnessTimer extends BukkitRunnable {
 
         UUID hologram;
@@ -207,8 +181,10 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
         public void run() {
             threadCurrentlyRunning = true;
-            if (!mceEntity.isAlive())
+            if (!mceEntity.isAlive()) {
                 this.cancel();
+                return;
+            }
 
             decreaseTorpidityBy(torporDepletion);
             updateTamingProcess();
