@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.ScoreboardHandler;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,14 +65,15 @@ public class PlayerInteractListener extends BasicListener {
 
     }
 
-    private void openEntityInventory(Player player, Entity entity, MSEEntity mse) {
+    private void openEntityInventory(Player player, Entity entity, MSEEntity mseEntity) {
 
         String name = entity.getCustomName();
         if (name == null)
             name = entity.getName();
 
-        Inventory tamingGUI = mse.getInventory();
+        Inventory tamingGUI = mseEntity.getInventory();
         player.openInventory(tamingGUI);
+        ScoreboardHandler.addPlayer(mseEntity, player);
 
     }
 

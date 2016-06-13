@@ -41,7 +41,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
             alphaPredatorMultiplier = 1;
 
         currentFoodValue = baseStats.getMaxFoodValue();
-        foodDepletion = 15;
+        foodDepletion = 5;
         currentXp = 0;
         updateLevel(0);
         if (mceEntity.getTamingHandler().isTamed())
@@ -88,6 +88,14 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
             return "Alpha " + entityType + " (" + level + ")";
         else
             return entityType + " (" + level + ")";
+    }
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public int getCurrentFoodValue() {
+        return currentFoodValue;
     }
 
     public float getMultiplier() {
@@ -184,7 +192,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
             if (!mceEntity.isAlive())
                 this.cancel();
 
-            currentFoodValue -= 5;
+            currentFoodValue -= foodDepletion;
             if (mceEntity.getTamingHandler().isTamed()) // Hunger is updated by taming handler during a taming process
                 updateHunger();
             if (currentFoodValue <= 0) {
