@@ -12,14 +12,14 @@ public class ThisPlugin extends JavaPlugin {
 
     private static ThisPlugin instance;
 
-    private static ConfigHandler configHandler;
+    private static ConfigHandler baseConfigHandler;
 
     @Override
     public void onEnable() {
 
         instance = this;
 
-        configHandler = new ConfigHandler();
+        baseConfigHandler = new ConfigHandler();
 
         EntityRegistry.registerCustomEntities();
 
@@ -53,7 +53,7 @@ public class ThisPlugin extends JavaPlugin {
     }
 
     public static ConfigHandler getConfigHandler() {
-        return configHandler;
+        return baseConfigHandler;
     }
 
 }

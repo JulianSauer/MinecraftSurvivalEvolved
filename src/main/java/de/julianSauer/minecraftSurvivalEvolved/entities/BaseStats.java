@@ -43,24 +43,21 @@ public class BaseStats {
         // Prevent spaces in .yml files
         entity = entity.replace(" ", "");
 
-        tameable = config.get.tameableFor(entity);
-        fortitude = config.get.fortitudeFor(entity);
-        levelCap = config.get.levelCapFor(entity);
-        maxTamingProgress = config.get.maxTamingProgressFor(entity);
-        maxTorpidity = config.get.maxToripidityFor(entity);
-        maxFoodValue = config.get.maxFoodFor(entity);
-        xpUntilLevelUp = config.get.xpUntilLevelUpFor(entity);
-        levelMultiplier = config.get.levelMultiplierFor(entity);
-        alphaProbability = config.get.alphaProbabilityFor(entity);
-        damage = config.get.damageFor(entity);
-        speed = config.get.speedFor(entity);
-        preferredFood = config.get.preferredFoodFor(entity);
-        foodSaturations = config.get.foodSaturations();
+        tameable = config.getTameableFor(entity);
+        fortitude = config.getFortitudeFor(entity);
+        levelCap = config.getLevelCapFor(entity);
+        maxTamingProgress = config.getMaxTamingProgressFor(entity);
+        maxTorpidity = config.getMaxToripidityFor(entity);
+        maxFoodValue = config.getMaxFoodFor(entity);
+        xpUntilLevelUp = config.getXpUntilLevelUpFor(entity);
+        levelMultiplier = config.getLevelMultiplierFor(entity);
+        alphaProbability = config.getAlphaProbabilityFor(entity);
+        damage = config.getDamageFor(entity);
+        speed = config.getSpeedFor(entity);
+        preferredFood = config.getPreferredFoodFor(entity);
+        foodSaturations = config.getFoodSaturations();
         highestFoodSaturation = Collections.max(foodSaturations.values());
-        mineableBlocks = config.get.mineableBlocksFor(entity);
-
-        if (levelCap <= 0)
-            throw new NumberFormatException("Level cap has to be higher than " + levelCap);
+        mineableBlocks = config.getMineableBlocksFor(entity);
 
     }
 
@@ -71,17 +68,15 @@ public class BaseStats {
      * @return BaseStats for this entity
      */
     public static BaseStats getBaseAttributesFor(String entity) {
-
         if (cache == null)
-            cache = new HashMap<String, BaseStats>();
+            cache = new HashMap();
+
         BaseStats ret = cache.get(entity);
         if (ret == null) {
             ret = new BaseStats(entity);
             cache.put(entity, ret);
         }
-
         return ret;
-
     }
 
     public boolean isTameable() {
