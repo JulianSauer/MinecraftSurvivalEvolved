@@ -61,7 +61,7 @@ public abstract class ConfigHandlerBase {
         Boolean ret = getBooleanFromConfig(configName, path);
         if (ret != null)
             return ret;
-        ret = getBooleanFromConfig(parentConfig, parentConfig);
+        ret = getBooleanFromConfig(parentConfig, path);
         if (ret != null)
             return ret;
         return false;
