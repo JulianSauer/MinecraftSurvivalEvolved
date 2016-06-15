@@ -1,13 +1,12 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.ScoreboardHandler;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.InventoryGUI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.Inventory;
 
 public class PlayerInteractListener extends BasicListener {
 
@@ -29,10 +28,10 @@ public class PlayerInteractListener extends BasicListener {
         Player player = e.getPlayer();
 
         if (mseEntity.getTamingHandler().isUnconscious()) {
-            openEntityInventory(player, entity, mseEntity);
+            InventoryGUI.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
             if (player.isSneaking())
-                openEntityInventory(player, entity, mseEntity);
+                InventoryGUI.openTamedGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }
@@ -62,18 +61,6 @@ public class PlayerInteractListener extends BasicListener {
             return;
         if (entity.isEmpty())
             entity.setPassenger(player);
-
-    }
-
-    private void openEntityInventory(Player player, Entity entity, MSEEntity mseEntity) {
-
-        String name = entity.getCustomName();
-        if (name == null)
-            name = entity.getName();
-
-        Inventory tamingGUI = mseEntity.getInventory();
-        player.openInventory(tamingGUI);
-        ScoreboardHandler.addPlayer(mseEntity, player);
 
     }
 
