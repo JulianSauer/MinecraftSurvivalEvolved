@@ -75,14 +75,21 @@ public class ConfigHandler extends ConfigHandlerBase {
     }
 
     public Map<String, Integer> getFoodSaturations() {
+        Map<String, Object> temp = getAllValuesFromConfig("Food.yml");
+        Map<String, Integer> ret = new HashMap<>();
+        for (Map.Entry<String, Object> entry : temp.entrySet()) {
+            try {
+                ret.put(entry.getKey(), (Integer) entry.getValue());
+            } catch (ClassCastException e) {
+                noValueFoundFor("Food.yml");
+            }
+        }
         return getAllValuesFromConfig("Food.yml");
     }
 
     public List<Material> getMineableBlocksFor(String entity) {
         ArrayList blocks = new ArrayList();
         List<String> materialStrings = getStringListFromConfig(entity + ".yml", defaultEntity, "MineableBlocks");
-        if (materialStrings == null)
-            throw new IllegalStateException("No value found in " + entity + ".yml for MineableBlocks");
         for (String materialString : materialStrings) {
             Material tempMaterial = Material.getMaterial(materialString);
             if (tempMaterial != null)
@@ -94,12 +101,15 @@ public class ConfigHandler extends ConfigHandlerBase {
     public Map<Material, Integer> getPreferredFoodFor(String entity) {
         Map<Material, Integer> preferredFood = new HashMap<>();
         ConfigurationSection foodList = getConfigurationSectionFromConfig(entity + ".yml", defaultEntity, "PreferredFood");
-        if (foodList == null)
-            throw new IllegalStateException("No value found in " + entity + ".yml for PreferredFood");
         for (String food : foodList.getValues(false).keySet()) {
             Material tempMaterial = Material.getMaterial(food);
-            if (tempMaterial != null)
-                preferredFood.put(tempMaterial, (Integer) foodList.get(food));
+            if (tempMaterial != null) {
+                try {
+                    preferredFood.put(tempMaterial, (Integer) foodList.get(food));
+                } catch (ClassCastException e) {
+                    noValueFoundFor(entity + ".yml", defaultEntity, "PreferredFood");
+                }
+            }
         }
         return preferredFood;
     }

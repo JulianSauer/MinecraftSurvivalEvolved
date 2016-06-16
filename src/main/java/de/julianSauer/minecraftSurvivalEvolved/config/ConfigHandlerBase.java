@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,17 +34,18 @@ public abstract class ConfigHandlerBase {
     }
 
     /**
-     * Tries to convert the value found under the given path to a Boolean.
+     * Tries to convert the value found under the given path to a boolean.
      *
      * @param configName Name of the .yml file
      * @param path       Path to the variable
      * @return Found value
      */
-    protected Boolean getBooleanFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isBoolean(path))
-            return customConfig.getBoolean(path);
-        return null;
+    protected boolean getBooleanFromConfig(String configName, String path) {
+        Boolean ret = getBoolean(configName, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getBoolean(path);
     }
 
     /**
@@ -58,27 +58,29 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected boolean getBooleanFromConfig(String configName, String parentConfig, String path) {
-        Boolean ret = getBooleanFromConfig(configName, path);
+        Boolean ret = getBoolean(configName, path);
         if (ret != null)
             return ret;
-        ret = getBooleanFromConfig(parentConfig, path);
+        ret = getBoolean(parentConfig, path);
         if (ret != null)
             return ret;
-        return false;
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getBoolean(path);
     }
 
     /**
-     * Tries to convert the value found under the given path to an Integer.
+     * Tries to convert the value found under the given path to an int.
      *
      * @param configName Name of the .yml file
      * @param path       Path to the variable
      * @return Found value
      */
-    protected Integer getIntFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isInt(path))
-            return customConfig.getInt(path);
-        return null;
+    protected int getIntFromConfig(String configName, String path) {
+        Integer ret = getInt(configName, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getInt(path);
     }
 
     /**
@@ -91,27 +93,29 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected int getIntFromConfig(String configName, String parentConfig, String path) {
-        Integer ret = getIntFromConfig(configName, path);
+        Integer ret = getInt(configName, path);
         if (ret != null)
             return ret;
-        ret = getIntFromConfig(parentConfig, path);
+        ret = getInt(parentConfig, path);
         if (ret != null)
             return ret;
-        return 0;
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getInt(path);
     }
 
     /**
-     * Tries to convert the value found under the given path to a Double.
+     * Tries to convert the value found under the given path to a double.
      *
      * @param configName Name of the .yml file
      * @param path       Path to the variable
      * @return Found value
      */
-    protected Double getDoubleFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isDouble(path))
-            return customConfig.getDouble(path);
-        return null;
+    protected double getDoubleFromConfig(String configName, String path) {
+        Double ret = getDouble(configName, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getDouble(path);
     }
 
     /**
@@ -124,13 +128,14 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected double getDoubleFromConfig(String configName, String parentConfig, String path) {
-        Double ret = getDoubleFromConfig(configName, path);
+        Double ret = getDouble(configName, path);
         if (ret != null)
             return ret;
-        ret = getDoubleFromConfig(parentConfig, path);
+        ret = getDouble(parentConfig, path);
         if (ret != null)
             return ret;
-        return 0;
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getDouble(path);
     }
 
     /**
@@ -141,10 +146,11 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected String getStringFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isString(path))
-            return customConfig.getString(path);
-        return null;
+        String ret = getString(configName, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getString(path);
     }
 
     /**
@@ -157,30 +163,29 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected String getStringFromConfig(String configName, String parentConfig, String path) {
-        String ret = getStringFromConfig(configName, path);
+        String ret = getString(configName, path);
         if (ret != null)
             return ret;
-        ret = getStringFromConfig(parentConfig, path);
+        ret = getString(parentConfig, path);
         if (ret != null)
             return ret;
-        return "";
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getString(path);
     }
 
     /**
-     * Tries to convert the values found under the given path to a list of Strings.
+     * Tries to convert the value found under the given path to a list of Strings.
      *
      * @param configName Name of the .yml file
      * @param path       Path to the variable
      * @return Found value
      */
     protected List<String> getStringListFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isList(path)) {
-            List list = customConfig.getStringList(path);
-            if (!list.isEmpty())
-                return list;
-        }
-        return new ArrayList<>();
+        List<String> ret = getStringList(configName, path);
+        if (!ret.isEmpty())
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getStringList(path);
     }
 
     /**
@@ -193,25 +198,29 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected List<String> getStringListFromConfig(String configName, String parentConfig, String path) {
-        List<String> ret = getStringListFromConfig(configName, path);
-        if (!ret.isEmpty())
+        List<String> ret = getStringList(configName, path);
+        if (ret != null && !ret.isEmpty())
             return ret;
-        ret = getStringListFromConfig(parentConfig, path);
-        return ret;
+        ret = getStringList(parentConfig, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getStringList(path);
     }
 
     /**
-     * Tries to convert the values found under the given path to a ConfigurationSection.
+     * Tries to convert the value found under the given path to a ConfigurationSection.
      *
      * @param configName Name of the .yml file
      * @param path       Path to the variable
      * @return Found value
      */
     protected ConfigurationSection getConfigurationSectionFromConfig(String configName, String path) {
-        FileConfiguration customConfig = configs.get(configName);
-        if (customConfig != null && customConfig.isSet(path) && customConfig.isConfigurationSection(path))
-            return customConfig.getConfigurationSection(path);
-        return null;
+        ConfigurationSection ret = getConfigurationSection(configName, path);
+        if (ret != null)
+            return ret;
+        noValueFoundFor(configName, path);
+        return configs.get(configName).getConfigurationSection(path);
     }
 
     /**
@@ -224,13 +233,14 @@ public abstract class ConfigHandlerBase {
      * @return Found value
      */
     protected ConfigurationSection getConfigurationSectionFromConfig(String configName, String parentConfig, String path) {
-        ConfigurationSection ret = getConfigurationSectionFromConfig(configName, path);
+        ConfigurationSection ret = getConfigurationSection(configName, path);
         if (ret != null)
             return ret;
-        ret = getConfigurationSectionFromConfig(parentConfig, path);
+        ret = getConfigurationSection(parentConfig, path);
         if (ret != null)
             return ret;
-        return null;
+        noValueFoundFor(configName, parentConfig, path);
+        return configs.get(parentConfig).getConfigurationSection(path);
     }
 
     /**
@@ -244,6 +254,129 @@ public abstract class ConfigHandlerBase {
         if (customConfig != null)
             return customConfig.getValues(true);
         return new HashMap<>();
+    }
+
+    /**
+     * Prints a warning to the log if a value was not found under the specified path.
+     *
+     * @param configName Name of the config
+     */
+    protected void noValueFoundFor(String configName) {
+        logger.warning("Value is missing or of wrong type in " + configName);
+        logger.warning("Using default value");
+        logger.warning("Delete " + configName + " to get a default one");
+    }
+
+    /**
+     * Prints a warning to the log if a value was not found under the specified path.
+     *
+     * @param configName Name of the config
+     * @param path       Path to the missing value
+     */
+    protected void noValueFoundFor(String configName, String path) {
+        logger.warning("Value is missing or of wrong type " + path + " in " + configName);
+        logger.warning("Using default value");
+        logger.warning("Delete " + configName + " to get a default one");
+    }
+
+    /**
+     * Prints a warning to the log if a value was not found under the specified path.
+     *
+     * @param configName   Name of the config
+     * @param parentConfig Name of the parent config
+     * @param path         Path to the missing value
+     */
+    protected void noValueFoundFor(String configName, String parentConfig, String path) {
+        logger.warning("Value is missing or of wrong type: " + path + " in " + configName + " or " + parentConfig);
+        logger.warning("Using default value");
+        logger.warning("Delete " + configName + " and " + parentConfig + " to get default ones");
+    }
+
+    /**
+     * Tries to convert the value found under the given path to a Boolean.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private Boolean getBoolean(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isBoolean(path))
+            return customConfig.getBoolean(path);
+        return null;
+    }
+
+    /**
+     * Tries to convert the value found under the given path to an Integer.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private Integer getInt(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isInt(path))
+            return customConfig.getInt(path);
+        return null;
+    }
+
+    /**
+     * Tries to convert the value found under the given path to a Double.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private Double getDouble(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isDouble(path))
+            return customConfig.getDouble(path);
+        return null;
+    }
+
+    /**
+     * Tries to convert the value found under the given path to a String.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private String getString(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isString(path))
+            return customConfig.getString(path);
+        return null;
+    }
+
+    /**
+     * Tries to convert the values found under the given path to a list of Strings.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private List<String> getStringList(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isList(path)) {
+            List list = customConfig.getStringList(path);
+            if (!list.isEmpty())
+                return list;
+        }
+        return null;
+    }
+
+    /**
+     * Tries to convert the values found under the given path to a ConfigurationSection.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @return Found value
+     */
+    private ConfigurationSection getConfigurationSection(String configName, String path) {
+        FileConfiguration customConfig = configs.get(configName);
+        if (customConfig != null && customConfig.isSet(path) && customConfig.isConfigurationSection(path))
+            return customConfig.getConfigurationSection(path);
+        return null;
     }
 
     /**
