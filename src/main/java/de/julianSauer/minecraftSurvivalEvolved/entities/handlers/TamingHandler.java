@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
-    private T mceEntity;
+    private T mseEntity;
 
     private int tamingProgress;
 
@@ -37,9 +37,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     private boolean threadCurrentlyRunning;
     private long unconsciousnessUpdateInterval;
 
-    public TamingHandler(T mceEntity) {
+    public TamingHandler(T mseEntity) {
 
-        this.mceEntity = mceEntity;
+        this.mseEntity = mseEntity;
 
         threadCurrentlyRunning = false;
 
@@ -53,49 +53,49 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     public boolean isTamed() {
-        return tamed && !mceEntity.getEntityStats().isAlpha();
+        return tamed && !mseEntity.getEntityStats().isAlpha();
     }
 
     public boolean isTameable() {
-        return mceEntity.getEntityStats().getBaseStats().isTameable() && !tamed && !mceEntity.getEntityStats().isAlpha();
+        return mseEntity.getEntityStats().getBaseStats().isTameable() && !tamed && !mseEntity.getEntityStats().isAlpha();
     }
 
     public boolean isUnconscious() {
-        return unconscious && !mceEntity.getEntityStats().isAlpha();
+        return unconscious && !mseEntity.getEntityStats().isAlpha();
     }
 
     public int getTamingProgress() {
-        if (mceEntity.getEntityStats().isAlpha())
+        if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
-                    + mceEntity.getName() + " at x:" + mceEntity.locX + " y:" + mceEntity.locY + " z:"
-                    + mceEntity.locZ + ")");
+                    + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
+                    + mseEntity.locZ + ")");
         return tamingProgress;
     }
 
     public int getMaxTamingProgress() {
-        if (mceEntity.getEntityStats().isAlpha())
+        if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
-                    + mceEntity.getName() + " at x:" + mceEntity.locX + " y:" + mceEntity.locY + " z:"
-                    + mceEntity.locZ + ")");
-        return (int) Calculator.calculateLevelDependentStatFor(mceEntity.getEntityStats().getBaseStats().getMaxTamingProgress(), mceEntity.getEntityStats().getLevel(), mceEntity.getEntityStats().getMultiplier());
+                    + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
+                    + mseEntity.locZ + ")");
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getEntityStats().getBaseStats().getMaxTamingProgress(), mseEntity.getEntityStats().getLevel(), mseEntity.getEntityStats().getMultiplier());
     }
 
     public UUID getOwner() {
-        if (tamed && !mceEntity.getEntityStats().isAlpha())
+        if (tamed && !mseEntity.getEntityStats().isAlpha())
             return owner;
         return null;
     }
 
     public int getTorpidity() {
-        if (mceEntity.getEntityStats().isAlpha())
+        if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
-                    + mceEntity.getName() + " at x:" + mceEntity.locX + " y:" + mceEntity.locY + " z:"
-                    + mceEntity.locZ + ")");
+                    + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
+                    + mseEntity.locZ + ")");
         return torpidity;
     }
 
     public int getMaxTorpidity() {
-        return (int) Calculator.calculateLevelDependentStatFor(mceEntity.getEntityStats().getBaseStats().getMaxTorpidity(), mceEntity.getEntityStats().getLevel(), mceEntity.getEntityStats().getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getEntityStats().getBaseStats().getMaxTorpidity(), mseEntity.getEntityStats().getLevel(), mseEntity.getEntityStats().getMultiplier());
     }
 
     /**
@@ -104,7 +104,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @return Current location of this entity
      */
     public Location getLocation() {
-        return new Location(mceEntity.getWorld().getWorld(), mceEntity.locX, mceEntity.locY, mceEntity.locZ);
+        return new Location(mseEntity.getWorld().getWorld(), mseEntity.locX, mseEntity.locY, mseEntity.locZ);
     }
 
     /**
@@ -115,7 +115,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
 
-        if (mceEntity.getEntityStats().isAlpha())
+        if (mseEntity.getEntityStats().isAlpha())
             return;
         tamer = lastDamager;
         torpidity += torpidityIncrease;
@@ -139,14 +139,14 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      */
     private boolean setSuccessfullyTamed() {
 
-        if (isTameable() && tamer != null && !mceEntity.getEntityStats().isAlpha()) {
+        if (isTameable() && tamer != null && !mseEntity.getEntityStats().isAlpha()) {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
-            mceEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
-            mceEntity.setCustomName(mceEntity.getEntityStats().getDefaultName());
-            BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mceEntity.getName());
-            InventoryGUI.closeTamingInventoriesOf(mceEntity, Bukkit.getPlayer(tamer));
+            mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
+            mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
+            BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
+            InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
             return true;
         } else {
             return false;
@@ -159,7 +159,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      */
     private void updateConsciousness() {
 
-        if (mceEntity.getEntityStats().isAlpha())
+        if (mseEntity.getEntityStats().isAlpha())
             return;
 
         if (isUnconscious() && torpidity <= 0) {
@@ -167,7 +167,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             if (unconsciousnessTimer != null && threadCurrentlyRunning) {
                 unconsciousnessTimer.cancel();
             }
-        } else if (!isUnconscious() && torpidity >= mceEntity.getEntityStats().getBaseStats().getFortitude()) {
+        } else if (!isUnconscious() && torpidity >= mseEntity.getEntityStats().getBaseStats().getFortitude()) {
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(ThisPlugin.getInstance(), 0, unconsciousnessUpdateInterval);
@@ -180,15 +180,15 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         UUID hologram;
 
         public UnconsciousnessTimer() {
-            mceEntity.setCustomName("");
+            mseEntity.setCustomName("");
             hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
             threadCurrentlyRunning = true;
-            mceEntity.getEntityStats().startFoodTimer();
+            mseEntity.getEntityStats().startFoodTimer();
         }
 
         public void run() {
             threadCurrentlyRunning = true;
-            if (!mceEntity.isAlive()) {
+            if (!mseEntity.isAlive()) {
                 this.cancel();
                 return;
             }
@@ -205,7 +205,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         @Override
         public void cancel() {
             HologramHandler.despawnHologram(hologram);
-            mceEntity.setCustomName(mceEntity.getEntityStats().getDefaultName());
+            mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
             threadCurrentlyRunning = false;
             super.cancel();
         }
@@ -227,7 +227,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             if (!isTameable())
                 return;
 
-            int tamingIncrease = mceEntity.getEntityStats().updateHunger();
+            int tamingIncrease = mseEntity.getEntityStats().updateHunger();
             if (tamingIncrease > 0) {
                 eatAnimation();
             }
@@ -241,12 +241,12 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
         private void eatAnimation() {
 
-            mceEntity.setPitchWhileTaming(-30F);
-            mceEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+            mseEntity.setPitchWhileTaming(-30F);
+            mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
             (new BukkitRunnable() {
                 @Override
                 public void run() {
-                    mceEntity.setPitchWhileTaming(0F);
+                    mseEntity.setPitchWhileTaming(0F);
                     this.cancel();
                 }
             }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
@@ -255,8 +255,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
         private String[] getHologramText() {
             return new String[]{
-                    ChatColor.DARK_AQUA + mceEntity.getEntityStats().getDefaultName(),
-                    ChatColor.DARK_AQUA + "Health: " + (int) mceEntity.getHealth() + "/" + (int) mceEntity.getMaxHealth(),
+                    ChatColor.DARK_AQUA + mseEntity.getEntityStats().getDefaultName(),
+                    ChatColor.DARK_AQUA + "Health: " + (int) mseEntity.getHealth() + "/" + (int) mseEntity.getMaxHealth(),
                     ChatColor.DARK_PURPLE + BarHandler.getProgressBar(getTorpidity(), getMaxTorpidity()),
                     ChatColor.GOLD + BarHandler.getProgressBar(getTamingProgress(), getMaxTamingProgress())
             };

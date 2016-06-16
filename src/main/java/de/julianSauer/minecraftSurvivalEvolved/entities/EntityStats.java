@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class EntityStats<T extends EntityInsentient & MSEEntity> {
 
-    private T mceEntity;
+    private T mseEntity;
 
     private BaseStats baseStats;
 
@@ -29,12 +29,12 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
 
     private FoodTimer foodTimer;
 
-    public EntityStats(T mceEntity) {
+    public EntityStats(T mseEntity) {
 
-        this.mceEntity = mceEntity;
-        entityType = mceEntity.getName();
+        this.mseEntity = mseEntity;
+        entityType = mseEntity.getName();
 
-        baseStats = BaseStats.getBaseAttributesFor(mceEntity.getName());
+        baseStats = BaseStats.getBaseAttributesFor(mseEntity.getName());
         if (Calculator.getRandomInt(101) <= baseStats.getAlphaProbability())
             alphaPredatorMultiplier = 4;
         else
@@ -44,7 +44,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
         foodDepletion = 5;
         currentXp = 0;
         updateLevel(0);
-        if (mceEntity.getTamingHandler().isTamed())
+        if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
 
     }
@@ -112,8 +112,8 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
             level = Calculator.getRandomInt(baseStats.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
-        if (!mceEntity.getTamingHandler().isTamed()) {
-            mceEntity.setCustomName(getDefaultName());
+        if (!mseEntity.getTamingHandler().isTamed()) {
+            mseEntity.setCustomName(getDefaultName());
         }
     }
 
@@ -139,7 +139,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
      */
     public int updateHunger() {
 
-        Inventory inventory = mceEntity.getInventory();
+        Inventory inventory = mseEntity.getInventory();
 
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
@@ -165,7 +165,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
                 return baseStats.getPreferredFood().get(itemMaterial);
             }
         }
-        if (!mceEntity.getTamingHandler().isTamed())
+        if (!mseEntity.getTamingHandler().isTamed())
             // Taming bar decreases if entity is not fed continuously
             return baseStats.getHighestFoodSaturation() < baseStats.getMaxFoodValue() - currentFoodValue ? -10 : 0;
         return 0;
@@ -190,14 +190,14 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
         @Override
         public void run() {
 
-            if (!mceEntity.isAlive())
+            if (!mseEntity.isAlive())
                 this.cancel();
 
             currentFoodValue -= foodDepletion;
-            if (mceEntity.getTamingHandler().isTamed()) // Hunger is updated by taming handler during a taming process
+            if (mseEntity.getTamingHandler().isTamed()) // Hunger is updated by taming handler during a taming process
                 updateHunger();
             if (currentFoodValue <= 0) {
-                mceEntity.setHealth(mceEntity.getHealth() - 0.5F);
+                mseEntity.setHealth(mseEntity.getHealth() - 0.5F);
                 currentFoodValue = 0;
             }
 

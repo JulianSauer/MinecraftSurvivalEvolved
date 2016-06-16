@@ -10,6 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Handles menu navigation and prevents unwanted interactions with custom GUIs
+ */
 public class InventoryClickListener extends BasicInventoryListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)

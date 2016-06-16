@@ -4,6 +4,9 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 
+/**
+ * Handles mining of blocks wile riding.
+ */
 public class BlockDamageListener extends BasicListener {
 
     @EventHandler

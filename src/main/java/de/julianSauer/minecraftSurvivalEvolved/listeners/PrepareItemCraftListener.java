@@ -8,6 +8,9 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Handles smooth crafting of custom recipies.
+ */
 public class PrepareItemCraftListener implements Listener {
 
     @EventHandler

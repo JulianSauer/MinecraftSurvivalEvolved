@@ -10,13 +10,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
+/**
+ * Handles drops of custom entities.
+ */
 public class EntityDeathListener extends BasicListener {
 
-    /**
-     * Adds inventory items of an entity to the drops on death.
-     *
-     * @param e
-     */
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
 

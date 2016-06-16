@@ -12,6 +12,9 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
 
+/**
+ * Handles attacks with tranquilizer arrows. Receives metadata from BowShootListener.
+ */
 public class EntityDamageByEntityListener extends BasicListener {
 
     @EventHandler

@@ -8,6 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+/**
+ * Handles mounting of tamed entities and opening of their main menu.
+ */
 public class PlayerInteractListener extends BasicListener {
 
     boolean enableTestRiding = false;

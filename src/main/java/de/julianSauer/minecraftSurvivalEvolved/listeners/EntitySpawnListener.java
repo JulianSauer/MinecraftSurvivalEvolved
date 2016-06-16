@@ -7,13 +7,16 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
+/**
+ * Handles particle effects of alpha entities.
+ * TODO: Add same effect on server startup.
+ */
 public class EntitySpawnListener extends BasicListener {
 
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
 
-        // Adds particle effect to alpha entities
         Entity entity = e.getEntity();
         MSEEntity mseEntity = getMSEEntityFromEntity(entity);
         if (mseEntity == null
