@@ -5,6 +5,7 @@ import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.InventoryGUI;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -97,7 +98,12 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         return (int) Calculator.calculateLevelDependentStatFor(mceEntity.getEntityStats().getBaseStats().getMaxTorpidity(), mceEntity.getEntityStats().getLevel(), mceEntity.getEntityStats().getMultiplier());
     }
 
-    private Location getLocation() {
+    /**
+     * Creates an org.bukkit.Location based on the entity's coordinates.
+     *
+     * @return Current location of this entity
+     */
+    public Location getLocation() {
         return new Location(mceEntity.getWorld().getWorld(), mceEntity.locX, mceEntity.locY, mceEntity.locZ);
     }
 
@@ -140,6 +146,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             mceEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
             mceEntity.setCustomName(mceEntity.getEntityStats().getDefaultName());
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mceEntity.getName());
+            InventoryGUI.closeTamingInventoriesOf(mceEntity, Bukkit.getPlayer(tamer));
             return true;
         } else {
             return false;

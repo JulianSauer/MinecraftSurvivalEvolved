@@ -35,6 +35,7 @@ public class ThisPlugin extends JavaPlugin {
         pluginManager.registerEvents(new EntitySpawnListener(), this);
         pluginManager.registerEvents(new InventoryClickListener(), this);
         pluginManager.registerEvents(new InventoryCloseListener(), this);
+        pluginManager.registerEvents(new InventoryDragListener(), this);
         pluginManager.registerEvents(new PlayerInteractListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
 

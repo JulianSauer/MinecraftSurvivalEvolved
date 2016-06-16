@@ -19,7 +19,7 @@ public class ScoreboardHandler {
 
     private static Map<UUID, ScoreboardUpdater> activeScoreboards;
 
-    private static Scoreboard emptyScoreboard;
+    private static Scoreboard emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();;
 
     private ScoreboardHandler() {
     }
@@ -42,8 +42,6 @@ public class ScoreboardHandler {
      * @param player Player that won't see a scoreboard anymore
      */
     public static void removePlayer(Player player) {
-        if (emptyScoreboard == null)
-            emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         player.setScoreboard(emptyScoreboard);
     }
 

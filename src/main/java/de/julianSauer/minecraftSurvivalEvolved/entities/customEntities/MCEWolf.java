@@ -51,7 +51,7 @@ public class MCEWolf extends EntityWolf implements MSEEntity {
 
     public Inventory getInventory() {
         if (inventory == null)
-            inventory = Bukkit.createInventory(this, 18, this.getName());
+            inventory = Bukkit.createInventory(this, 18, this.getName() + " Inventory");
         return inventory;
     }
 

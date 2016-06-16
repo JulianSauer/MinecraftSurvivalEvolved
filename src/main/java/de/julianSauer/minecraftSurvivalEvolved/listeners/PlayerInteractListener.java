@@ -31,7 +31,7 @@ public class PlayerInteractListener extends BasicListener {
             InventoryGUI.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
             if (player.isSneaking())
-                InventoryGUI.openTamedGUI(player, mseEntity);
+                InventoryGUI.openMainGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }

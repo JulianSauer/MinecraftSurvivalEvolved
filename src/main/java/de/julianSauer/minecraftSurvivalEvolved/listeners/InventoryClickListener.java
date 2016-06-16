@@ -4,71 +4,124 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import de.julianSauer.minecraftSurvivalEvolved.visuals.InventoryGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryClickListener extends BasicListener {
+public class InventoryClickListener extends BasicInventoryListener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
 
-        Inventory inventory = e.getClickedInventory();
-        InventoryHolder inventoryHolder = inventory.getHolder();
-        if (!(inventoryHolder instanceof MSEEntity))
-            return;
+        if (playerClickedOnButtonMenu(e)) {
 
-        MSEEntity mseEntity = (MSEEntity) inventoryHolder;
-        if (!(e.getWhoClicked() instanceof Player))
-            return;
+            Inventory inventory = e.getClickedInventory();
+            Player player = (Player) e.getWhoClicked();
+            MSEEntity mseEntity = (MSEEntity) inventory.getHolder();
 
-        Player player = (Player) e.getWhoClicked();
-
-        if (inventory.getName().equals("Entity Stats")) {
-
-            // Entity stats GUI
-            ItemStack[] buttons = InventoryGUI.getStatsButtons();
-            for (int i = 0; i < buttons.length; i++)
-                if (!compareItems(buttons[i], inventory.getItem(i)))
-                    return;
-
-            if(e.getCurrentItem().getItemMeta().getDisplayName().equals("Back")) {
-                e.setCancelled(true);
-                InventoryGUI.openTamedGUI(player, mseEntity);
+            if (inventory.getName().equals("Entity Options")) {
+                // Entity options GUI
+                e.setCancelled(
+                        processEntityOptionsMenu(player, mseEntity, inventory, e.getCurrentItem())
+                );
+            } else if (inventory.getName().equals(mseEntity.getEntityStats().getEntityType())) {
+                // Main GUI
+                e.setCancelled(
+                        processMainMenu(player, mseEntity, inventory, e.getCurrentItem())
+                );
+            } else if (inventory.getName().contains(" Inventory")) {
+                // Inventory GUI
+                e.setCancelled(
+                        processInventoryMenu(player, mseEntity, inventory, e.getCurrentItem())
+                );
             }
-
-        } else if (inventory.getName().equals(mseEntity.getEntityStats().getEntityType())) {
-
-            // Tamed GUI
-            ItemStack[] buttons = InventoryGUI.getTamedButtons();
-            for (int i = 0; i < buttons.length; i++)
-                if (!compareItems(buttons[i], inventory.getItem(i)))
-                    return;
-
-            if(e.getCurrentItem().getItemMeta().getDisplayName().equals("Open Inventory")) {
+        }
+        if (playerInteractsWithCustomGUI(e)) {
+            if (e.isShiftClick()
+                    || e.getClick() == ClickType.DOUBLE_CLICK
+                    || e.getClick() == ClickType.NUMBER_KEY)
                 e.setCancelled(true);
-                InventoryGUI.openTamingGUI(player, mseEntity);
-            }
-            if(e.getCurrentItem().getItemMeta().getDisplayName().equals("Open Entity Stats")) {
-                e.setCancelled(true);
-                InventoryGUI.openStatsGUI(player, mseEntity);
-            }
+            else if ((e.isRightClick()
+                    || e.getClick() == ClickType.DROP
+                    || e.getClick() == ClickType.CONTROL_DROP
 
+            ) && e.getClickedInventory().getHolder() instanceof MSEEntity)
+                e.setCancelled(true);
         }
 
     }
 
-    /**
-     * Compares type and name of an item.
-     *
-     * @param item1 First item
-     * @param item2 Second item
-     * @return True if type and name are equal
-     */
-    private boolean compareItems(ItemStack item1, ItemStack item2) {
-        return item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName())
-                && item1.getType() == item2.getType();
+    private boolean processEntityOptionsMenu(Player player, MSEEntity mseEntity, Inventory inventory, ItemStack currentItem) {
+
+        ItemStack[] buttons = InventoryGUI.getOptionsMenuButtons();
+        if (!buttonsAreValid(buttons, inventory.getContents()))
+            return false;
+
+        if (buttonNamesAreEqual(currentItem, buttons[0])) {
+            // Back
+            InventoryGUI.openMainGUI(player, mseEntity);
+
+        } else if (buttonNamesAreEqual(currentItem, buttons[1])) {
+            // Change name
+            // TODO
+            return true;
+
+        } else if (buttonNamesAreEqual(currentItem, buttons[2])) {
+            // Health
+            // TODO
+            return true;
+
+        } else if (buttonNamesAreEqual(currentItem, buttons[3])) {
+            // Damage
+            // TODO
+            return true;
+
+        } else if (buttonNamesAreEqual(currentItem, buttons[4])) {
+            // Food
+            // TODO
+            return true;
+
+        }
+        return false;
+
     }
+
+    private boolean processMainMenu(Player player, MSEEntity mseEntity, Inventory inventory, ItemStack currentItem) {
+
+        ItemStack[] buttons = InventoryGUI.getMainMenuButtons();
+        if (!buttonsAreValid(buttons, inventory.getContents()))
+            return false;
+
+        if (buttonNamesAreEqual(currentItem, buttons[0])) {
+            // Open inventory
+            InventoryGUI.openInventoryGUI(player, mseEntity);
+            return true;
+
+        } else if (buttonNamesAreEqual(currentItem, buttons[1])) {
+            // Open options
+            InventoryGUI.openOptionsGUI(player, mseEntity, false);
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean processInventoryMenu(Player player, MSEEntity mseEntity, Inventory inventory, ItemStack currentItem) {
+
+        ItemStack[] buttons = InventoryGUI.getInventoryMenuButtons();
+        if (!buttonsAreValid(buttons, inventory.getContents()))
+            return false;
+
+        if (buttonNamesAreEqual(currentItem, buttons[0])) {
+            // Back
+            InventoryGUI.openMainGUI(player, mseEntity);
+            return true;
+        }
+        return false;
+
+    }
+
 
 }
