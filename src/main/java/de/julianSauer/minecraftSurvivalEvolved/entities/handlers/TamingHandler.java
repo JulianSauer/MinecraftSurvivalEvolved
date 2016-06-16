@@ -167,7 +167,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             if (unconsciousnessTimer != null && threadCurrentlyRunning) {
                 unconsciousnessTimer.cancel();
             }
-        } else if (!isUnconscious() && torpidity >= mseEntity.getEntityStats().getBaseStats().getFortitude()) {
+        } else if (!isUnconscious() && torpidity >= mseEntity.getEntityStats().getFortitude()) {
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(ThisPlugin.getInstance(), 0, unconsciousnessUpdateInterval);
