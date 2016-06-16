@@ -146,7 +146,8 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
             if (item == null)
                 continue;
 
-            if (baseStats.getPreferredFood().containsKey(item.getType())) {
+            Material itemMaterial = item.getType();
+            if (baseStats.getPreferredFood().containsKey(itemMaterial)) {
 
                 int saturation = baseStats.getFoodsaturationFor(item.getType().toString());
                 if (saturation <= 0)
@@ -161,7 +162,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
                 else
                     inventory.setItem(i, item);
 
-                return baseStats.getPreferredFood().get(item.getType());
+                return baseStats.getPreferredFood().get(itemMaterial);
             }
         }
         if (!mceEntity.getTamingHandler().isTamed())
