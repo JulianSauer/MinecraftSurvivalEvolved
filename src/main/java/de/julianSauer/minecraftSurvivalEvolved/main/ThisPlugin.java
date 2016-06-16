@@ -4,7 +4,10 @@ import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.*;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.TestPacketListener;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +16,8 @@ public class ThisPlugin extends JavaPlugin {
     private static ThisPlugin instance;
 
     private static ConfigHandler configHandler;
+
+    private static PacketInjector packetInjector;
 
     @Override
     public void onEnable() {
@@ -40,6 +45,10 @@ public class ThisPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
 
         instance = this;
+
+        packetInjector = new PacketInjector();
+        PacketEventManager.registerPacketListener(new TestPacketListener());
+
         getLogger().info("Enabled");
 
     }
@@ -56,6 +65,10 @@ public class ThisPlugin extends JavaPlugin {
 
     public static ConfigHandler getConfigHandler() {
         return configHandler;
+    }
+
+    public static PacketInjector getPacketInjector() {
+        return packetInjector;
     }
 
 }
