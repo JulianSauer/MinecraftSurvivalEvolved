@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 /**
  * Handles mounting of tamed entities and opening of their main menu.
  */
-public class PlayerInteractListener extends BasicListener {
+public class PlayerInteractListener implements BasicEventListener {
 
     boolean enableTestRiding = false;
 

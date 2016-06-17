@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Handles smooth crafting of custom recipies.
  */
-public class PrepareItemCraftListener implements Listener {
+public class PrepareItemCraftListener implements BasicEventListener {
 
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {

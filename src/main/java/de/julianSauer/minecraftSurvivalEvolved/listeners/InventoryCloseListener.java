@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 /**
  * Removes scoreboard when a player closes a custom inventory.
  */
-public class InventoryCloseListener extends BasicListener {
+public class InventoryCloseListener implements BasicEventListener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {

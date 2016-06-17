@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * Handles drops of custom entities.
  */
-public class EntityDeathListener extends BasicListener {
+public class EntityDeathListener implements BasicEventListener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {

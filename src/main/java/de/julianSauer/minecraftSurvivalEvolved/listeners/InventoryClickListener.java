@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 /**
  * Handles menu navigation and prevents unwanted interactions with custom GUIs
  */
-public class InventoryClickListener extends BasicInventoryListener {
+public class InventoryClickListener implements BasicInventoryListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {

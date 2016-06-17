@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
  * Handles particle effects of alpha entities.
  * TODO: Add same effect on server startup.
  */
-public class EntitySpawnListener extends BasicListener {
+public class EntitySpawnListener implements BasicEventListener {
 
 
     @EventHandler

@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 /**
  * Handles mining of blocks wile riding.
  */
-public class BlockDamageListener extends BasicListener {
+public class BlockDamageListener implements BasicEventListener {
 
     @EventHandler
     public void onBlockDamage(BlockDamageEvent e) {

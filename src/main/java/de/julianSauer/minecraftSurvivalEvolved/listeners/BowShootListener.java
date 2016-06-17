@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -15,7 +14,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 /**
  * Handles attacks with tranquilizer arrows. Sets metadata for EntityDamageByEntityListener.
  */
-public class BowShootListener extends BasicListener {
+public class BowShootListener implements BasicEventListener {
 
     @EventHandler
     public void onBowShoot(EntityShootBowEvent e) {

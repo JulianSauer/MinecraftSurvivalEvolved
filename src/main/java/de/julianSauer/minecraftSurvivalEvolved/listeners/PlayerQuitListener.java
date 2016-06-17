@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * Stops listening for packets for this player.
  */
-public class PlayerQuitListener extends BasicListener {
+public class PlayerQuitListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {

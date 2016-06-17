@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Handles attacks with tranquilizer arrows. Receives metadata from BowShootListener.
  */
-public class EntityDamageByEntityListener extends BasicListener {
+public class EntityDamageByEntityListener implements BasicEventListener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {

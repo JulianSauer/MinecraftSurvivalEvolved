@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 /**
  * Prevents unwanted interaction with custom GUIs
  */
-public class InventoryDragListener extends BasicInventoryListener {
+public class InventoryDragListener implements BasicInventoryListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryDrag(InventoryDragEvent e) {

@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * Starts listening for packets for this player.
  */
-public class PlayerJoinListener extends BasicListener {
+public class PlayerJoinListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
