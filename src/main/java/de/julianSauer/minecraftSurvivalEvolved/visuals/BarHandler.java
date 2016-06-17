@@ -1,10 +1,10 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.craftbukkit.v1_9_R1.boss.CraftBossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -20,7 +20,7 @@ public class BarHandler {
      * @param entityType Type of the tamed entity to be mentioned in the message
      */
     public static void sendTamedTextTo(Player receiver, String entityType) {
-        BossBar bossBar = new CraftBossBar("You have tamed a " + entityType + "!", BarColor.GREEN, BarStyle.SOLID);
+        BossBar bossBar = Bukkit.createBossBar("You have tamed a " + entityType + "!", BarColor.GREEN, BarStyle.SOLID);
         bossBar.addPlayer(receiver);
         (new BukkitRunnable() {
             @Override
