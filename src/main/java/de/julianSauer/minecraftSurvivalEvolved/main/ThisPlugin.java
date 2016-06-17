@@ -4,6 +4,8 @@ import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.*;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InUpdateSignListener;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import org.bukkit.plugin.PluginManager;
@@ -40,11 +42,14 @@ public class ThisPlugin extends JavaPlugin {
         pluginManager.registerEvents(new InventoryCloseListener(), this);
         pluginManager.registerEvents(new InventoryDragListener(), this);
         pluginManager.registerEvents(new PlayerInteractListener(), this);
+        pluginManager.registerEvents(new PlayerJoinListener(), this);
+        pluginManager.registerEvents(new PlayerQuitListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
 
-        instance = this;
-
         packetInjector = new PacketInjector();
+        PacketEventManager.registerPacketListener(new InUpdateSignListener());
+
+        instance = this;
 
         getLogger().info("Enabled");
 
