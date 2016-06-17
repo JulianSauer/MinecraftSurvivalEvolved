@@ -9,30 +9,36 @@ public class PacketInjector {
 
     /**
      * Adds a player to the packet listener.
+     *
      * @param player
      */
     public void addPlayer(Player player) {
-        if(!(player instanceof CraftPlayer))
+        if (!(player instanceof CraftPlayer))
             return;
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         Channel channel = entityPlayer.playerConnection.networkManager.channel;
-        if (channel.pipeline().get("PacketInjector") == null) {
+
+        String key = entityPlayer.getName();
+        if (channel.pipeline().get(key) == null) {
             PacketEventManager customPacketListener = new PacketEventManager();
-            channel.pipeline().addBefore("packet_handler", "PacketInjector", customPacketListener);
+            channel.pipeline().addBefore("packet_handler", key, customPacketListener);
         }
     }
 
     /**
      * Removes a player from the packet listener.
+     *
      * @param player
      */
     public void removePlayer(Player player) {
-        if(!(player instanceof CraftPlayer))
+        if (!(player instanceof CraftPlayer))
             return;
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         Channel channel = entityPlayer.playerConnection.networkManager.channel;
-        if (channel.pipeline().get("PacketInjector") != null) {
-            channel.pipeline().remove("PacketInjector");
+
+        String key = player.getName();
+        if (channel.pipeline().get(key) != null) {
+            channel.pipeline().remove(key);
         }
     }
 

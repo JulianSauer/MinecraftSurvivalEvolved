@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.NameChangeHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.SignGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -58,6 +59,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             player.closeInventory();
+            NameChangeHandler.markEntityForNameChange(player.getName(), mseEntity);
             SignGUI.sendSignToPlayer(player);
         }
     }
