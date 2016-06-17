@@ -5,7 +5,7 @@ import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.InventoryGUI;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.InventoryGUI;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
