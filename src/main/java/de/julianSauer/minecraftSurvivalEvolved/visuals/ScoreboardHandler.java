@@ -19,7 +19,7 @@ public class ScoreboardHandler {
 
     private static Map<UUID, ScoreboardUpdater> activeScoreboards;
 
-    private static Scoreboard emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();;
+    private static Scoreboard emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
     private ScoreboardHandler() {
     }
