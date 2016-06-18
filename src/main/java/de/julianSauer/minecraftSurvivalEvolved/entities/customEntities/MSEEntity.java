@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface MSEEntity extends Tameable, InventoryHolder {
 
+    String getName();
+
     void setCustomName(String name);
 
     EntityStats getEntityStats();

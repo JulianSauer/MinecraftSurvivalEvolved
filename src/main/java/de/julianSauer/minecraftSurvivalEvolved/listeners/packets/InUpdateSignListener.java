@@ -4,6 +4,8 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.NameChangeHandl
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.server.v1_9_R1.PacketPlayInUpdateSign;
 
+import java.util.UUID;
+
 /**
  * Listens for incoming sign updates to change the name of an MSEEntity.
  */
@@ -14,7 +16,7 @@ public class InUpdateSignListener implements PacketListener<PacketPlayInUpdateSi
         String newName = "";
         for (String s : packet.b())
             newName += s;
-        String player = context.name();
+        UUID player = getUUIDFrom(context);
         NameChangeHandler.changeNameOfEntity(player, newName);
     }
 

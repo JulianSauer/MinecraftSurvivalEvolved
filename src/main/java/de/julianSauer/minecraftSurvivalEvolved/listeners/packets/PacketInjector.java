@@ -18,7 +18,7 @@ public class PacketInjector {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         Channel channel = entityPlayer.playerConnection.networkManager.channel;
 
-        String key = entityPlayer.getName();
+        String key = entityPlayer.getUniqueID().toString();
         if (channel.pipeline().get(key) == null) {
             PacketEventManager customPacketListener = new PacketEventManager();
             channel.pipeline().addBefore("packet_handler", key, customPacketListener);
@@ -36,7 +36,7 @@ public class PacketInjector {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         Channel channel = entityPlayer.playerConnection.networkManager.channel;
 
-        String key = player.getName();
+        String key = player.getUniqueId().toString();
         if (channel.pipeline().get(key) != null) {
             channel.pipeline().remove(key);
         }

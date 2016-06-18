@@ -59,7 +59,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             player.closeInventory();
-            NameChangeHandler.markEntityForNameChange(player.getName(), mseEntity);
+            NameChangeHandler.markEntityForNameChange(player.getUniqueId(), mseEntity);
             SignGUI.sendSignToPlayer(player);
         }
     }
