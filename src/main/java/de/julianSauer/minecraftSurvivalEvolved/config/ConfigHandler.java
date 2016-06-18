@@ -3,9 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,32 +85,28 @@ public class ConfigHandler extends ConfigHandlerBase {
         return getAllValuesFromConfig("Food.yml");
     }
 
-    public List<Material> getMineableBlocksFor(String entity) {
-        ArrayList blocks = new ArrayList();
-        List<String> materialStrings = getStringListFromConfig(entity + ".yml", defaultEntity, "MineableBlocks");
-        for (String materialString : materialStrings) {
-            Material tempMaterial = Material.getMaterial(materialString);
-            if (tempMaterial != null)
-                blocks.add(tempMaterial);
-        }
-        return blocks;
+    public Map<Material, Integer> getMineableBlocksFor(String entity) {
+        return getMapFromSection(entity, "MineableBlocks");
     }
 
     public Map<Material, Integer> getPreferredFoodFor(String entity) {
-        Map<Material, Integer> preferredFood = new HashMap<>();
-        ConfigurationSection foodList = getConfigurationSectionFromConfig(entity + ".yml", defaultEntity, "PreferredFood");
-        for (String food : foodList.getValues(false).keySet()) {
-            Material tempMaterial = Material.getMaterial(food);
-            if (tempMaterial != null) {
+        return getMapFromSection(entity, "PreferredFood");
+    }
+
+    private Map<Material, Integer> getMapFromSection(String entity, String sectionName) {
+        Map<Material, Integer> returnMap = new HashMap<>();
+        ConfigurationSection configurationSection = getConfigurationSectionFromConfig(entity + ".yml", defaultEntity, sectionName);
+        for (String materialName : configurationSection.getValues(false).keySet()) {
+            Material material = Material.getMaterial(materialName);
+            if (material != null) {
                 try {
-                    preferredFood.put(tempMaterial, (Integer) foodList.get(food));
+                    returnMap.put(material, (Integer) configurationSection.get(materialName));
                 } catch (ClassCastException e) {
-                    noValueFoundFor(entity + ".yml", defaultEntity, "PreferredFood");
+                    noValueFoundFor(entity + ".yml", defaultEntity, sectionName);
                 }
             }
         }
-        return preferredFood;
+        return returnMap;
     }
-
 
 }

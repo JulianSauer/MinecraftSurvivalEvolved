@@ -1,11 +1,12 @@
 Damage: 10.0
 MaxTorpidity: 500
 # Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
 MineableBlocks:
-- "LOG"
-- "LOG_2"
-- "LEAVES"
-- "LEAVES_2"
+  LOG: 4
+  LOG_2: 4
+  LEAVES: 3
+  LEAVES_2: 3
 
 # Food needed for taming/feeding
 # The value specifies it's efficiency

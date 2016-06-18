@@ -1,7 +1,8 @@
 Speed: 0.2
 # Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
 MineableBlocks:
-- "DIRT"
+  DIRT: 4
 
 # Food needed for taming/feeding
 # The value specifies it's efficiency

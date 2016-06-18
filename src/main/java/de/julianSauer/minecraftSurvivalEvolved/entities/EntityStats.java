@@ -77,6 +77,10 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
         return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), level, getMultiplier());
     }
 
+    public double getMaxDamage() {
+        return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), baseStats.getLevelCap(), getMultiplier());
+    }
+
     public float getSpeed() {
         float speedMultiplier = getMultiplier();
         speedMultiplier /= 2;

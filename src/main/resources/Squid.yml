@@ -1,6 +1,7 @@
 # Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
 MineableBlocks:
-- "SAND"
+  SAND: 5
 
 # Food needed for taming/feeding
 # The value specifies it's efficiency

@@ -6,7 +6,6 @@ import org.bukkit.Material;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +33,6 @@ public class BaseStats {
 
     private Map<Material, Integer> preferredFood;
     private Map<String, Integer> foodSaturations;
-    private List<Material> mineableBlocks;
 
     private BaseStats(String entity) {
 
@@ -57,7 +55,6 @@ public class BaseStats {
         preferredFood = config.getPreferredFoodFor(entity);
         foodSaturations = config.getFoodSaturations();
         highestFoodSaturation = Collections.max(foodSaturations.values());
-        mineableBlocks = config.getMineableBlocksFor(entity);
 
     }
 
@@ -137,7 +134,4 @@ public class BaseStats {
         return preferredFood;
     }
 
-    public List<Material> getMineableBlocks() {
-        return mineableBlocks;
-    }
 }

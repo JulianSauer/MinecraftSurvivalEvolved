@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MovementHandlerInterface;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.RidingHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
@@ -15,6 +16,8 @@ public class MCEWolf extends EntityWolf implements MSEEntity {
 
     private TamingHandler tamingHandler;
 
+    private MiningHandler miningHandler;
+
     private MovementHandlerInterface movementHandler;
 
     private Inventory inventory;
@@ -24,6 +27,7 @@ public class MCEWolf extends EntityWolf implements MSEEntity {
     public MCEWolf(World world) {
         super(world);
         tamingHandler = new TamingHandler(this);
+        miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
         movementHandler = new RidingHandler(this);
         pitchWhileTaming = 0;
@@ -61,6 +65,10 @@ public class MCEWolf extends EntityWolf implements MSEEntity {
 
     public TamingHandler getTamingHandler() {
         return tamingHandler;
+    }
+
+    public MiningHandler getMiningHandler() {
+        return miningHandler;
     }
 
 }

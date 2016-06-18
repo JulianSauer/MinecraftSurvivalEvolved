@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
 
 /**
@@ -8,6 +9,8 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
 public interface Tameable {
 
     TamingHandler getTamingHandler();
+
+    MiningHandler getMiningHandler();
 
     void setPitchWhileTaming(float pitch);
 

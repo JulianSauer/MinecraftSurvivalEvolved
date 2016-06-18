@@ -4,6 +4,7 @@ import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.*;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InBlockDigListener;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InUpdateSignListener;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
@@ -47,6 +48,7 @@ public class ThisPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
 
         packetInjector = new PacketInjector();
+        PacketEventManager.registerPacketListener(new InBlockDigListener());
         PacketEventManager.registerPacketListener(new InUpdateSignListener());
 
         instance = this;

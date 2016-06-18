@@ -14,10 +14,9 @@ public class BlockDamageListener implements BasicEventListener {
 
         MSEEntity mseEntity = getMSEEntityFromVehicle(e.getPlayer());
         if (mseEntity != null) {
-            if (mseEntity.getEntityStats().getBaseStats().getMineableBlocks().contains(e.getBlock().getType()))
-                e.setInstaBreak(true);
+            if (mseEntity.getMiningHandler().canMineBlock(e.getBlock().getType()))
+                e.setCancelled(true);
         }
-
     }
 
 }

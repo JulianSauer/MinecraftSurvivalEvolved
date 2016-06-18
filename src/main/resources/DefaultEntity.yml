@@ -1,6 +1,6 @@
 # Base stats of all entites if not specified by a EntityName.yml file
 LevelCap: 120
-LevelMultiplier: 0.05
+LevelMultiplier: 0.01
 Tameable: true
 
 # Probability in percent of this entity to turn into an alpha predator on spawn
@@ -17,8 +17,8 @@ MaxTamingProgress: 100
 XpUntilLevelUp: 20
 
 # Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
 MineableBlocks:
--
 
 # Food needed for taming/feeding
 # The value specifies it's efficiency

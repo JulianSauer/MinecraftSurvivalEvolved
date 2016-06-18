@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MovementHandlerInterface;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.SwimmingHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
@@ -15,6 +16,8 @@ public class MCESquid extends EntitySquid implements MSEEntity {
 
     private TamingHandler tamingHandler;
 
+    private MiningHandler miningHandler;
+
     private MovementHandlerInterface movementHandler;
 
     private Inventory inventory;
@@ -25,6 +28,7 @@ public class MCESquid extends EntitySquid implements MSEEntity {
         super(world);
 
         tamingHandler = new TamingHandler(this);
+        miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
         movementHandler = new SwimmingHandler(this);
         pitchWhileTaming = 0;
@@ -61,6 +65,10 @@ public class MCESquid extends EntitySquid implements MSEEntity {
 
     public TamingHandler getTamingHandler() {
         return tamingHandler;
+    }
+
+    public MiningHandler getMiningHandler() {
+        return miningHandler;
     }
 
 }
