@@ -30,13 +30,13 @@ public class EntityDamageByEntityListener implements BasicEventListener {
             MSEEntity mseEntity = getMSEEntityFromEntity(target);
             Player player = (Player) arrow.getShooter();
 
+            // Reduce damage
             double torpidity = e.getDamage();
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
-            if (!mseEntity.getEntityStats().getBaseStats().isTameable())
-                return;
-
-            mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
+            // Increase torpor
+            if (mseEntity.getEntityStats().getBaseStats().isTameable() && !mseEntity.getTamingHandler().isUnconscious())
+                mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
         } else if (isMountedAttack(damager)) {
             e.setDamage(getMSEEntityFromVehicle(damager).getEntityStats().getDamage());

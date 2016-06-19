@@ -38,7 +38,7 @@ public class ButtonIcons {
     }
 
     public static ItemStack getChangeNameButton() {
-        return createItemWith("Change Name", Material.SIGN);
+        return createItemWith("Change Name", Material.NAME_TAG);
     }
 
     public static ItemStack getIncreaseHealthButton() {
@@ -51,6 +51,10 @@ public class ButtonIcons {
 
     public static ItemStack getIncreaseFoodButton() {
         return createItemStackWithoutFlags("Food", Material.RAW_BEEF);
+    }
+
+    public static ItemStack getForceFeedButton() {
+        return createItemWith("Feed Narcotics", Material.LEASH);
     }
 
     /**

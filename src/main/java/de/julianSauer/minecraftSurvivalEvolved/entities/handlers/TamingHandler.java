@@ -7,10 +7,10 @@ import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.InventoryGUI;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -111,13 +111,24 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * Increases the torpidity and updates the consciousness of an entity. May start a taming progress.
      *
      * @param torpidityIncrease
-     * @param lastDamager       Player is saved in case the entity becomes unconscious and is succesfully tamed
+     * @param lastDamager       Player is saved in case the entity becomes unconscious and is successfully tamed
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
 
         if (mseEntity.getEntityStats().isAlpha())
             return;
         tamer = lastDamager;
+        increaseTorpidityBy(torpidityIncrease);
+
+    }
+
+    /**
+     * Increases the torpidity and updates the consciousness of an entity.
+     *
+     * @param torpidityIncrease
+     */
+    private void increaseTorpidityBy(int torpidityIncrease) {
+
         torpidity += torpidityIncrease;
         if (torpidity > getMaxTorpidity())
             torpidity = getMaxTorpidity();
@@ -130,6 +141,29 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         if (torpidity < 0)
             torpidity = 0;
         updateConsciousness();
+    }
+
+    /**
+     * Makes the entity eat one narcotic out of the inventory.
+     */
+    public void feedNarcotics() {
+        Inventory inventory = mseEntity.getInventory();
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item != null && item.getType() == Material.POTION) {
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equalsIgnoreCase("Narcotics")) {
+                    if (item.getAmount() <= 1)
+                        item = new ItemStack(Material.AIR);
+                    else
+                        item.setAmount(item.getAmount() - 1);
+                    inventory.setItem(i, item);
+                    eatAnimation();
+                    increaseTorpidityBy(20);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -175,15 +209,36 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     }
 
+    /**
+     * Shows an eat animation by moving the head upwards and playing a sound.
+     */
+    private void eatAnimation() {
+
+        mseEntity.setPitchWhileTaming(-30F);
+        mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+        (new BukkitRunnable() {
+            @Override
+            public void run() {
+                mseEntity.setPitchWhileTaming(0F);
+                this.cancel();
+            }
+        }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
+
+    }
+
     class UnconsciousnessTimer extends BukkitRunnable {
 
         UUID hologram;
 
         public UnconsciousnessTimer() {
-            mseEntity.setCustomName("");
-            hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
             threadCurrentlyRunning = true;
-            mseEntity.getEntityStats().startFoodTimer();
+
+            if (!isTamed()) {
+                mseEntity.getEntityStats().startFoodTimer();
+                mseEntity.setCustomName("");
+                hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
+            } else
+                hologram = HologramHandler.spawnHologramAt(getLocation(), ChatColor.RED + "Unconscious");
         }
 
         public void run() {
@@ -194,6 +249,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             }
 
             decreaseTorpidityBy(torporDepletion);
+            if (isTamed())
+                return;
+
             updateTamingProcess();
             if (!HologramHandler.updateHologram(hologram, getHologramText()))
                 this.cancel();
@@ -236,20 +294,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
                 tamingProgress = 0;
             if (tamingProgress >= getMaxTamingProgress())
                 setSuccessfullyTamed();
-
-        }
-
-        private void eatAnimation() {
-
-            mseEntity.setPitchWhileTaming(-30F);
-            mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
-            (new BukkitRunnable() {
-                @Override
-                public void run() {
-                    mseEntity.setPitchWhileTaming(0F);
-                    this.cancel();
-                }
-            }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
 
         }
 

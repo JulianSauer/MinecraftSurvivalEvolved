@@ -24,9 +24,9 @@ public class EntityDeathListener implements BasicEventListener {
 
         Inventory entityInventory = mseEntity.getInventory();
 
-        // Remove back button
+        // Remove back button and force feed button
         ItemStack backButton = entityInventory.getItem(0);
-        if (ButtonIcons.isButtonIcon(backButton, ButtonIcons.getBackButton()))
+        if (ButtonIcons.isButtonIcon(backButton, ButtonIcons.getBackButton()) || ButtonIcons.isButtonIcon(backButton, ButtonIcons.getForceFeedButton()))
             entityInventory.setItem(0, new ItemStack(Material.AIR));
 
         e.getDrops().addAll(Arrays.asList(entityInventory.getContents()));

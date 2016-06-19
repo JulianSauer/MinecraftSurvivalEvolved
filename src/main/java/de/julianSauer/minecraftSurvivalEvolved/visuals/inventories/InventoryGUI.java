@@ -4,12 +4,9 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.ScoreboardHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
@@ -18,11 +15,13 @@ public class InventoryGUI {
     private static ButtonFactory optionsMenuButtonFactory;
     private static ButtonFactory mainMenuButtonFactory;
     private static ButtonFactory inventoryMenuButtonFactory;
+    private static ButtonFactory tamingMenuButtonFactory;
 
     static {
         optionsMenuButtonFactory = new OptionsMenuButtonFactory();
         mainMenuButtonFactory = new MainMenuButtonFactory();
         inventoryMenuButtonFactory = new InventoryMenuButtonFactory();
+        tamingMenuButtonFactory = new TamingButtonFactory();
     }
 
     /**
@@ -33,6 +32,11 @@ public class InventoryGUI {
      */
     public static void openTamingGUI(Player player, MSEEntity mseEntity) {
         Inventory tamingGUI = mseEntity.getInventory();
+
+        Map<Integer, Button> buttons = tamingMenuButtonFactory.getButtons();
+        for (int i = 0; i < buttons.size(); i++)
+            tamingGUI.setItem(i, buttons.get(i).getButton());
+
         player.openInventory(tamingGUI);
         ScoreboardHandler.addPlayer(mseEntity, player);
     }
@@ -103,27 +107,6 @@ public class InventoryGUI {
                 Bukkit.getScheduler().runTask(ThisPlugin.getInstance(), () -> player.closeInventory());
         }
 
-        // Check if another item than the back button is placed here
-        Inventory inventory = mseEntity.getInventory();
-        ItemStack itemAtBackButtonSlot = inventory.getItem(0);
-        if (itemAtBackButtonSlot == null)
-            return;
-        if (itemAtBackButtonSlot.getType() != Material.AIR) {
-            if (ButtonIcons.isButtonIcon(itemAtBackButtonSlot, ButtonIcons.getBackButton())) {
-                for (int i = 0; i < inventory.getSize(); i++) {
-                    if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR) {
-                        inventory.setItem(i, itemAtBackButtonSlot);
-                        inventory.setItem(0, new ItemStack(Material.AIR));
-                        return;
-                    }
-                }
-            }
-        }
-        // No free space found - drop item
-        Location location = mseEntity.getTamingHandler().getLocation();
-        Bukkit.getScheduler().runTask(ThisPlugin.getInstance(), () -> location.getWorld().dropItem(location, itemAtBackButtonSlot));
-        inventory.setItem(0, new ItemStack(Material.AIR));
-
     }
 
     /**
@@ -132,7 +115,7 @@ public class InventoryGUI {
      * @param slot      Slot of the clicked button
      * @param player    Player that clicked the button
      * @param mseEntity Entity that the menu belongs to
-     * @return True if no button was pressed
+     * @return True if a button was pressed
      */
     public static boolean mainMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = mainMenuButtonFactory.getButtons().get(slot);
@@ -149,7 +132,7 @@ public class InventoryGUI {
      * @param slot      Slot of the clicked button
      * @param player    Player that clicked the button
      * @param mseEntity Entity that the menu belongs to
-     * @return True if no button was pressed
+     * @return True if a button was pressed
      */
     public static boolean optionsMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = optionsMenuButtonFactory.getButtons().get(slot);
@@ -166,10 +149,27 @@ public class InventoryGUI {
      * @param slot      Slot of the clicked button
      * @param player    Player that clicked the button
      * @param mseEntity Entity that the menu belongs to
-     * @return True if no button was pressed
+     * @return True if a button was pressed
      */
     public static boolean inventoryMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = inventoryMenuButtonFactory.getButtons().get(slot);
+        if (button != null) {
+            button.onClick(player, mseEntity);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Maps an inventory click to a button.
+     *
+     * @param slot      Slot of the clicked button
+     * @param player    Player that clicked the button
+     * @param mseEntity Entity that the menu belongs to
+     * @return True if a button was pressed
+     */
+    public static boolean tamingMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
+        Button button = tamingMenuButtonFactory.getButtons().get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
             return true;

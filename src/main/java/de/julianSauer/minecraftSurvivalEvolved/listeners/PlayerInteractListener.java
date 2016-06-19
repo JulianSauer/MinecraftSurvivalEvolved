@@ -30,7 +30,7 @@ public class PlayerInteractListener implements BasicEventListener {
 
         Player player = e.getPlayer();
 
-        if (mseEntity.getTamingHandler().isUnconscious()) {
+        if (mseEntity.getTamingHandler().isUnconscious() && !mseEntity.getTamingHandler().isTamed()) {
             InventoryGUI.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
             if (player.isSneaking())
