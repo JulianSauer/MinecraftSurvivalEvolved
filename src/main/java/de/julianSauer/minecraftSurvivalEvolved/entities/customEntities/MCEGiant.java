@@ -1,11 +1,10 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MovementHandlerInterface;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.RidingHandler;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.EntityGiantZombie;
+import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -20,6 +19,8 @@ public class MCEGiant extends EntityGiantZombie implements MSEEntity {
 
     private MovementHandlerInterface movementHandler;
 
+    private PathFinderHandler pathFinderHandlerCreature;
+
     private Inventory inventory;
 
     private float pitchWhileTaming;
@@ -31,6 +32,7 @@ public class MCEGiant extends EntityGiantZombie implements MSEEntity {
         miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
         movementHandler = new RidingHandler(this);
+        pathFinderHandlerCreature = new PathFinderHandlerCreature(this);
         pitchWhileTaming = 0;
     }
 
@@ -64,12 +66,47 @@ public class MCEGiant extends EntityGiantZombie implements MSEEntity {
         return entityStats;
     }
 
+    @Override
+    public PathfinderGoalSelector getGoalSelector() {
+        return goalSelector;
+    }
+
+    @Override
+    public PathfinderGoalSelector getTargetSelector() {
+        return targetSelector;
+    }
+
+    @Override
+    public PathfinderGoalMeleeAttack getMeleeAttack() {
+        return new PathfinderGoalMeleeAttack(this, 1.0D, true);
+    }
+
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
 
     public MiningHandler getMiningHandler() {
         return miningHandler;
+    }
+
+    @Override
+    public void setPassiveGoals() {
+        pathFinderHandlerCreature.setPassiveGoals();
+    }
+
+    @Override
+    public void setNeutralGoals() {
+        pathFinderHandlerCreature.setNeutralGoals();
+    }
+
+    @Override
+    public void setAggressiveGoals() {
+        pathFinderHandlerCreature.setAggressiveGoals();
+    }
+
+    @Override
+    public void setWandering(boolean wandering) {
+        pathFinderHandlerCreature.setWandering(wandering);
     }
 
 }

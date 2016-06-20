@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities;
+package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
@@ -17,5 +17,13 @@ public interface Tameable {
     float getPitchWhileTaming();
 
     void callSuperMovement(float[] args);
+
+    void setPassiveGoals();
+
+    void setNeutralGoals();
+
+    void setAggressiveGoals();
+
+    void setWandering(boolean wandering);
 
 }

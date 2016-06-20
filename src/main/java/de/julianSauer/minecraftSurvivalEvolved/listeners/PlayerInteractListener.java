@@ -15,6 +15,8 @@ public class PlayerInteractListener implements BasicEventListener {
 
     boolean enableTestRiding = false;
 
+    static boolean wandering = true;
+
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
 
@@ -33,8 +35,11 @@ public class PlayerInteractListener implements BasicEventListener {
         if (mseEntity.getTamingHandler().isUnconscious() && !mseEntity.getTamingHandler().isTamed()) {
             InventoryGUI.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
-            if (player.isSneaking())
-                InventoryGUI.openMainGUI(player, mseEntity);
+            if (player.isSneaking()) {
+                mseEntity.setWandering(wandering);
+                wandering = !wandering;
+            }
+                //InventoryGUI.openMainGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }

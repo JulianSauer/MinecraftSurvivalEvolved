@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.utils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -77,5 +78,16 @@ public class ReflectionHelper {
         return null;
     }
 
+    public static Constructor getConstructor(Class clazz, String innerClassName, Class... parameterTypes) {
+        try {
+            Class innerClass = Class.forName(clazz.getName() + "$" + innerClassName);
+            Constructor constructor = innerClass.getDeclaredConstructor(parameterTypes);
+            constructor.setAccessible(true);
+            return constructor;
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 

@@ -181,6 +181,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
             InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+            mseEntity.setPassiveGoals();
             return true;
         } else {
             return false;

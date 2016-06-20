@@ -50,11 +50,6 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
         lastViewingDirection = entity.aO;
 
         if (!isMounted()) {
-            if (entity.getTamingHandler().isTamed()) {
-                entity.callSuperMovement(new float[]{0, 0});
-                return;
-            }
-
             entity.l(entity.getEntityStats().getSpeed() * 2);
             entity.callSuperMovement(args);
             return;
