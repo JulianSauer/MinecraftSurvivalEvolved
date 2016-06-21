@@ -13,7 +13,7 @@ import java.util.Map;
 public class TamingButtonFactory implements ButtonFactory {
 
     @Override
-    public Map<Integer, Button> getButtons() {
+    public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
         Map<Integer, Button> buttonMap = new HashMap<>(5);
         buttonMap.put(0, new TamingMenuForceFeed());
         return buttonMap;

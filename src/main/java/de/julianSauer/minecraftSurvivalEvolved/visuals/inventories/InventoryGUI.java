@@ -33,7 +33,7 @@ public class InventoryGUI {
     public static void openTamingGUI(Player player, MSEEntity mseEntity) {
         Inventory tamingGUI = mseEntity.getInventory();
 
-        Map<Integer, Button> buttons = tamingMenuButtonFactory.getButtons();
+        Map<Integer, Button> buttons = tamingMenuButtonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             tamingGUI.setItem(i, buttons.get(i).getButton());
 
@@ -50,7 +50,7 @@ public class InventoryGUI {
     public static void openMainGUI(Player player, MSEEntity mseEntity) {
         Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getEntityStats().getEntityType());
 
-        Map<Integer, Button> buttons = mainMenuButtonFactory.getButtons();
+        Map<Integer, Button> buttons = mainMenuButtonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             tamedGUI.setItem(i, buttons.get(i).getButton());
 
@@ -67,7 +67,7 @@ public class InventoryGUI {
     public static void openInventoryGUI(Player player, MSEEntity mseEntity) {
         Inventory inventoryGUI = mseEntity.getInventory();
 
-        Map<Integer, Button> buttons = inventoryMenuButtonFactory.getButtons();
+        Map<Integer, Button> buttons = inventoryMenuButtonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             inventoryGUI.setItem(i, buttons.get(i).getButton());
 
@@ -86,7 +86,7 @@ public class InventoryGUI {
         Inventory statsGUI = Bukkit.createInventory(mseEntity, 9, "Entity Options");
 
         optionsMenuButtonFactory.setGlowing(levelUp);
-        Map<Integer, Button> buttons = optionsMenuButtonFactory.getButtons();
+        Map<Integer, Button> buttons = optionsMenuButtonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             statsGUI.setItem(i, buttons.get(i).getButton());
 
@@ -120,7 +120,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public static boolean mainMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = mainMenuButtonFactory.getButtons().get(slot);
+        Button button = mainMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
             return true;
@@ -137,9 +137,10 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public static boolean optionsMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = optionsMenuButtonFactory.getButtons().get(slot);
+        Button button = optionsMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
+            openOptionsGUI(player, mseEntity, true); // Updates the GUI
             return true;
         }
         return false;
@@ -154,7 +155,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public static boolean inventoryMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = inventoryMenuButtonFactory.getButtons().get(slot);
+        Button button = inventoryMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
             return true;
@@ -171,7 +172,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public static boolean tamingMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = tamingMenuButtonFactory.getButtons().get(slot);
+        Button button = tamingMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
             return true;

@@ -70,7 +70,7 @@ public class PathFinderHandlerCreature implements PathFinderHandler {
         EntityCreature entity = (EntityCreature) mseEntity;
         mseEntity.getGoalSelector().a(4, mseEntity.getMeleeAttack());
         mseEntity.getGoalSelector().a(3, new PathfinderGoalLeapAtTarget(entity, 0.4F));
-        mseEntity.getTargetSelector().a(1, new PathfinderGoalRandomTarget(entity, EntityCreature.class, false, getNeutralPredicate(mseEntity)));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityMonster.class, false, getNeutralPredicate(mseEntity)));
     }
 
     @Override
@@ -81,8 +81,8 @@ public class PathFinderHandlerCreature implements PathFinderHandler {
             return;
 
         EntityCreature entity = (EntityCreature) mseEntity;
-        mseEntity.getTargetSelector().a(2, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
-        mseEntity.getTargetSelector().a(2, new PathfinderGoalRandomTarget(entity, EntityPlayer.class, false, getNeutralPredicate(mseEntity)));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityPlayer.class, false, getNeutralPredicate(mseEntity)));
+        mseEntity.getTargetSelector().a(1, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
     }
 
     @Override

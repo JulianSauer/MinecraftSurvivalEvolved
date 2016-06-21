@@ -104,6 +104,11 @@ public class MSESpider extends EntitySpider implements MSEEntity {
     }
 
     @Override
+    public PathFinderHandler getPathFinderHandler() {
+        return pathFinderHandlerCreature;
+    }
+
+    @Override
     public void setPassiveGoals() {
         pathFinderHandlerCreature.setPassiveGoals();
     }

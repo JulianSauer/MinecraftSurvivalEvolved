@@ -41,6 +41,18 @@ public class ButtonIcons {
         return createItemWith("Change Name", Material.NAME_TAG);
     }
 
+    public static ItemStack getPassiveModeButton() {
+        return createItemWith("Currently Passive", Material.WOOD_SPADE);
+    }
+
+    public static ItemStack getNeutralModeButton() {
+        return createItemWith("Currently Neutral", Material.IRON_AXE);
+    }
+
+    public static ItemStack getAggressiveModeButton() {
+        return createItemWith("Currently Aggressive", Material.DIAMOND_SWORD);
+    }
+
     public static ItemStack getIncreaseHealthButton() {
         return createItemStackWithoutFlags("Health", Material.NETHERRACK);
     }

@@ -26,13 +26,26 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
     }
 
     @Override
-    public Map<Integer, Button> getButtons() {
-        Map<Integer, Button> buttonMap = new HashMap<>(5);
+    public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
+        Map<Integer, Button> buttonMap = new HashMap<>(6);
         buttonMap.put(0, new OptionsMenuBack());
         buttonMap.put(1, new OptionsMenuName());
-        buttonMap.put(2, new OptionsMenuHealth());
-        buttonMap.put(3, new OptionsMenuDamage());
-        buttonMap.put(4, new OptionsMenuFood());
+
+        switch (mseEntity.getEntityMode()) {
+            case PASSIVE:
+                buttonMap.put(2, new OptionsMenuPassiveMode());
+                break;
+            case NEUTRAL:
+                buttonMap.put(2, new OptionsMenuNeutralMode());
+                break;
+            case AGGRESSIVE:
+                buttonMap.put(2, new OptionsMenuAggressiveMode());
+                break;
+        }
+        buttonMap.put(3, new OptionsMenuHealth());
+        buttonMap.put(4, new OptionsMenuDamage());
+        buttonMap.put(5, new OptionsMenuFood());
+
         return buttonMap;
     }
 
@@ -61,6 +74,45 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
             player.closeInventory();
             NameChangeHandler.markEntityForNameChange(player.getUniqueId(), mseEntity);
             SignGUI.sendSignToPlayer(player);
+        }
+    }
+
+    class OptionsMenuPassiveMode implements Button {
+
+        @Override
+        public ItemStack getButton() {
+            return ButtonIcons.getPassiveModeButton();
+        }
+
+        @Override
+        public void onClick(Player player, MSEEntity mseEntity) {
+            mseEntity.setNeutralGoals();
+        }
+    }
+
+    class OptionsMenuNeutralMode implements Button {
+
+        @Override
+        public ItemStack getButton() {
+            return ButtonIcons.getNeutralModeButton();
+        }
+
+        @Override
+        public void onClick(Player player, MSEEntity mseEntity) {
+            mseEntity.setAggressiveGoals();
+        }
+    }
+
+    class OptionsMenuAggressiveMode implements Button {
+
+        @Override
+        public ItemStack getButton() {
+            return ButtonIcons.getAggressiveModeButton();
+        }
+
+        @Override
+        public void onClick(Player player, MSEEntity mseEntity) {
+            mseEntity.setPassiveGoals();
         }
     }
 

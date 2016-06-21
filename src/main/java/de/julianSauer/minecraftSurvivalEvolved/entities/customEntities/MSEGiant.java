@@ -96,6 +96,11 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
     }
 
     @Override
+    public PathFinderHandler getPathFinderHandler() {
+        return pathFinderHandlerCreature;
+    }
+
+    @Override
     public void setPassiveGoals() {
         pathFinderHandlerCreature.setPassiveGoals();
     }

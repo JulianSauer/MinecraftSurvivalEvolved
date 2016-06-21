@@ -13,7 +13,7 @@ import java.util.Map;
 public class MainMenuButtonFactory implements ButtonFactory {
 
     @Override
-    public Map<Integer, Button> getButtons() {
+    public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
         Map<Integer, Button> buttonMap = new HashMap<>(2);
         buttonMap.put(0, new MainMenuInventory());
         buttonMap.put(1, new MainMenuOptions());

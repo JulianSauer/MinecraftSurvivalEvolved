@@ -1,5 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+
 import java.util.Map;
 
 /**
@@ -13,6 +15,6 @@ interface ButtonFactory {
     default void setGlowing(boolean glow) {
     }
 
-    Map<Integer, Button> getButtons();
+    Map<Integer, Button> getButtons(MSEEntity mseEntity);
 
 }

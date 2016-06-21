@@ -2,8 +2,9 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import com.google.common.base.Predicate;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityCreeper;
-import org.bukkit.entity.Player;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
 
 /**
  * Controls entity behavior
@@ -67,8 +68,10 @@ public interface PathFinderHandler {
                 MSEEntity entity = (MSEEntity) object;
                 if (entity.getTamingHandler().getOwner() != null)
                     return !entity.getTamingHandler().getOwner().equals(mseEntity.getTamingHandler().getOwner());
-            } else if (object instanceof Player)
-                return mseEntity.getTamingHandler().getOwner().equals(((Player) object).getUniqueId());
+            } else if (object instanceof EntityPlayer) {
+                if (mseEntity.getTamingHandler() != null)
+                    return !mseEntity.getTamingHandler().getOwner().equals(((Entity) object).getUniqueID());
+            }
             return true;
         };
     }

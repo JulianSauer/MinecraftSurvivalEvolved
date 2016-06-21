@@ -95,6 +95,11 @@ public class MSESquid extends EntitySquid implements MSEEntity {
     }
 
     @Override
+    public PathFinderHandler getPathFinderHandler() {
+        return pathFinderHandlerCreature;
+    }
+
+    @Override
     public void setPassiveGoals() {
         pathFinderHandlerCreature.setPassiveGoals();
     }
