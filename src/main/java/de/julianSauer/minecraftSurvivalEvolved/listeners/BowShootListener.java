@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public class BowShootListener implements BasicEventListener {
 
             if (arrowMeta.hasDisplayName()) {
                 if (arrowMeta.getDisplayName().equals("Tranquilizer Arrow")) {
-                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(ThisPlugin.getInstance(), true));
+                    e.getProjectile().setMetadata("Tranquilizer Arrow", new FixedMetadataValue(MSEMain.getInstance(), true));
                 }
             }
 

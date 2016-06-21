@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.config;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,7 +20,7 @@ public class CustomConfig {
 
     public CustomConfig(String fileName) {
         this.fileName = fileName;
-        File dataFolder = ThisPlugin.getInstance().getDataFolder();
+        File dataFolder = MSEMain.getInstance().getDataFolder();
         if (dataFolder == null)
             throw new IllegalStateException();
         file = new File(dataFolder, fileName);
@@ -29,7 +29,7 @@ public class CustomConfig {
     public void reloadConfig() {
 
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
-        InputStream defaultsStream = ThisPlugin.getInstance().getResource(fileName);
+        InputStream defaultsStream = MSEMain.getInstance().getResource(fileName);
         if (defaultsStream != null) {
             Reader defaultsStreamReader = new InputStreamReader(defaultsStream);
             YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(defaultsStreamReader);
@@ -37,7 +37,7 @@ public class CustomConfig {
             try {
                 defaultsStreamReader.close();
             } catch (IOException e) {
-                ThisPlugin.getInstance().getLogger().log(Level.SEVERE, "Could not save config to " + file, e);
+                MSEMain.getInstance().getLogger().log(Level.SEVERE, "Could not save config to " + file, e);
             }
         }
 
@@ -56,13 +56,13 @@ public class CustomConfig {
         try {
             getConfig().save(file);
         } catch (IOException e) {
-            ThisPlugin.getInstance().getLogger().log(Level.SEVERE, "Could not save config to " + file, e);
+            MSEMain.getInstance().getLogger().log(Level.SEVERE, "Could not save config to " + file, e);
         }
     }
 
     public void saveDefaultConfig() {
         if (!file.exists())
-            ThisPlugin.getInstance().saveResource(fileName, false);
+            MSEMain.getInstance().saveResource(fileName, false);
     }
 
 }

@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.ScoreboardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -106,7 +106,7 @@ public class InventoryGUI {
             return;
         for (Player player : players) {
             if (player != null && player.getOpenInventory().getTopInventory().getHolder().equals(mseEntity))
-                Bukkit.getScheduler().runTask(ThisPlugin.getInstance(), () -> player.closeInventory());
+                Bukkit.getScheduler().runTask(MSEMain.getInstance(), () -> player.closeInventory());
         }
 
     }

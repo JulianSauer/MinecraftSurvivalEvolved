@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ public class MiningHandler {
 
     public MiningHandler(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
-        mineableBlocks = ThisPlugin.getConfigHandler().getMineableBlocksFor(mseEntity.getName());
+        mineableBlocks = MSEMain.getConfigHandler().getMineableBlocksFor(mseEntity.getName());
         damageInPercent = 0;
     }
 

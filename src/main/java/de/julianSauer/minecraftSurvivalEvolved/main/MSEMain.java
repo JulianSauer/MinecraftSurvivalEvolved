@@ -12,9 +12,9 @@ import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ThisPlugin extends JavaPlugin {
+public class MSEMain extends JavaPlugin {
 
-    private static ThisPlugin instance;
+    private static MSEMain instance;
 
     private static ConfigHandler configHandler;
 
@@ -65,7 +65,7 @@ public class ThisPlugin extends JavaPlugin {
         getLogger().info("Disabled");
     }
 
-    public static ThisPlugin getInstance() {
+    public static MSEMain getInstance() {
         return instance;
     }
 

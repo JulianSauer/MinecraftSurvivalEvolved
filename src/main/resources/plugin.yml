@@ -1,7 +1,7 @@
 name: MinecraftSurvivalEvolved
 version: 0.2
 author: EndermansEnd
-main: de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin
+main: de.julianSauer.minecraftSurvivalEvolved.main.MSEMain
 load: STARTUP
 commands:
   mse:

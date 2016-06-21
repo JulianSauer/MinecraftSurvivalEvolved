@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import org.bukkit.Material;
@@ -183,7 +183,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
         if (foodTimer != null)
             return;
         foodTimer = new FoodTimer();
-        foodTimer.runTaskTimerAsynchronously(ThisPlugin.getInstance(), 0L, 100L);
+        foodTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
     }
 
     /**

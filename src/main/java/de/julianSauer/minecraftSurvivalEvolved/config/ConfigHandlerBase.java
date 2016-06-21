@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.config;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -29,7 +29,7 @@ public abstract class ConfigHandlerBase {
             configs.put(configName, configFile.getConfig());
         }
 
-        this.logger = ThisPlugin.getInstance().getLogger();
+        this.logger = MSEMain.getInstance().getLogger();
         createDefaultConfigs();
     }
 
@@ -399,7 +399,7 @@ public abstract class ConfigHandlerBase {
      * @return True if a .yml file was found
      */
     private boolean configExistsFor(String configName) {
-        File[] files = ThisPlugin.getInstance().getDataFolder().listFiles();
+        File[] files = MSEMain.getInstance().getDataFolder().listFiles();
         if (files == null)
             return false;
 

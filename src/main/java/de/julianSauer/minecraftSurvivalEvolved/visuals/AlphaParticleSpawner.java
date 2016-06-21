@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -9,14 +9,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AlphaParticleSpawner {
 
-    private ThisPlugin instance;
+    private MSEMain instance;
 
     private LivingEntity entity;
 
     private ParticleEffects[] particleEffects;
 
     public AlphaParticleSpawner(LivingEntity entity) {
-        instance = ThisPlugin.getInstance();
+        instance = MSEMain.getInstance();
         this.entity = entity;
     }
 

@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -27,7 +27,7 @@ public class BarHandler {
             public void run() {
                 bossBar.removeAll();
             }
-        }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 100L, 0L);
+        }).runTaskTimerAsynchronously(MSEMain.getInstance(), 100L, 0L);
     }
 
 

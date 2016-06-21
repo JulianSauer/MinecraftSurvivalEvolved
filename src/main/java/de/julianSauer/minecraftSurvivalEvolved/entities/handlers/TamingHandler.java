@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
@@ -216,7 +216,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         } else if (!isUnconscious() && torpidity >= mseEntity.getEntityStats().getFortitude()) {
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
-            unconsciousnessTimer.runTaskTimerAsynchronously(ThisPlugin.getInstance(), 0, unconsciousnessUpdateInterval);
+            unconsciousnessTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0, unconsciousnessUpdateInterval);
         }
 
     }
@@ -234,7 +234,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
                 mseEntity.setPitchWhileTaming(0F);
                 this.cancel();
             }
-        }).runTaskTimerAsynchronously(ThisPlugin.getInstance(), 4L, 0L);
+        }).runTaskTimerAsynchronously(MSEMain.getInstance(), 4L, 0L);
 
     }
 

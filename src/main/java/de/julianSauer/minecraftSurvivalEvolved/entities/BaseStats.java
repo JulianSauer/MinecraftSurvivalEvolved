@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.Material;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class BaseStats {
 
     private BaseStats(String entity) {
 
-        ConfigHandler config = ThisPlugin.getConfigHandler();
+        ConfigHandler config = MSEMain.getConfigHandler();
 
         // Prevent spaces in .yml files
         entity = entity.replace(" ", "");

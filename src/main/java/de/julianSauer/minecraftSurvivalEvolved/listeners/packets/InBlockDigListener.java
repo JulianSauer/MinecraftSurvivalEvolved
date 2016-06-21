@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners.packets;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.server.v1_9_R1.BlockPosition;
 import net.minecraft.server.v1_9_R1.PacketPlayInBlockDig;
@@ -39,7 +39,7 @@ public class InBlockDigListener implements PacketListener<PacketPlayInBlockDig> 
                 return;
             MiningTimer miningTimer = new MiningTimer(player.getUniqueId(), block, mseEntity);
             currentMiningTasks.put(player.getUniqueId(), miningTimer);
-            miningTimer.runTaskTimer(ThisPlugin.getInstance(), breakSpeed, 20L);
+            miningTimer.runTaskTimer(MSEMain.getInstance(), breakSpeed, 20L);
 
         } else if (digType == PacketPlayInBlockDig.EnumPlayerDigType.ABORT_DESTROY_BLOCK) {
 

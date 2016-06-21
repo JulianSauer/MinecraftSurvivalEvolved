@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -11,7 +11,7 @@ public class PlayerJoinListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        ThisPlugin.getPacketInjector().addPlayer(e.getPlayer());
+        MSEMain.getPacketInjector().addPlayer(e.getPlayer());
     }
 
 }

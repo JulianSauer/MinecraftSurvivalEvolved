@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -85,7 +85,7 @@ public class HologramHandler {
                 try {
                     // Calling spawn methods thread safe
                     armorStands.add((ArmorStand)
-                            Bukkit.getScheduler().callSyncMethod(ThisPlugin.getInstance(),
+                            Bukkit.getScheduler().callSyncMethod(MSEMain.getInstance(),
                                     new CallableSpawner(location.add(0, spacing, 0), text[i]))
                                     .get()
                     );

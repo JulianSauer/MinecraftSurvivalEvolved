@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.visuals;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.main.ThisPlugin;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityLiving;
 import org.bukkit.Bukkit;
@@ -61,7 +61,7 @@ public class ScoreboardHandler {
 
         ScoreboardUpdater scoreboardUpdater = new ScoreboardUpdater(mseEntity);
         activeScoreboards.put(key, scoreboardUpdater);
-        scoreboardUpdater.runTaskTimerAsynchronously(ThisPlugin.getInstance(), 0L, 100L);
+        scoreboardUpdater.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
         return scoreboardUpdater;
 
     }
