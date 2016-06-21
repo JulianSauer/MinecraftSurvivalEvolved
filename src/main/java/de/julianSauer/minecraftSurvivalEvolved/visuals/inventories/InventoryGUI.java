@@ -102,8 +102,10 @@ public class InventoryGUI {
      */
     public static void closeTamingInventoriesOf(MSEEntity mseEntity, Player... players) {
 
+        if (players == null || mseEntity == null)
+            return;
         for (Player player : players) {
-            if (player.getOpenInventory().getTopInventory().getHolder().equals(mseEntity))
+            if (player != null && player.getOpenInventory().getTopInventory().getHolder().equals(mseEntity))
                 Bukkit.getScheduler().runTask(ThisPlugin.getInstance(), () -> player.closeInventory());
         }
 

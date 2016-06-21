@@ -7,7 +7,11 @@ import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.InventoryGUI;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -99,15 +103,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     /**
-     * Creates an org.bukkit.Location based on the entity's coordinates.
-     *
-     * @return Current location of this entity
-     */
-    public Location getLocation() {
-        return new Location(mseEntity.getWorld().getWorld(), mseEntity.locX, mseEntity.locY, mseEntity.locZ);
-    }
-
-    /**
      * Increases the torpidity and updates the consciousness of an entity. May start a taming progress.
      *
      * @param torpidityIncrease
@@ -167,6 +162,22 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     /**
+     * Tames this entity. Ignores if the entity is tameable or already tamed.
+     *
+     * @param newOwner Player that will own the entity
+     */
+    public void forceTame(Player newOwner) {
+        tamed = true;
+        this.owner = newOwner.getUniqueId();
+        decreaseTorpidityBy(getMaxTorpidity());
+        mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
+        mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
+        BarHandler.sendTamedTextTo(newOwner, mseEntity.getName());
+        InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+        mseEntity.setPassiveGoals();
+    }
+
+    /**
      * Sets the owner of an entity and wakes it up.
      *
      * @return False if the entity could not be tamed
@@ -177,7 +188,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
-            mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
+            mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
             mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
             InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
@@ -216,7 +227,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     private void eatAnimation() {
 
         mseEntity.setPitchWhileTaming(-30F);
-        mseEntity.getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+        mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
         (new BukkitRunnable() {
             @Override
             public void run() {
@@ -237,9 +248,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             if (!isTamed()) {
                 mseEntity.getEntityStats().startFoodTimer();
                 mseEntity.setCustomName("");
-                hologram = HologramHandler.spawnHologramAt(getLocation(), getHologramText());
+                hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), getHologramText());
             } else
-                hologram = HologramHandler.spawnHologramAt(getLocation(), ChatColor.RED + "Unconscious");
+                hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), ChatColor.RED + "Unconscious");
         }
 
         public void run() {

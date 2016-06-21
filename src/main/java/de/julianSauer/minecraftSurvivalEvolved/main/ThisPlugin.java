@@ -33,6 +33,8 @@ public class ThisPlugin extends JavaPlugin {
         customRecipes.setUpNarcotics();
         customRecipes.setUpTranquilizerArrow();
 
+        getCommand("mse").setExecutor(new MSECommandExecutor());
+
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new BlockDamageListener(), this);
         pluginManager.registerEvents(new BowShootListener(), this);

@@ -7,6 +7,7 @@ import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 
 public class MSEGiant extends EntityGiantZombie implements MSEEntity {
@@ -79,6 +80,11 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
     @Override
     public PathfinderGoalMeleeAttack getMeleeAttack() {
         return new PathfinderGoalMeleeAttack(this, 1.0D, true);
+    }
+
+    @Override
+    public Location getLocation() {
+        return new Location(this.getWorld().getWorld(), this.locX, this.locY, this.locZ);
     }
 
     public TamingHandler getTamingHandler() {
