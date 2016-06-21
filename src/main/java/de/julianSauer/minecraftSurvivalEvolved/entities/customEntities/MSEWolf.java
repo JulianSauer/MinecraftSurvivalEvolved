@@ -32,7 +32,7 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
         miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
         movementHandler = new RidingHandler(this);
-        pathFinderHandlerCreature = new PathFinderHandlerCreature(this);
+        pathFinderHandlerCreature = new PathFinderHandlerMonster(this);
         pitchWhileTaming = 0;
     }
 

@@ -7,7 +7,7 @@ import net.minecraft.server.v1_9_R1.*;
 
 import java.util.Set;
 
-public class PathFinderHandlerCreature implements PathFinderHandler {
+public class PathFinderHandlerMonster implements PathFinderHandler {
 
     private MSEEntity mseEntity;
 
@@ -19,7 +19,7 @@ public class PathFinderHandlerCreature implements PathFinderHandler {
     private EntityMode entityMode;
     private boolean wandering;
 
-    public PathFinderHandlerCreature(MSEEntity mseEntity) {
+    public PathFinderHandlerMonster(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
 
         goalB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "b");
