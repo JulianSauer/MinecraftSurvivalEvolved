@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners.packets;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.NameChangeHandler;
+import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.server.v1_9_R1.PacketPlayInUpdateSign;
 
@@ -17,7 +17,7 @@ public class InUpdateSignListener implements PacketListener<PacketPlayInUpdateSi
         for (String s : packet.b())
             newName += s;
         UUID player = getUUIDFrom(context);
-        NameChangeHandler.changeNameOfEntity(player, newName);
+        NameChanger.changeNameOfEntity(player, newName);
     }
 
 }

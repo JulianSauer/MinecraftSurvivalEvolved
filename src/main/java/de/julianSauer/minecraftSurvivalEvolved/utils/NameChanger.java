@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
+package de.julianSauer.minecraftSurvivalEvolved.utils;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Maps player names to entities to mark them for a name change.
  */
-public class NameChangeHandler {
+public class NameChanger {
 
     private static Map<UUID, MSEEntity> waitingForNameChange = new HashMap<>();
 
