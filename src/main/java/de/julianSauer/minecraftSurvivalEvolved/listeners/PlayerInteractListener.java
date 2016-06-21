@@ -13,17 +13,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
  */
 public class PlayerInteractListener implements BasicEventListener {
 
-    boolean enableTestRiding = false;
-
-    static boolean wandering = true;
-
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
-
-        if (enableTestRiding) {
-            testRide(e);
-            return;
-        }
 
         Entity entity = e.getRightClicked();
         MSEEntity mseEntity = getMSEEntityFromEntity(entity);
@@ -35,11 +26,8 @@ public class PlayerInteractListener implements BasicEventListener {
         if (mseEntity.getTamingHandler().isUnconscious() && !mseEntity.getTamingHandler().isTamed()) {
             InventoryGUI.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
-            if (player.isSneaking()) {
-                mseEntity.setWandering(wandering);
-                wandering = !wandering;
-            }
-                //InventoryGUI.openMainGUI(player, mseEntity);
+            if (player.isSneaking())
+                InventoryGUI.openMainGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }
@@ -52,23 +40,6 @@ public class PlayerInteractListener implements BasicEventListener {
         // Cancel event if a hologram is clicked
         if (!e.getRightClicked().isVisible())
             e.setCancelled(true);
-
-    }
-
-    /**
-     * Allows entity riding without taming the entity first.
-     *
-     * @param e
-     */
-    private void testRide(PlayerInteractEntityEvent e) {
-
-        Entity entity = e.getRightClicked();
-        Player player = e.getPlayer();
-
-        if (getMSEEntityFromEntity(entity) == null)
-            return;
-        if (entity.isEmpty())
-            entity.setPassenger(player);
 
     }
 

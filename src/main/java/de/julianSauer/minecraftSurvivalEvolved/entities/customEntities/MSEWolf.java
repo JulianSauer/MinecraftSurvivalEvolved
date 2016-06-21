@@ -2,15 +2,14 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
-import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalSpiderMeleeAttack;
-import net.minecraft.server.v1_9_R1.EntityCaveSpider;
+import net.minecraft.server.v1_9_R1.EntityWolf;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
-public class MCECaveSpider extends EntityCaveSpider implements MSEEntity {
+public class MSEWolf extends EntityWolf implements MSEEntity {
 
     private EntityStats entityStats;
 
@@ -26,9 +25,8 @@ public class MCECaveSpider extends EntityCaveSpider implements MSEEntity {
 
     private float pitchWhileTaming;
 
-    public MCECaveSpider(World world) {
+    public MSEWolf(World world) {
         super(world);
-
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
@@ -79,7 +77,7 @@ public class MCECaveSpider extends EntityCaveSpider implements MSEEntity {
 
     @Override
     public PathfinderGoalMeleeAttack getMeleeAttack() {
-        return new PathfinderGoalSpiderMeleeAttack(this);
+        return new PathfinderGoalMeleeAttack(this, 1.0D, true);
     }
 
     public TamingHandler getTamingHandler() {

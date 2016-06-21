@@ -12,11 +12,11 @@ public class EntityRegistry {
 
     public enum TameableEntityType {
 
-        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, MCESpider.class),
-        GIANT("Giant", 53, EntityType.GIANT, EntityGiantZombie.class, MCEGiant.class),
-        CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, MCECaveSpider.class),
-        SQUID("Squid", 94, EntityType.SQUID, EntitySquid.class, MCESquid.class),
-        WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, MCEWolf.class);
+        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, MSESpider.class),
+        GIANT("Giant", 53, EntityType.GIANT, EntityGiantZombie.class, MSEGiant.class),
+        CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, MSECaveSpider.class),
+        SQUID("Squid", 94, EntityType.SQUID, EntitySquid.class, MSESquid.class),
+        WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, MSEWolf.class);
 
         private String name;
         private int id;

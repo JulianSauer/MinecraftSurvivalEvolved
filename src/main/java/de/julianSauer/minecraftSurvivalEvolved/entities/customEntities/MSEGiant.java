@@ -2,15 +2,14 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
-import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalSpiderMeleeAttack;
-import net.minecraft.server.v1_9_R1.EntitySpider;
+import net.minecraft.server.v1_9_R1.EntityGiantZombie;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
-public class MCESpider extends EntitySpider implements MSEEntity {
+public class MSEGiant extends EntityGiantZombie implements MSEEntity {
 
     private EntityStats entityStats;
 
@@ -26,7 +25,7 @@ public class MCESpider extends EntitySpider implements MSEEntity {
 
     private float pitchWhileTaming;
 
-    public MCESpider(World world) {
+    public MSEGiant(World world) {
         super(world);
 
         tamingHandler = new TamingHandler(this);
@@ -44,30 +43,25 @@ public class MCESpider extends EntitySpider implements MSEEntity {
 
     }
 
-    @Override
     public void callSuperMovement(float[] args) {
         if (args.length == 2)
             super.g(args[0], args[1]);
     }
 
-    @Override
     public float getPitchWhileTaming() {
         return pitchWhileTaming;
     }
 
-    @Override
     public void setPitchWhileTaming(float pitch) {
         this.pitchWhileTaming = pitch;
     }
 
-    @Override
     public Inventory getInventory() {
         if (inventory == null)
             inventory = Bukkit.createInventory(this, 18, this.getName() + " Inventory");
         return inventory;
     }
 
-    @Override
     public EntityStats getEntityStats() {
         return entityStats;
     }
@@ -84,15 +78,13 @@ public class MCESpider extends EntitySpider implements MSEEntity {
 
     @Override
     public PathfinderGoalMeleeAttack getMeleeAttack() {
-        return new PathfinderGoalSpiderMeleeAttack(this);
+        return new PathfinderGoalMeleeAttack(this, 1.0D, true);
     }
 
-    @Override
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
 
-    @Override
     public MiningHandler getMiningHandler() {
         return miningHandler;
     }
