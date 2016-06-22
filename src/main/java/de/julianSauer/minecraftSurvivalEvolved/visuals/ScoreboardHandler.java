@@ -79,7 +79,7 @@ public class ScoreboardHandler {
             this.mseEntity = mseEntity;
 
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-            objective = scoreboard.registerNewObjective(mseEntity.getEntityStats().getEntityType(), "Dummy");
+            objective = scoreboard.registerNewObjective(mseEntity.getEntityType(), "Dummy");
             objective.setDisplayName(mseEntity.getEntityStats().getDefaultName());
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.getScore("Health").setScore((int) ((EntityLiving) mseEntity).getHealth()); // TODO: Replace with MSEEntity#getHealth()

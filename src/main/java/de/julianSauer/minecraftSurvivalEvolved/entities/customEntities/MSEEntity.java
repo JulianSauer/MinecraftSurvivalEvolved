@@ -12,6 +12,8 @@ public interface MSEEntity extends Tameable, InventoryHolder {
 
     EntityStats getEntityStats();
 
+    String getEntityType();
+
     PathfinderGoalSelector getGoalSelector();
 
     PathfinderGoalSelector getTargetSelector();

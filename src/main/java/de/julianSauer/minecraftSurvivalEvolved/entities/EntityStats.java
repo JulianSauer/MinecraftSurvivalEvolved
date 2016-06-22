@@ -1,9 +1,11 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * General stats of an entity. Also grands access to base stats of an entity.
  */
-public class EntityStats<T extends EntityInsentient & MSEEntity> {
+public class EntityStats<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
     private T mseEntity;
 
@@ -25,84 +27,145 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
 
     private float currentXp;
 
-    private String entityType;
-
     private FoodTimer foodTimer;
 
+    private boolean initialized;
+
     public EntityStats(T mseEntity) {
-
         this.mseEntity = mseEntity;
-        entityType = mseEntity.getName();
+        baseStats = BaseStats.getBaseAttributesFor(mseEntity.getEntityType());
+        foodDepletion = 5;
+        initialized = false;
+    }
 
-        baseStats = BaseStats.getBaseAttributesFor(mseEntity.getName());
+    @Override
+    public void initWithDefaults() {
+        initialized = true;
+
         if (Calculator.getRandomInt(101) <= baseStats.getAlphaProbability())
             alphaPredatorMultiplier = 4;
         else
             alphaPredatorMultiplier = 1;
 
-        currentFoodValue = baseStats.getMaxFoodValue();
-        foodDepletion = 5;
-        currentXp = 0;
         updateLevel(0);
+        currentFoodValue = baseStats.getMaxFoodValue();
+        currentXp = 0;
         if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
+    }
 
+    @Override
+    public void initWith(NBTTagCompound data) {
+
+        if (data.getInt("MSELevel") == 0) {
+            initWithDefaults();
+            return;
+        }
+
+        initialized = true;
+        if (data.getBoolean("MSEIsAlpha"))
+            alphaPredatorMultiplier = 4;
+        else
+            alphaPredatorMultiplier = 1;
+
+        this.level = data.getInt("MSELevel");
+        this.currentFoodValue = data.getInt("MSECurrentFoodValue");
+        this.currentXp = data.getFloat("MSECurrentXp");
+        if (mseEntity.getTamingHandler().isTamed())
+            startFoodTimer();
+    }
+
+    @Override
+    public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
+        data.setInt("MSELevel", getLevel());
+        data.setBoolean("MSEIsAlpha", isAlpha());
+        data.setInt("MSECurrentFoodValue", getCurrentFoodValue());
+        data.setFloat("MSECurrentXp", getCurrentXp());
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     public boolean isAlpha() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return (alphaPredatorMultiplier != 1);
     }
 
     public BaseStats getBaseStats() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return baseStats;
     }
 
     public int getFortitude() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return (int) Calculator.calculateLevelDependentStatFor(baseStats.getFortitude(), level, baseStats.getLevelMultiplier());
     }
 
     public int getLevel() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return level;
     }
 
     public float getCurrentXp() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return currentXp;
     }
 
     public float getXpUntilLevelUp() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return baseStats.getXpUntilLevelUp();
     }
 
     public double getDamage() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), level, getMultiplier());
     }
 
     public double getMaxDamage() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), baseStats.getLevelCap(), getMultiplier());
     }
 
     public float getSpeed() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         float speedMultiplier = getMultiplier();
         speedMultiplier /= 2;
         return (float) Calculator.calculateLevelDependentStatFor(baseStats.getSpeed(), level, speedMultiplier);
     }
 
     public String getDefaultName() {
-        if (this.isAlpha())
-            return "Alpha " + entityType + " (" + level + ")";
-        else
-            return entityType + " (" + level + ")";
-    }
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
-    public String getEntityType() {
-        return entityType;
+        if (this.isAlpha())
+            return "Alpha " + mseEntity.getEntityType() + " (" + level + ")";
+        else
+            return mseEntity.getEntityType() + " (" + level + ")";
     }
 
     public int getCurrentFoodValue() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return currentFoodValue;
     }
 
     public float getMultiplier() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return baseStats.getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
@@ -112,6 +175,9 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
      * @param levelIncrease Use 0 to initialize
      */
     public void updateLevel(int levelIncrease) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         if (level == null)
             level = Calculator.getRandomInt(baseStats.getLevelCap()) + 1;
         if (levelIncrease > 0)
@@ -127,6 +193,9 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
      * @param xpIncrease
      */
     public void increaseXp(float xpIncrease) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         currentXp += xpIncrease;
         float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp(), level, getMultiplier());
         while (currentXp >= currentXpForLevelUp) {
@@ -142,6 +211,9 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
      * @return Saturation of the food that was eaten.
      */
     public int updateHunger() {
+
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
         Inventory inventory = mseEntity.getInventory();
 
@@ -180,6 +252,8 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> {
      * Starts food depletion for this entity.
      */
     public void startFoodTimer() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (foodTimer != null)
             return;
         foodTimer = new FoodTimer();

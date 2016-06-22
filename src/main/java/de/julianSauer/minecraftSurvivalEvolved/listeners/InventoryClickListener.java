@@ -27,7 +27,7 @@ public class InventoryClickListener implements BasicInventoryListener {
                 e.setCancelled(
                         InventoryGUI.optionsMenuButtonClicked(e.getSlot(), player, mseEntity));
 
-            } else if (inventory.getName().equals(mseEntity.getEntityStats().getEntityType())) {
+            } else if (inventory.getName().equals(mseEntity.getEntityType())) {
                 e.setCancelled(
                         InventoryGUI.mainMenuButtonClicked(e.getSlot(), player, mseEntity));
 

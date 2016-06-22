@@ -35,6 +35,11 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      */
     public void handleMovement(float[] args) {
 
+        if (!entity.getEntityStats().isInitialized()) {
+            entity.callSuperMovement(args);
+            return;
+        }
+
         if (entity.getTamingHandler().isUnconscious()) {
 
             // Prevent movement when unconscious
@@ -84,6 +89,8 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      * @return True if entity is mounted by a player
      */
     protected boolean isMounted() {
+        if (!entity.getEntityStats().isInitialized())
+            return false;
 
         return !(entity.getEntityStats().isAlpha()
                 || entity.passengers == null

@@ -7,6 +7,7 @@ import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.InventoryGUI;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Implements taming functionality for entities that can be used to implement Tameable.
  */
-public class TamingHandler<T extends EntityInsentient & MSEEntity> {
+public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
     private T mseEntity;
 
@@ -41,34 +42,94 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     private boolean threadCurrentlyRunning;
     private long unconsciousnessUpdateInterval;
 
+    private boolean initialized;
+
     public TamingHandler(T mseEntity) {
-
         this.mseEntity = mseEntity;
-
+        initialized = false;
         threadCurrentlyRunning = false;
+        torporDepletion = 1;
+        unconsciousnessUpdateInterval = 100L;
+    }
 
+    @Override
+    public void initWithDefaults() {
+        initialized = true;
         unconscious = false;
         tamed = false;
         torpidity = 0;
-        torporDepletion = 1;
         tamingProgress = 0;
-        unconsciousnessUpdateInterval = 100L;
+    }
+
+    @Override
+    public void initWith(NBTTagCompound data) {
+
+        if (data.getInt("MSELevel") == 0) {
+            initWithDefaults();
+            return;
+        }
+
+        initialized = true;
+
+        unconscious = data.getBoolean("MSEUnconscious");
+        tamed = data.getBoolean("MSETamed");
+
+        if (unconscious)
+            torpidity = data.getInt("MSETorpidity");
+        else
+            torpidity = 0;
+
+        if (tamed)
+            owner = UUID.fromString(data.getString("MSEOwner"));
+        else if (unconscious) {
+            tamingProgress = data.getInt("MSETamingProgress");
+            tamer = UUID.fromString(data.getString("MSETamer"));
+        } else
+            tamingProgress = 0;
 
     }
 
+    @Override
+    public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
+
+        data.setBoolean("MSEUnconscious", isUnconscious());
+        data.setBoolean("MSETamed", isTamed());
+        if (isTamed()) {
+            data.setString("MSEOwner", getOwner().toString());
+        } else if (isUnconscious()) {
+            data.setInt("MSETamingProgress", getTamingProgress());
+            data.setString("MSETamer", getTamer().toString());
+        }
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
     public boolean isTamed() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return tamed && !mseEntity.getEntityStats().isAlpha();
     }
 
     public boolean isTameable() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return mseEntity.getEntityStats().getBaseStats().isTameable() && !tamed && !mseEntity.getEntityStats().isAlpha();
     }
 
     public boolean isUnconscious() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return unconscious && !mseEntity.getEntityStats().isAlpha();
     }
 
     public int getTamingProgress() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
@@ -77,6 +138,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     public int getMaxTamingProgress() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
@@ -85,12 +148,22 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     public UUID getOwner() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (tamed && !mseEntity.getEntityStats().isAlpha())
             return owner;
         return null;
     }
 
+    public UUID getTamer() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+        return tamer;
+    }
+
     public int getTorpidity() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (mseEntity.getEntityStats().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
@@ -99,6 +172,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     }
 
     public int getMaxTorpidity() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getEntityStats().getBaseStats().getMaxTorpidity(), mseEntity.getEntityStats().getLevel(), mseEntity.getEntityStats().getMultiplier());
     }
 
@@ -109,12 +184,13 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @param lastDamager       Player is saved in case the entity becomes unconscious and is successfully tamed
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
         if (mseEntity.getEntityStats().isAlpha())
             return;
         tamer = lastDamager;
         increaseTorpidityBy(torpidityIncrease);
-
     }
 
     /**
@@ -123,15 +199,19 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @param torpidityIncrease
      */
     private void increaseTorpidityBy(int torpidityIncrease) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
         torpidity += torpidityIncrease;
         if (torpidity > getMaxTorpidity())
             torpidity = getMaxTorpidity();
         updateConsciousness();
-
     }
 
     public void decreaseTorpidityBy(int torpidityDecrease) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         torpidity -= torpidityDecrease;
         if (torpidity < 0)
             torpidity = 0;
@@ -142,6 +222,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * Makes the entity eat one narcotic out of the inventory.
      */
     public void feedNarcotics() {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         Inventory inventory = mseEntity.getInventory();
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
@@ -167,6 +250,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @param newOwner Player that will own the entity
      */
     public void forceTame(Player newOwner) {
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         tamed = true;
         this.owner = newOwner.getUniqueId();
         decreaseTorpidityBy(getMaxTorpidity());
@@ -183,6 +269,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @return False if the entity could not be tamed
      */
     private boolean setSuccessfullyTamed() {
+
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
         if (isTameable() && tamer != null && !mseEntity.getEntityStats().isAlpha()) {
             tamed = true;
@@ -205,6 +294,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      */
     private void updateConsciousness() {
 
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+
         if (mseEntity.getEntityStats().isAlpha())
             return;
 
@@ -225,6 +317,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * Shows an eat animation by moving the head upwards and playing a sound.
      */
     private void eatAnimation() {
+
+        if (!initialized)
+            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
         mseEntity.setPitchWhileTaming(-30F);
         mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);

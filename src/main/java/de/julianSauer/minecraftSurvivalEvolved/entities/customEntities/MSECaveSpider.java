@@ -3,10 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalSpiderMeleeAttack;
-import net.minecraft.server.v1_9_R1.EntityCaveSpider;
-import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
@@ -27,8 +24,11 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
 
     private float pitchWhileTaming;
 
+    private String entityType;
+
     public MSECaveSpider(World world) {
         super(world);
+        entityType = getName();
 
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
@@ -40,32 +40,54 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
 
     @Override
     public void g(float sideMot, float forMot) {
-
         movementHandler.handleMovement(new float[]{sideMot, forMot});
-
     }
 
+    @Override
     public void callSuperMovement(float[] args) {
         if (args.length == 2)
             super.g(args[0], args[1]);
     }
 
+    @Override
+    public void a(NBTTagCompound data) {
+        super.a(data);
+        tamingHandler.initWith(data);
+        entityStats.initWith(data);
+    }
+
+    @Override
+    public void b(NBTTagCompound data) {
+        super.b(data);
+        tamingHandler.saveData(data);
+        entityStats.saveData(data);
+    }
+
+    @Override
     public float getPitchWhileTaming() {
         return pitchWhileTaming;
     }
 
+    @Override
     public void setPitchWhileTaming(float pitch) {
         this.pitchWhileTaming = pitch;
     }
 
+    @Override
     public Inventory getInventory() {
         if (inventory == null)
             inventory = Bukkit.createInventory(this, 18, this.getName() + " Inventory");
         return inventory;
     }
 
+    @Override
     public EntityStats getEntityStats() {
         return entityStats;
+    }
+
+    @Override
+    public String getEntityType() {
+        return entityType;
     }
 
     @Override
@@ -88,10 +110,12 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
         return new Location(this.getWorld().getWorld(), this.locX, this.locY, this.locZ);
     }
 
+    @Override
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
 
+    @Override
     public MiningHandler getMiningHandler() {
         return miningHandler;
     }
