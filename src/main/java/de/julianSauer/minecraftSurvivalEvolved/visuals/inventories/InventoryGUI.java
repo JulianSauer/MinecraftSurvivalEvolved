@@ -140,7 +140,6 @@ public class InventoryGUI {
         Button button = optionsMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
-            openOptionsGUI(player, mseEntity, true); // Updates the GUI
             return true;
         }
         return false;

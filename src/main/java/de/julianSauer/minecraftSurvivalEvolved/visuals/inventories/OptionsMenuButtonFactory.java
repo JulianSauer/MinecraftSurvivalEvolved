@@ -87,6 +87,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setNeutralGoals();
+            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
@@ -100,6 +101,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setAggressiveGoals();
+            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
@@ -113,6 +115,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setPassiveGoals();
+            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
