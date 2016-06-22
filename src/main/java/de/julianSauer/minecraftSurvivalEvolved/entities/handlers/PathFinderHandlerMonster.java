@@ -19,16 +19,51 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
     private EntityMode entityMode;
     private boolean wandering;
 
+    private boolean initialized;
+
     public PathFinderHandlerMonster(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
+        initialized = false;
 
         goalB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "b");
         goalC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "c");
         targetB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "b");
         targetC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "c");
 
-        entityMode = EntityMode.PASSIVE;
+    }
+
+    @Override
+    public void initWithDefaults() {
+        initialized = true;
+        setDefaultGoals();
         wandering = false;
+    }
+
+    @Override
+    public void initWith(NBTTagCompound data) {
+        if (!data.getBoolean("MSEInitialized")) {
+            initWithDefaults();
+            return;
+        }
+
+        initialized = true;
+        entityMode = EntityMode.valueOf(data.getString("MSEEntityMode"));
+        wandering = data.getBoolean("MSEWandering");
+        updateGoals();
+    }
+
+    @Override
+    public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
+
+        data.setString("MSEEntityMode", entityMode.toString());
+        data.setBoolean("MSEWandering", wandering);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -38,6 +73,7 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
 
     @Override
     public void clearPathFinderGoals() {
+        System.out.println("clearing");
         goalB.clear();
         goalC.clear();
         targetB.clear();
@@ -83,6 +119,22 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
         EntityCreature entity = (EntityCreature) mseEntity;
         mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityPlayer.class, false, getNeutralPredicate(mseEntity)));
         mseEntity.getTargetSelector().a(1, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
+    }
+
+    @Override
+    public void setDefaultGoals() {
+        entityMode = EntityMode.DEFAULT;
+        clearPathFinderGoals();
+        if (!(mseEntity instanceof EntityCreature))
+            return;
+
+        EntityCreature entity = (EntityCreature) mseEntity;
+        mseEntity.getGoalSelector().a(0, new PathfinderGoalFloat(entity));
+        mseEntity.getGoalSelector().a(6, new PathfinderGoalLookAtPlayer(entity, EntityHuman.class, 8.0F));
+        mseEntity.getGoalSelector().a(6, new PathfinderGoalRandomLookaround(entity));
+        mseEntity.getTargetSelector().a(1, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
+        mseEntity.getGoalSelector().a(5, new PathfinderGoalRandomStroll(entity, 0.8D));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
     }
 
     @Override

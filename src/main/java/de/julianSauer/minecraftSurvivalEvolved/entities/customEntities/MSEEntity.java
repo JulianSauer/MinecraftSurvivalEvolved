@@ -4,6 +4,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.UUID;
@@ -26,6 +27,13 @@ public interface MSEEntity extends Tameable, InventoryHolder {
      * @return Current location of this entity
      */
     Location getLocation();
+
+    /**
+     * Converts the entity into a Bukkit entity.
+     *
+     * @return NMS entity as CraftEntity
+     */
+    Entity getCraftEntity();
 
     // Methods implemented by Minecraft
     String getName();

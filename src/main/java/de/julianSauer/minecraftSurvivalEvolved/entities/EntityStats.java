@@ -4,9 +4,11 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,20 +54,23 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
         currentXp = 0;
         if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
+
+        if (isAlpha())
+            (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
     }
 
     @Override
     public void initWith(NBTTagCompound data) {
-
-        if (data.getInt("MSELevel") == 0) {
+        if (!data.getBoolean("MSEInitialized")) {
             initWithDefaults();
             return;
         }
 
         initialized = true;
-        if (data.getBoolean("MSEIsAlpha"))
+        if (data.getBoolean("MSEIsAlpha")) {
             alphaPredatorMultiplier = 4;
-        else
+            (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
+        } else
             alphaPredatorMultiplier = 1;
 
         this.level = data.getInt("MSELevel");

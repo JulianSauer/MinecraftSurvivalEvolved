@@ -5,6 +5,9 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 
 public class MSEGiant extends EntityGiantZombie implements MSEEntity {
@@ -17,7 +20,7 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
 
     private MovementHandlerInterface movementHandler;
 
-    private PathFinderHandler pathFinderHandlerCreature;
+    private PathFinderHandler pathFinderHandler;
 
     private Inventory inventory;
 
@@ -33,7 +36,7 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         miningHandler = new MiningHandler(this);
         entityStats = new EntityStats(this);
         movementHandler = new RidingHandler(this);
-        pathFinderHandlerCreature = new PathFinderHandlerMonster(this);
+        pathFinderHandler = new PathFinderHandlerMonster(this);
         pitchWhileTaming = 0;
     }
 
@@ -53,6 +56,7 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         super.a(data);
         tamingHandler.initWith(data);
         entityStats.initWith(data);
+        pathFinderHandler.initWith(data);
     }
 
     @Override
@@ -60,6 +64,8 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         super.b(data);
         tamingHandler.saveData(data);
         entityStats.saveData(data);
+        pathFinderHandler.saveData(data);
+        data.setBoolean("MSEInitialized", true);
     }
 
     @Override
@@ -109,6 +115,11 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         return new Location(this.getWorld().getWorld(), this.locX, this.locY, this.locZ);
     }
 
+    @Override
+    public org.bukkit.entity.Entity getCraftEntity() {
+        return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), this);
+    }
+
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
@@ -119,27 +130,27 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
 
     @Override
     public PathFinderHandler getPathFinderHandler() {
-        return pathFinderHandlerCreature;
+        return pathFinderHandler;
     }
 
     @Override
     public void setPassiveGoals() {
-        pathFinderHandlerCreature.setPassiveGoals();
+        pathFinderHandler.setPassiveGoals();
     }
 
     @Override
     public void setNeutralGoals() {
-        pathFinderHandlerCreature.setNeutralGoals();
+        pathFinderHandler.setNeutralGoals();
     }
 
     @Override
     public void setAggressiveGoals() {
-        pathFinderHandlerCreature.setAggressiveGoals();
+        pathFinderHandler.setAggressiveGoals();
     }
 
     @Override
     public void setWandering(boolean wandering) {
-        pathFinderHandlerCreature.setWandering(wandering);
+        pathFinderHandler.setWandering(wandering);
     }
 
 }

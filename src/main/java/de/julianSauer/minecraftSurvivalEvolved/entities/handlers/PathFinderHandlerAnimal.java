@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalRandomTarget;
 import de.julianSauer.minecraftSurvivalEvolved.utils.ReflectionHelper;
 import net.minecraft.server.v1_9_R1.*;
 
@@ -18,16 +19,51 @@ public class PathFinderHandlerAnimal implements PathFinderHandler {
     private EntityMode entityMode;
     private boolean wandering;
 
+    private boolean initialized;
+
     public PathFinderHandlerAnimal(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
+        initialized = false;
 
         goalB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "b");
         goalC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "c");
         targetB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "b");
         targetC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "c");
 
-        entityMode = EntityMode.PASSIVE;
+    }
+
+    @Override
+    public void initWithDefaults() {
+        initialized = true;
+        setDefaultGoals();
         wandering = false;
+    }
+
+    @Override
+    public void initWith(NBTTagCompound data) {
+        if (!data.getBoolean("MSEInitialized")) {
+            initWithDefaults();
+            return;
+        }
+
+        initialized = true;
+        entityMode = EntityMode.valueOf(data.getString("MSEEntityMode"));
+        wandering = data.getBoolean("MSEWandering");
+        updateGoals();
+    }
+
+    @Override
+    public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
+
+        data.setString("MSEEntityMode", entityMode.toString());
+        data.setBoolean("MSEWandering", wandering);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -68,6 +104,21 @@ public class PathFinderHandlerAnimal implements PathFinderHandler {
     public void setAggressiveGoals() {
         setNeutralGoals();
         entityMode = EntityMode.AGGRESSIVE;
+    }
+
+    @Override
+    public void setDefaultGoals() {
+        entityMode = EntityMode.DEFAULT;
+        clearPathFinderGoals();
+        if (!(mseEntity instanceof EntityAnimal))
+            return;
+
+        EntityAnimal entity = (EntityAnimal) mseEntity;
+        mseEntity.getGoalSelector().a(0, new PathfinderGoalFloat(entity));
+        mseEntity.getGoalSelector().a(6, new PathfinderGoalLookAtPlayer(entity, EntityHuman.class, 8.0F));
+        mseEntity.getGoalSelector().a(6, new PathfinderGoalRandomLookaround(entity));
+        mseEntity.getTargetSelector().a(1, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
+        mseEntity.getGoalSelector().a(3, new PathfinderGoalRandomStroll(entity, 0.8D));
     }
 
     @Override

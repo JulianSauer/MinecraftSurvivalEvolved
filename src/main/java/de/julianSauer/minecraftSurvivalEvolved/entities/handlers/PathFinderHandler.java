@@ -4,14 +4,18 @@ import com.google.common.base.Predicate;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityCreeper;
+import net.minecraft.server.v1_9_R1.EntityMonster;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
+
+import javax.annotation.Nullable;
 
 /**
  * Controls entity behavior
  */
-public interface PathFinderHandler {
+public interface PathFinderHandler extends Persistentable {
 
     enum EntityMode {
+        DEFAULT,
         PASSIVE,
         NEUTRAL,
         AGGRESSIVE
@@ -26,6 +30,9 @@ public interface PathFinderHandler {
      */
     default void updateGoals() {
         switch (getEntityMode()) {
+            case DEFAULT:
+                setDefaultGoals();
+                break;
             case PASSIVE:
                 setPassiveGoals();
                 break;
@@ -54,6 +61,11 @@ public interface PathFinderHandler {
     void setAggressiveGoals();
 
     /**
+     * Enables the normal goals of the entity.
+     */
+    void setDefaultGoals();
+
+    /**
      * Enables wandering for this entity.
      *
      * @param wandering
@@ -69,10 +81,20 @@ public interface PathFinderHandler {
                 if (entity.getTamingHandler().getOwner() != null)
                     return !entity.getTamingHandler().getOwner().equals(mseEntity.getTamingHandler().getOwner());
             } else if (object instanceof EntityPlayer) {
-                if (mseEntity.getTamingHandler() != null)
+                if (mseEntity.getTamingHandler() != null && mseEntity.getTamingHandler().getOwner() != null)
                     return !mseEntity.getTamingHandler().getOwner().equals(((Entity) object).getUniqueID());
             }
             return true;
+        };
+    }
+
+    default Predicate getDefaultPredicate(MSEEntity mseEntity) {
+        return new Predicate() {
+            @Override
+            public boolean apply(@Nullable Object input) {
+                System.out.println(input.getClass() + " - " + (input instanceof EntityMonster));
+                return (input instanceof EntityMonster);
+            }
         };
     }
 

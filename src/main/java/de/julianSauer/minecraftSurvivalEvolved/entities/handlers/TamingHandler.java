@@ -64,7 +64,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     @Override
     public void initWith(NBTTagCompound data) {
 
-        if (data.getInt("MSELevel") == 0) {
+        if (!data.getBoolean("MSEInitialized")) {
             initWithDefaults();
             return;
         }
