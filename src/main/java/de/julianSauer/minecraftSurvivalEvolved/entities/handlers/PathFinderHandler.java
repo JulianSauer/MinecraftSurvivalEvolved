@@ -73,29 +73,23 @@ public interface PathFinderHandler extends Persistentable {
     void setWandering(boolean wandering);
 
     default Predicate getNeutralPredicate(MSEEntity mseEntity) {
-        return object -> {
-            if (object instanceof EntityCreeper)
+        return input -> {
+            if (input instanceof EntityCreeper)
                 return false;
-            if (object instanceof MSEEntity) {
-                MSEEntity entity = (MSEEntity) object;
+            if (input instanceof MSEEntity) {
+                MSEEntity entity = (MSEEntity) input;
                 if (entity.getTamingHandler().getOwner() != null)
                     return !entity.getTamingHandler().getOwner().equals(mseEntity.getTamingHandler().getOwner());
-            } else if (object instanceof EntityPlayer) {
+            } else if (input instanceof EntityPlayer) {
                 if (mseEntity.getTamingHandler() != null && mseEntity.getTamingHandler().getOwner() != null)
-                    return !mseEntity.getTamingHandler().getOwner().equals(((Entity) object).getUniqueID());
+                    return !mseEntity.getTamingHandler().getOwner().equals(((Entity) input).getUniqueID());
             }
             return true;
         };
     }
 
     default Predicate getDefaultPredicate(MSEEntity mseEntity) {
-        return new Predicate() {
-            @Override
-            public boolean apply(@Nullable Object input) {
-                System.out.println(input.getClass() + " - " + (input instanceof EntityMonster));
-                return (input instanceof EntityMonster);
-            }
-        };
+        return input -> !(input instanceof EntityMonster);
     }
 
 }

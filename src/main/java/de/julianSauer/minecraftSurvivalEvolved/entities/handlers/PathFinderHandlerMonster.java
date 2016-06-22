@@ -73,7 +73,6 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
 
     @Override
     public void clearPathFinderGoals() {
-        System.out.println("clearing");
         goalB.clear();
         goalC.clear();
         targetB.clear();
@@ -91,7 +90,7 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
         mseEntity.getGoalSelector().a(0, new PathfinderGoalFloat(entity));
         mseEntity.getGoalSelector().a(6, new PathfinderGoalLookAtPlayer(entity, EntityHuman.class, 8.0F));
         mseEntity.getGoalSelector().a(6, new PathfinderGoalRandomLookaround(entity));
-        mseEntity.getTargetSelector().a(1, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
         if (wandering)
             mseEntity.getGoalSelector().a(5, new PathfinderGoalRandomStroll(entity, 0.8D));
     }
@@ -118,7 +117,7 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
 
         EntityCreature entity = (EntityCreature) mseEntity;
         mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityPlayer.class, false, getNeutralPredicate(mseEntity)));
-        mseEntity.getTargetSelector().a(1, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
+        mseEntity.getTargetSelector().a(1, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, input -> true));
     }
 
     @Override
@@ -132,9 +131,11 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
         mseEntity.getGoalSelector().a(0, new PathfinderGoalFloat(entity));
         mseEntity.getGoalSelector().a(6, new PathfinderGoalLookAtPlayer(entity, EntityHuman.class, 8.0F));
         mseEntity.getGoalSelector().a(6, new PathfinderGoalRandomLookaround(entity));
-        mseEntity.getTargetSelector().a(1, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
-        mseEntity.getGoalSelector().a(5, new PathfinderGoalRandomStroll(entity, 0.8D));
-        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, object -> true));
+        mseEntity.getGoalSelector().a(4, mseEntity.getMeleeAttack());
+        mseEntity.getGoalSelector().a(4, new PathfinderGoalRandomStroll(entity, 0.8D));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityPlayer.class, false, input -> true));
+        mseEntity.getTargetSelector().a(0, new PathfinderGoalRandomTarget(entity, EntityAnimal.class, false, getDefaultPredicate(mseEntity)));
     }
 
     @Override
