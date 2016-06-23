@@ -69,6 +69,14 @@ public class ButtonIcons {
         return createItemWith("Feed Narcotics", Material.LEASH);
     }
 
+    public static ItemStack getFollowingButton() {
+        return createItemWith("Follow", Material.LEASH);
+    }
+
+    public static ItemStack getFollowingPlayerButton(String player) {
+        return createItemWith("Following: " + player, Material.LEASH);
+    }
+
     /**
      * Adds an enchantment glow to an item.
      *

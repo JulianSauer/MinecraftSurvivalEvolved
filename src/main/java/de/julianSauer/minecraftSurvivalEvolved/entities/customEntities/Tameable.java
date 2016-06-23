@@ -3,6 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.PathFinderHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -37,5 +38,11 @@ public interface Tameable {
     void setAggressiveGoals();
 
     void setWandering(boolean wandering);
+
+    void toggleFollowing(EntityPlayer player);
+
+    EntityPlayer getFollowingPlayer();
+
+    boolean isFollowing();
 
 }

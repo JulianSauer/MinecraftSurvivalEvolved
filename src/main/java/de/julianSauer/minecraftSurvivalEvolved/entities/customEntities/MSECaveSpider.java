@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
@@ -122,6 +123,11 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     }
 
     @Override
+    public net.minecraft.server.v1_9_R1.EntityInsentient getHandle() {
+        return this;
+    }
+
+    @Override
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
@@ -154,6 +160,21 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     @Override
     public void setWandering(boolean wandering) {
         pathFinderHandler.setWandering(wandering);
+    }
+
+    @Override
+    public void toggleFollowing(EntityPlayer player) {
+        pathFinderHandler.toggleFollowing(player);
+    }
+
+    @Override
+    public EntityPlayer getFollowingPlayer() {
+        return pathFinderHandler.getFollowingPlayer();
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return pathFinderHandler.isFollowing();
     }
 
 }

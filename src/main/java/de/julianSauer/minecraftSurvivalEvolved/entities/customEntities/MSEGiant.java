@@ -120,6 +120,11 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), this);
     }
 
+    @Override
+    public net.minecraft.server.v1_9_R1.EntityInsentient getHandle() {
+        return this;
+    }
+
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
@@ -151,6 +156,21 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
     @Override
     public void setWandering(boolean wandering) {
         pathFinderHandler.setWandering(wandering);
+    }
+
+    @Override
+    public void toggleFollowing(EntityPlayer player) {
+        pathFinderHandler.toggleFollowing(player);
+    }
+
+    @Override
+    public EntityPlayer getFollowingPlayer() {
+        return pathFinderHandler.getFollowingPlayer();
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return pathFinderHandler.isFollowing();
     }
 
 }

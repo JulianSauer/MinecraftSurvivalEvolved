@@ -7,8 +7,6 @@ import net.minecraft.server.v1_9_R1.EntityCreeper;
 import net.minecraft.server.v1_9_R1.EntityMonster;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 
-import javax.annotation.Nullable;
-
 /**
  * Controls entity behavior
  */
@@ -22,6 +20,10 @@ public interface PathFinderHandler extends Persistentable {
     }
 
     EntityMode getEntityMode();
+
+    EntityPlayer getFollowingPlayer();
+
+    boolean isFollowing();
 
     void clearPathFinderGoals();
 
@@ -71,6 +73,8 @@ public interface PathFinderHandler extends Persistentable {
      * @param wandering
      */
     void setWandering(boolean wandering);
+
+    void toggleFollowing(EntityPlayer player);
 
     default Predicate getNeutralPredicate(MSEEntity mseEntity) {
         return input -> {

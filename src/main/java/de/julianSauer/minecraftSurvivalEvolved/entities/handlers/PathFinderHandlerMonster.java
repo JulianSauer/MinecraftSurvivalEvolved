@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalFollowPlayer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalRandomTarget;
 import de.julianSauer.minecraftSurvivalEvolved.utils.ReflectionHelper;
 import net.minecraft.server.v1_9_R1.*;
@@ -18,6 +19,8 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
 
     private EntityMode entityMode;
     private boolean wandering;
+    private boolean following;
+    private EntityPlayer followingPlayer;
 
     private boolean initialized;
 
@@ -30,6 +33,8 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
         targetB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "b");
         targetC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getTargetSelector(), "c");
 
+        following = false;
+        followingPlayer = null;
     }
 
     @Override
@@ -72,6 +77,16 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
     }
 
     @Override
+    public EntityPlayer getFollowingPlayer() {
+        return followingPlayer;
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return following;
+    }
+
+    @Override
     public void clearPathFinderGoals() {
         goalB.clear();
         goalC.clear();
@@ -91,8 +106,10 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
         mseEntity.getGoalSelector().a(6, new PathfinderGoalLookAtPlayer(entity, EntityHuman.class, 8.0F));
         mseEntity.getGoalSelector().a(6, new PathfinderGoalRandomLookaround(entity));
         mseEntity.getTargetSelector().a(0, new PathfinderGoalHurtByTarget(entity, false, new Class[0]));
-        if (wandering)
+        if (wandering && !following)
             mseEntity.getGoalSelector().a(5, new PathfinderGoalRandomStroll(entity, 0.8D));
+        else if (following && followingPlayer != null)
+            mseEntity.getGoalSelector().a(1, new PathfinderGoalFollowPlayer(mseEntity, followingPlayer));
     }
 
     @Override
@@ -141,6 +158,26 @@ public class PathFinderHandlerMonster implements PathFinderHandler {
     @Override
     public void setWandering(boolean wandering) {
         this.wandering = wandering;
+        updateGoals();
+    }
+
+    @Override
+    public void toggleFollowing(EntityPlayer player) {
+        if (following) {
+            if (player.equals(followingPlayer)) {
+                following = false;
+                followingPlayer = null;
+            } else {
+                followingPlayer = player;
+            }
+        } else {
+            if (player != null) {
+                following = true;
+                followingPlayer = player;
+            } else {
+                followingPlayer = null;
+            }
+        }
         updateGoals();
     }
 

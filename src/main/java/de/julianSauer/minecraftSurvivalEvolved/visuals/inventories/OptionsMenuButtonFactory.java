@@ -3,6 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.SignGUI;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,10 +28,9 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
     @Override
     public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
-        Map<Integer, Button> buttonMap = new HashMap<>(6);
+        Map<Integer, Button> buttonMap = new HashMap<>(7);
         buttonMap.put(0, new OptionsMenuBack());
         buttonMap.put(1, new OptionsMenuName());
-
         switch (mseEntity.getEntityMode()) {
             case PASSIVE:
                 buttonMap.put(2, new OptionsMenuPassiveMode());
@@ -42,9 +42,13 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
                 buttonMap.put(2, new OptionsMenuAggressiveMode());
                 break;
         }
-        buttonMap.put(3, new OptionsMenuHealth());
-        buttonMap.put(4, new OptionsMenuDamage());
-        buttonMap.put(5, new OptionsMenuFood());
+        if (mseEntity.isFollowing() && mseEntity.getFollowingPlayer() != null)
+            buttonMap.put(3, new OptionsMenuFollowingPlayer(mseEntity.getFollowingPlayer().getName()));
+        else
+            buttonMap.put(3, new OptionsMenuFollowing());
+        buttonMap.put(4, new OptionsMenuHealth());
+        buttonMap.put(5, new OptionsMenuDamage());
+        buttonMap.put(6, new OptionsMenuFood());
 
         return buttonMap;
     }
@@ -117,6 +121,44 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
             mseEntity.setPassiveGoals();
             InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
+    }
+
+    class OptionsMenuFollowing implements Button {
+
+        @Override
+        public ItemStack getButton() {
+            return ButtonIcons.getFollowingButton();
+        }
+
+        @Override
+        public void onClick(Player player, MSEEntity mseEntity) {
+            if (player instanceof CraftPlayer)
+                mseEntity.toggleFollowing(((CraftPlayer) player).getHandle());
+            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+        }
+
+    }
+
+    class OptionsMenuFollowingPlayer implements Button {
+
+        private String player;
+
+        OptionsMenuFollowingPlayer(String player) {
+            this.player = player;
+        }
+
+        @Override
+        public ItemStack getButton() {
+            return ButtonIcons.getFollowingPlayerButton(player);
+        }
+
+        @Override
+        public void onClick(Player player, MSEEntity mseEntity) {
+            if (player instanceof CraftPlayer)
+                mseEntity.toggleFollowing(((CraftPlayer) player).getHandle());
+            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+        }
+
     }
 
     class OptionsMenuHealth implements Button {

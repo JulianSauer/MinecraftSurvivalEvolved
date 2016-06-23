@@ -122,6 +122,11 @@ public class MSESpider extends EntitySpider implements MSEEntity {
     }
 
     @Override
+    public net.minecraft.server.v1_9_R1.EntityInsentient getHandle() {
+        return this;
+    }
+
+    @Override
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
@@ -154,6 +159,21 @@ public class MSESpider extends EntitySpider implements MSEEntity {
     @Override
     public void setWandering(boolean wandering) {
         pathFinderHandler.setWandering(wandering);
+    }
+
+    @Override
+    public void toggleFollowing(EntityPlayer player) {
+        pathFinderHandler.toggleFollowing(player);
+    }
+
+    @Override
+    public EntityPlayer getFollowingPlayer() {
+        return pathFinderHandler.getFollowingPlayer();
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return pathFinderHandler.isFollowing();
     }
 
 }

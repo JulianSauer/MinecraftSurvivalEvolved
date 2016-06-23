@@ -119,6 +119,11 @@ public class MSESquid extends EntitySquid implements MSEEntity {
         return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), this);
     }
 
+    @Override
+    public net.minecraft.server.v1_9_R1.EntityInsentient getHandle() {
+        return this;
+    }
+
     public TamingHandler getTamingHandler() {
         return tamingHandler;
     }
@@ -152,5 +157,19 @@ public class MSESquid extends EntitySquid implements MSEEntity {
         pathFinderHandler.setWandering(wandering);
     }
 
+    @Override
+    public void toggleFollowing(EntityPlayer player) {
+        pathFinderHandler.toggleFollowing(player);
+    }
+
+    @Override
+    public EntityPlayer getFollowingPlayer() {
+        return pathFinderHandler.getFollowingPlayer();
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return pathFinderHandler.isFollowing();
+    }
 
 }
