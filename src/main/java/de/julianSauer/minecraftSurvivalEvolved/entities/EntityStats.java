@@ -55,8 +55,11 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
         if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
 
-        if (isAlpha())
+        if (isAlpha()) {
             (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
+            if (mseEntity.getCraftEntity() instanceof LivingEntity)
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
+        }
     }
 
     @Override
@@ -70,6 +73,8 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
         if (data.getBoolean("MSEIsAlpha")) {
             alphaPredatorMultiplier = 4;
             (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
+            if (mseEntity.getCraftEntity() instanceof LivingEntity)
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
         } else
             alphaPredatorMultiplier = 1;
 

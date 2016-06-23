@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -282,6 +283,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
             InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
             mseEntity.setPassiveGoals();
+            if (mseEntity.getCraftEntity() instanceof LivingEntity)
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
             return true;
         } else {
             return false;
