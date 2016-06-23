@@ -34,6 +34,8 @@ public class ReflectionHelper {
      */
     public static Object getPrivateVariableValue(Class clazz, Object object, String name) {
         Field field = getPrivateVariable(clazz, name);
+        if (field == null)
+            return null;
         try {
             return field.get(object);
         } catch (IllegalAccessException e) {
@@ -51,6 +53,8 @@ public class ReflectionHelper {
      */
     public static Object getPrivateStaticVariable(Class clazz, String name) {
         Field field = getPrivateVariable(clazz, name);
+        if (field == null)
+            return null;
         try {
             return field.get(null);
         } catch (IllegalAccessException e) {

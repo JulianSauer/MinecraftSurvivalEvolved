@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class ConfigHandler extends ConfigHandlerBase {
 
-    private String defaultEntity = "DefaultEntity.yml";
+    private final String defaultEntity = "DefaultEntity.yml";
 
     public ConfigHandler() {
         super(new String[]{
@@ -82,7 +82,7 @@ public class ConfigHandler extends ConfigHandlerBase {
                 noValueFoundFor("Food.yml");
             }
         }
-        return getAllValuesFromConfig("Food.yml");
+        return ret;
     }
 
     public Map<Material, Integer> getMineableBlocksFor(String entity) {

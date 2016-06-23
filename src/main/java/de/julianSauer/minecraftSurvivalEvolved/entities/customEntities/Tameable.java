@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.PathFinderHandler;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.PathfinderHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public interface Tameable {
 
     MiningHandler getMiningHandler();
 
-    PathFinderHandler getPathFinderHandler();
+    PathfinderHandler getPathfinderHandler();
 
     default void forceTame(Player newOwner) {
         getTamingHandler().forceTame(newOwner);
@@ -27,8 +27,8 @@ public interface Tameable {
 
     void callSuperMovement(float[] args);
 
-    default PathFinderHandler.EntityMode getEntityMode() {
-        return getPathFinderHandler().getEntityMode();
+    default PathfinderHandler.EntityMode getEntityMode() {
+        return getPathfinderHandler().getEntityMode();
     }
 
     void setPassiveGoals();

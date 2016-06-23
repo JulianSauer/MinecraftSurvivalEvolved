@@ -1,18 +1,16 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.EntityStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
-import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 
 public class MSEWolf extends EntityWolf implements MSEEntity {
 
-    private EntityStats entityStats;
+    private GeneralBehaviorHandler generalBehaviorHandler;
 
     private TamingHandler tamingHandler;
 
@@ -20,7 +18,7 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
 
     private MovementHandlerInterface movementHandler;
 
-    private PathFinderHandler pathFinderHandler;
+    private PathfinderHandler pathfinderHandler;
 
     private Inventory inventory;
 
@@ -34,9 +32,9 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
 
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
-        entityStats = new EntityStats(this);
+        generalBehaviorHandler = new GeneralBehaviorHandler(this);
         movementHandler = new RidingHandler(this);
-        pathFinderHandler = new PathFinderHandlerMonster(this);
+        pathfinderHandler = new PathfinderHandlerMonster(this);
         pitchWhileTaming = 0;
     }
 
@@ -55,16 +53,16 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
     public void a(NBTTagCompound data) {
         super.a(data);
         tamingHandler.initWith(data);
-        entityStats.initWith(data);
-        pathFinderHandler.initWith(data);
+        generalBehaviorHandler.initWith(data);
+        pathfinderHandler.initWith(data);
     }
 
     @Override
     public void b(NBTTagCompound data) {
         super.b(data);
         tamingHandler.saveData(data);
-        entityStats.saveData(data);
-        pathFinderHandler.saveData(data);
+        generalBehaviorHandler.saveData(data);
+        pathfinderHandler.saveData(data);
         data.setBoolean("MSEInitialized", true);
     }
 
@@ -85,9 +83,8 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
         return inventory;
     }
 
-    @Override
-    public EntityStats getEntityStats() {
-        return entityStats;
+    public GeneralBehaviorHandler getGeneralBehaviorHandler() {
+        return generalBehaviorHandler;
     }
 
     @Override
@@ -133,44 +130,43 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
         return miningHandler;
     }
 
-    @Override
-    public PathFinderHandler getPathFinderHandler() {
-        return pathFinderHandler;
+    public PathfinderHandler getPathfinderHandler() {
+        return pathfinderHandler;
     }
 
     @Override
     public void setPassiveGoals() {
-        pathFinderHandler.setPassiveGoals();
+        pathfinderHandler.setPassiveGoals();
     }
 
     @Override
     public void setNeutralGoals() {
-        pathFinderHandler.setNeutralGoals();
+        pathfinderHandler.setNeutralGoals();
     }
 
     @Override
     public void setAggressiveGoals() {
-        pathFinderHandler.setAggressiveGoals();
+        pathfinderHandler.setAggressiveGoals();
     }
 
     @Override
     public void setWandering(boolean wandering) {
-        pathFinderHandler.setWandering(wandering);
+        pathfinderHandler.setWandering(wandering);
     }
 
     @Override
     public void toggleFollowing(EntityPlayer player) {
-        pathFinderHandler.toggleFollowing(player);
+        pathfinderHandler.toggleFollowing(player);
     }
 
     @Override
     public EntityPlayer getFollowingPlayer() {
-        return pathFinderHandler.getFollowingPlayer();
+        return pathfinderHandler.getFollowingPlayer();
     }
 
     @Override
     public boolean isFollowing() {
-        return pathFinderHandler.isFollowing();
+        return pathfinderHandler.isFollowing();
     }
 
 }

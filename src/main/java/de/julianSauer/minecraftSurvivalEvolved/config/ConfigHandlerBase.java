@@ -13,14 +13,14 @@ import java.util.logging.Logger;
 /**
  * Manages config files.
  */
-public abstract class ConfigHandlerBase {
+abstract class ConfigHandlerBase {
 
-    private Logger logger;
+    private final Logger logger;
 
     private Map<String, CustomConfig> configFiles;
     private Map<String, FileConfiguration> configs;
 
-    public ConfigHandlerBase(String[] configNames) {
+    protected ConfigHandlerBase(String[] configNames) {
         configFiles = new HashMap<>();
         configs = new HashMap<>();
         for (String configName : configNames) {
@@ -182,7 +182,7 @@ public abstract class ConfigHandlerBase {
      */
     protected List<String> getStringListFromConfig(String configName, String path) {
         List<String> ret = getStringList(configName, path);
-        if (!ret.isEmpty())
+        if (ret != null && !ret.isEmpty())
             return ret;
         noValueFoundFor(configName, path);
         return configs.get(configName).getStringList(path);
@@ -273,7 +273,7 @@ public abstract class ConfigHandlerBase {
      * @param configName Name of the config
      * @param path       Path to the missing value
      */
-    protected void noValueFoundFor(String configName, String path) {
+    private void noValueFoundFor(String configName, String path) {
         logger.warning("Value is missing or of wrong type " + path + " in " + configName);
         logger.warning("Using default value");
         logger.warning("Delete " + configName + " to get a default one");

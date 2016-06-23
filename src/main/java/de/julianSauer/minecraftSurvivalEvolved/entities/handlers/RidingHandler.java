@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 public class RidingHandler<T extends EntityInsentient & MSEEntity> implements MovementHandlerInterface {
 
-    protected T entity;
+    protected final T entity;
     private Field jump = null;
     private Method setYawPitch;
 
@@ -35,7 +35,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      */
     public void handleMovement(float[] args) {
 
-        if (!entity.getEntityStats().isInitialized()) {
+        if (!entity.getGeneralBehaviorHandler().isInitialized()) {
             entity.callSuperMovement(args);
             return;
         }
@@ -55,12 +55,12 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
         lastViewingDirection = entity.aO;
 
         if (!isMounted()) {
-            entity.l(entity.getEntityStats().getSpeed() * 2);
+            entity.l(entity.getGeneralBehaviorHandler().getSpeed() * 2);
             entity.callSuperMovement(args);
             return;
         }
 
-        entity.l(entity.getEntityStats().getSpeed());
+        entity.l(entity.getGeneralBehaviorHandler().getSpeed());
         entity.callSuperMovement(calculateMovement());
         jump();
     }
@@ -68,14 +68,12 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
     /**
      * Lets the entity jump if the passenger jumps.
      */
-    protected void jump() {
+    private void jump() {
 
         if (jump != null && entity.onGround) {
             try {
-                if (jump.getBoolean(entity.passengers.get(0))) {
-                    double jumpHeight = 0.5D;
-                    entity.motY = jumpHeight;
-                }
+                if (jump.getBoolean(entity.passengers.get(0)))
+                    entity.motY = 0.5D;
             } catch (IllegalAccessException ex) {
                 ex.printStackTrace();
             }
@@ -89,10 +87,10 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      * @return True if entity is mounted by a player
      */
     protected boolean isMounted() {
-        if (!entity.getEntityStats().isInitialized())
+        if (!entity.getGeneralBehaviorHandler().isInitialized())
             return false;
 
-        return !(entity.getEntityStats().isAlpha()
+        return !(entity.getGeneralBehaviorHandler().isAlpha()
                 || entity.passengers == null
                 || entity.passengers.size() < 1
                 || !(entity.passengers.get(0) instanceof EntityPlayer)
@@ -105,7 +103,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      * @param f  Yaw
      * @param f1 Pitch
      */
-    protected void setYawPitch(float f, float f1) {
+    private void setYawPitch(float f, float f1) {
         try {
             setYawPitch.invoke(entity, f, f1);
         } catch (InvocationTargetException | IllegalAccessException e) {

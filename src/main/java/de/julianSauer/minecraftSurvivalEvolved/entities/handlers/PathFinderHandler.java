@@ -10,7 +10,7 @@ import net.minecraft.server.v1_9_R1.EntityPlayer;
 /**
  * Controls entity behavior
  */
-public interface PathFinderHandler extends Persistentable {
+public interface PathfinderHandler extends Persistentable {
 
     enum EntityMode {
         DEFAULT,

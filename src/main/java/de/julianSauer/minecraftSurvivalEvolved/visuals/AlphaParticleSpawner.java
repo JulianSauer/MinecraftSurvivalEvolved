@@ -9,9 +9,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AlphaParticleSpawner {
 
-    private MSEMain instance;
+    private final MSEMain instance;
 
-    private LivingEntity entity;
+    private final LivingEntity entity;
 
     private ParticleEffects[] particleEffects;
 
@@ -46,7 +46,7 @@ public class AlphaParticleSpawner {
     private void spawnParticleEffects() {
 
         World world = entity.getWorld();
-        Location location = entity.getLocation(); // Possible FX: DRAGON_BREATH, CLOUD, CRIT, EXPLOSION_LARGE, EXPLOSION_HUGE, FLAME & LAVA, SPELL_WITCH
+        Location location = entity.getLocation();
         world.spawnParticle(Particle.SPELL_WITCH, location, 1);
         world.spawnParticle(Particle.SPELL_WITCH, location.add(0, 1, 0), 1);
 
@@ -55,7 +55,7 @@ public class AlphaParticleSpawner {
     /**
      * Adds an effect to an entity if it's not dead.
      */
-    class ParticleEffects extends BukkitRunnable {
+    private class ParticleEffects extends BukkitRunnable {
 
         public void run() {
             if (entity.isDead())

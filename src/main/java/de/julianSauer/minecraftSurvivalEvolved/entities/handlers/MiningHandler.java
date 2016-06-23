@@ -14,11 +14,11 @@ import java.util.Map;
  */
 public class MiningHandler {
 
-    private MSEEntity mseEntity;
+    private final MSEEntity mseEntity;
 
-    private Map<Material, Integer> mineableBlocks;
+    private final Map<Material, Integer> mineableBlocks;
 
-    double damageInPercent;
+    private double damageInPercent;
 
     public MiningHandler(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
@@ -47,8 +47,8 @@ public class MiningHandler {
         if (!canMineBlock(material))
             return -1;
 
-        double damage = mseEntity.getEntityStats().getDamage();
-        double maxDamage = mseEntity.getEntityStats().getMaxDamage() * 2;
+        double damage = mseEntity.getGeneralBehaviorHandler().getDamage();
+        double maxDamage = mseEntity.getGeneralBehaviorHandler().getMaxDamage() * 2;
         damageInPercent = (damage / maxDamage) * 100;
         return (long) (mineableBlocks.get(material) * (100 - damageInPercent) * 0.2);
 

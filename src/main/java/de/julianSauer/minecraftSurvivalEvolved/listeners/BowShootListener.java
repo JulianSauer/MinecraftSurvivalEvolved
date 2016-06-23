@@ -23,7 +23,10 @@ public class BowShootListener implements BasicEventListener {
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
 
-            ItemMeta arrowMeta = getShotArrow(player).getItemMeta();
+            ItemStack shotArrow = getShotArrow(player);
+            if (shotArrow == null)
+                return;
+            ItemMeta arrowMeta = shotArrow.getItemMeta();
 
             if (arrowMeta.hasDisplayName()) {
                 if (arrowMeta.getDisplayName().equals("Tranquilizer Arrow")) {
@@ -64,11 +67,10 @@ public class BowShootListener implements BasicEventListener {
      * @return True if it's a normal arrow
      */
     private boolean isArrow(ItemStack arrow) {
-        if (arrow == null)
-            return false;
-        return arrow.getType().equals(Material.ARROW)
+        return arrow != null
+                && (arrow.getType().equals(Material.ARROW)
                 || arrow.getType().equals(Material.SPECTRAL_ARROW)
-                || arrow.getType().equals(Material.TIPPED_ARROW);
+                || arrow.getType().equals(Material.TIPPED_ARROW));
     }
 
 }

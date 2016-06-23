@@ -11,7 +11,4 @@ public class PathfinderGoalRandomTarget<T extends EntityLiving> extends Pathfind
         super(entity, var2, 10, var3, false, var4);
     }
 
-    public boolean a() {
-        return super.a();
-    }
 }

@@ -18,11 +18,11 @@ public class EntityRegistry {
         SQUID("Squid", 94, EntityType.SQUID, EntitySquid.class, MSESquid.class),
         WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, MSEWolf.class);
 
-        private String name;
-        private int id;
-        private EntityType entityType;
-        private Class<? extends EntityInsentient> nmsClass;
-        private Class<? extends EntityInsentient> customClass;
+        private final String name;
+        private final int id;
+        private final EntityType entityType;
+        private final Class<? extends EntityInsentient> nmsClass;
+        private final Class<? extends EntityInsentient> customClass;
 
         TameableEntityType(String name, int id, EntityType entityType, Class<? extends EntityInsentient> nmsClass, Class<? extends EntityInsentient> customClass) {
             this.name = name;
@@ -87,9 +87,9 @@ public class EntityRegistry {
     private static void writeEntityToMaps(Class paramClass, String paramString, int paramInt) {
         ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "c")).put(paramString, paramClass);
         ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "d")).put(paramClass, paramString);
-        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
-        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
-        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "e")).put(paramInt, paramClass);
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "f")).put(paramClass, paramInt);
+        ((Map) ReflectionHelper.getPrivateStaticVariable(EntityTypes.class, "g")).put(paramString, paramInt);
     }
 
 }

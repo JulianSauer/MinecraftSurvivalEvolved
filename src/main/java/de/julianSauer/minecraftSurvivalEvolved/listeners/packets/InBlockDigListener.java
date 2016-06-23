@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class InBlockDigListener implements PacketListener<PacketPlayInBlockDig> {
 
-    Map<UUID, MiningTimer> currentMiningTasks = new HashMap<>();
+    private Map<UUID, MiningTimer> currentMiningTasks = new HashMap<>();
 
     @Override
     public void onPacketEvent(ChannelHandlerContext context, PacketPlayInBlockDig packet) {
@@ -58,9 +58,9 @@ public class InBlockDigListener implements PacketListener<PacketPlayInBlockDig> 
      */
     public class MiningTimer extends BukkitRunnable {
 
-        private Block block;
-        private UUID player;
-        private MSEEntity mseEntity;
+        private final Block block;
+        private final UUID player;
+        private final MSEEntity mseEntity;
 
         MiningTimer(UUID player, Block block, MSEEntity mseEntity) {
             this.player = player;

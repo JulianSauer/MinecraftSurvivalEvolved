@@ -15,24 +15,24 @@ public class BaseStats {
 
     private static HashMap<String, BaseStats> cache;
 
-    private boolean tameable;
+    private final boolean tameable;
 
-    private int fortitude;
-    private int levelCap;
-    private int maxTamingProgress;
-    private int maxTorpidity;
-    private int maxFoodValue;
-    private int xpUntilLevelUp;
-    private int highestFoodSaturation;
+    private final int fortitude;
+    private final int levelCap;
+    private final int maxTamingProgress;
+    private final int maxTorpidity;
+    private final int maxFoodValue;
+    private final int xpUntilLevelUp;
+    private final int highestFoodSaturation;
 
-    private float levelMultiplier;
-    private int alphaProbability;
-    private float speed;
+    private final float levelMultiplier;
+    private final int alphaProbability;
+    private final float speed;
 
-    private double damage;
+    private final double damage;
 
-    private Map<Material, Integer> preferredFood;
-    private Map<String, Integer> foodSaturations;
+    private final Map<Material, Integer> preferredFood;
+    private final Map<String, Integer> foodSaturations;
 
     private BaseStats(String entity) {
 

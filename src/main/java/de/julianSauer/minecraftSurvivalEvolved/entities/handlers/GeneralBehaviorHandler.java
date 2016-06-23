@@ -1,7 +1,7 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities;
+package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
@@ -16,11 +16,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * General stats of an entity. Also grands access to base stats of an entity.
  */
-public class EntityStats<T extends EntityInsentient & MSEEntity> implements Persistentable {
+public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
-    private T mseEntity;
+    private final T mseEntity;
 
-    private BaseStats baseStats;
+    private final BaseStats baseStats;
 
     private int alphaPredatorMultiplier; // baseStats are multiplied by this value; set to 1 if not an alpha
     private int currentFoodValue;
@@ -33,7 +33,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
 
     private boolean initialized;
 
-    public EntityStats(T mseEntity) {
+    public GeneralBehaviorHandler(T mseEntity) {
         this.mseEntity = mseEntity;
         baseStats = BaseStats.getBaseAttributesFor(mseEntity.getEntityType());
         foodDepletion = 5;
@@ -200,7 +200,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
     /**
      * Increases the xp for this entity. Also handles level ups.
      *
-     * @param xpIncrease
+     * @param xpIncrease Amount of increase
      */
     public void increaseXp(float xpIncrease) {
         if (!initialized)
@@ -273,7 +273,7 @@ public class EntityStats<T extends EntityInsentient & MSEEntity> implements Pers
     /**
      * Handles autonomous eating of an entity
      */
-    class FoodTimer extends BukkitRunnable {
+    private class FoodTimer extends BukkitRunnable {
 
         @Override
         public void run() {

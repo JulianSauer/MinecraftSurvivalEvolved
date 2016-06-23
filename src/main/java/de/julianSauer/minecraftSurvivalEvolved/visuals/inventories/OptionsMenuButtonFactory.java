@@ -141,7 +141,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
     class OptionsMenuFollowingPlayer implements Button {
 
-        private String player;
+        private final String player;
 
         OptionsMenuFollowingPlayer(String player) {
             this.player = player;

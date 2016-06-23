@@ -31,14 +31,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      */
     public static void openTamingGUI(Player player, MSEEntity mseEntity) {
-        Inventory tamingGUI = mseEntity.getInventory();
-
-        Map<Integer, Button> buttons = tamingMenuButtonFactory.getButtons(mseEntity);
-        for (int i = 0; i < buttons.size(); i++)
-            tamingGUI.setItem(i, buttons.get(i).getButton());
-
-        player.openInventory(tamingGUI);
-        ScoreboardHandler.addPlayer(mseEntity, player);
+        openGenericGUI(player, mseEntity, tamingMenuButtonFactory, mseEntity.getInventory());
     }
 
     /**
@@ -49,13 +42,7 @@ public class InventoryGUI {
      */
     public static void openMainGUI(Player player, MSEEntity mseEntity) {
         Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getEntityType());
-
-        Map<Integer, Button> buttons = mainMenuButtonFactory.getButtons(mseEntity);
-        for (int i = 0; i < buttons.size(); i++)
-            tamedGUI.setItem(i, buttons.get(i).getButton());
-
-        player.openInventory(tamedGUI);
-        ScoreboardHandler.addPlayer(mseEntity, player);
+        openGenericGUI(player, mseEntity, mainMenuButtonFactory, tamedGUI);
     }
 
     /**
@@ -65,14 +52,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      */
     public static void openInventoryGUI(Player player, MSEEntity mseEntity) {
-        Inventory inventoryGUI = mseEntity.getInventory();
-
-        Map<Integer, Button> buttons = inventoryMenuButtonFactory.getButtons(mseEntity);
-        for (int i = 0; i < buttons.size(); i++)
-            inventoryGUI.setItem(i, buttons.get(i).getButton());
-
-        player.openInventory(inventoryGUI);
-        ScoreboardHandler.addPlayer(mseEntity, player);
+        openGenericGUI(player, mseEntity, inventoryMenuButtonFactory, mseEntity.getInventory());
     }
 
     /**
@@ -84,14 +64,8 @@ public class InventoryGUI {
      */
     public static void openOptionsGUI(Player player, MSEEntity mseEntity, boolean levelUp) {
         Inventory statsGUI = Bukkit.createInventory(mseEntity, 9, "Entity Options");
-
         optionsMenuButtonFactory.setGlowing(levelUp);
-        Map<Integer, Button> buttons = optionsMenuButtonFactory.getButtons(mseEntity);
-        for (int i = 0; i < buttons.size(); i++)
-            statsGUI.setItem(i, buttons.get(i).getButton());
-
-        player.openInventory(statsGUI);
-        ScoreboardHandler.addPlayer(mseEntity, player);
+        openGenericGUI(player, mseEntity, optionsMenuButtonFactory, statsGUI);
     }
 
     /**
@@ -177,6 +151,23 @@ public class InventoryGUI {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Opens the inventory as a UI with buttons from the buttonFactory.
+     *
+     * @param player        Player that opened the inventory
+     * @param mseEntity     Entity that is associated with the inventory
+     * @param buttonFactory Provides the buttons
+     * @param inventory     Inventory that will be used as a base for the UI
+     */
+    private static void openGenericGUI(Player player, MSEEntity mseEntity, ButtonFactory buttonFactory, Inventory inventory) {
+        Map<Integer, Button> buttons = buttonFactory.getButtons(mseEntity);
+        for (int i = 0; i < buttons.size(); i++)
+            inventory.setItem(i, buttons.get(i).getButton());
+
+        player.openInventory(inventory);
+        ScoreboardHandler.addPlayer(mseEntity, player);
     }
 
 }

@@ -9,16 +9,16 @@ import net.minecraft.server.v1_9_R1.PathfinderGoal;
  */
 public class PathfinderGoalFollowPlayer extends PathfinderGoal {
 
-    private MSEEntity mseEntity;
-    private EntityPlayer player;
+    private final MSEEntity mseEntity;
+    private final EntityPlayer player;
 
-    private double speed;
-    private double distanceSquared;
+    private final double speed;
+    private final double distanceSquared;
 
     public PathfinderGoalFollowPlayer(MSEEntity mseEntity, EntityPlayer player) {
         this.mseEntity = mseEntity;
         this.player = player;
-        this.speed = mseEntity.getEntityStats().getSpeed() * 10;
+        this.speed = mseEntity.getGeneralBehaviorHandler().getSpeed() * 10;
         this.distanceSquared = 4.0;
         this.a(3);
     }

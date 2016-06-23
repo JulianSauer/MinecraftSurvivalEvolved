@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
-    private T mseEntity;
+    private final T mseEntity;
 
     private int tamingProgress;
 
@@ -113,25 +113,25 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public boolean isTamed() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        return tamed && !mseEntity.getEntityStats().isAlpha();
+        return tamed && !mseEntity.getGeneralBehaviorHandler().isAlpha();
     }
 
     public boolean isTameable() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        return mseEntity.getEntityStats().getBaseStats().isTameable() && !tamed && !mseEntity.getEntityStats().isAlpha();
+        return mseEntity.getGeneralBehaviorHandler().getBaseStats().isTameable() && !tamed && !mseEntity.getGeneralBehaviorHandler().isAlpha();
     }
 
     public boolean isUnconscious() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        return unconscious && !mseEntity.getEntityStats().isAlpha();
+        return unconscious && !mseEntity.getGeneralBehaviorHandler().isAlpha();
     }
 
     public int getTamingProgress() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        if (mseEntity.getEntityStats().isAlpha())
+        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
@@ -141,17 +141,17 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public int getMaxTamingProgress() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        if (mseEntity.getEntityStats().isAlpha())
+        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
-        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getEntityStats().getBaseStats().getMaxTamingProgress(), mseEntity.getEntityStats().getLevel(), mseEntity.getEntityStats().getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTamingProgress(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
     }
 
     public UUID getOwner() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        if (tamed && !mseEntity.getEntityStats().isAlpha())
+        if (tamed && !mseEntity.getGeneralBehaviorHandler().isAlpha())
             return owner;
         return null;
     }
@@ -165,7 +165,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public int getTorpidity() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        if (mseEntity.getEntityStats().isAlpha())
+        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
             throw new IllegalStateException("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
@@ -175,7 +175,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public int getMaxTorpidity() {
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
-        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getEntityStats().getBaseStats().getMaxTorpidity(), mseEntity.getEntityStats().getLevel(), mseEntity.getEntityStats().getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTorpidity(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
     }
 
     /**
@@ -188,7 +188,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
-        if (mseEntity.getEntityStats().isAlpha())
+        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
             return;
         tamer = lastDamager;
         increaseTorpidityBy(torpidityIncrease);
@@ -258,7 +258,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         this.owner = newOwner.getUniqueId();
         decreaseTorpidityBy(getMaxTorpidity());
         mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
-        mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
+        mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
         BarHandler.sendTamedTextTo(newOwner, mseEntity.getName());
         InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
         mseEntity.setPassiveGoals();
@@ -269,25 +269,25 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
      *
      * @return False if the entity could not be tamed
      */
-    private boolean setSuccessfullyTamed() {
+    private void setSuccessfullyTamed() {
 
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
-        if (isTameable() && tamer != null && !mseEntity.getEntityStats().isAlpha()) {
+        if (isTameable() && tamer != null && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
             tamed = true;
             owner = tamer;
             decreaseTorpidityBy(getMaxTorpidity());
             mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
-            mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
+            mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
             InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
             mseEntity.setPassiveGoals();
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
-            return true;
+            return;
         } else {
-            return false;
+            return;
         }
 
     }
@@ -300,7 +300,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
 
-        if (mseEntity.getEntityStats().isAlpha())
+        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
             return;
 
         if (isUnconscious() && torpidity <= 0) {
@@ -308,7 +308,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             if (unconsciousnessTimer != null && threadCurrentlyRunning) {
                 unconsciousnessTimer.cancel();
             }
-        } else if (!isUnconscious() && torpidity >= mseEntity.getEntityStats().getFortitude()) {
+        } else if (!isUnconscious() && torpidity >= mseEntity.getGeneralBehaviorHandler().getFortitude()) {
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
             unconsciousnessTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0, unconsciousnessUpdateInterval);
@@ -338,13 +338,13 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
     class UnconsciousnessTimer extends BukkitRunnable {
 
-        UUID hologram;
+        final UUID hologram;
 
         public UnconsciousnessTimer() {
             threadCurrentlyRunning = true;
 
             if (!isTamed()) {
-                mseEntity.getEntityStats().startFoodTimer();
+                mseEntity.getGeneralBehaviorHandler().startFoodTimer();
                 mseEntity.setCustomName("");
                 hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), getHologramText());
             } else
@@ -373,7 +373,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         @Override
         public void cancel() {
             HologramHandler.despawnHologram(hologram);
-            mseEntity.setCustomName(mseEntity.getEntityStats().getDefaultName());
+            mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
             threadCurrentlyRunning = false;
             super.cancel();
         }
@@ -395,7 +395,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             if (!isTameable())
                 return;
 
-            int tamingIncrease = mseEntity.getEntityStats().updateHunger();
+            int tamingIncrease = mseEntity.getGeneralBehaviorHandler().updateHunger();
             if (tamingIncrease > 0) {
                 eatAnimation();
             }
@@ -409,7 +409,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
         private String[] getHologramText() {
             return new String[]{
-                    ChatColor.DARK_AQUA + mseEntity.getEntityStats().getDefaultName(),
+                    ChatColor.DARK_AQUA + mseEntity.getGeneralBehaviorHandler().getDefaultName(),
                     ChatColor.DARK_AQUA + "Health: " + (int) mseEntity.getHealth() + "/" + (int) mseEntity.getMaxHealth(),
                     ChatColor.DARK_PURPLE + BarHandler.getProgressBar(getTorpidity(), getMaxTorpidity()),
                     ChatColor.GOLD + BarHandler.getProgressBar(getTamingProgress(), getMaxTamingProgress())

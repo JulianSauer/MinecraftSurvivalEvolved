@@ -21,7 +21,7 @@ public class PacketEventManager extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
         PacketListener packetListener = packetListeners.get(packet.getClass());
-        if (packetListener != null)
+        if (packetListener != null && packet instanceof Packet)
             packetListener.onPacketEvent(context, (Packet) packet);
         super.channelRead(context, packet);
     }

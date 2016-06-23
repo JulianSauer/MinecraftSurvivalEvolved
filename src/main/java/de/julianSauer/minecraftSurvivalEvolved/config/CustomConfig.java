@@ -10,9 +10,9 @@ import java.util.logging.Level;
 /**
  * Used for custom config files.
  */
-public class CustomConfig {
+class CustomConfig {
 
-    private String fileName;
+    private final String fileName;
 
     private File file;
 

@@ -63,7 +63,7 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
         x = mot[0];
         z = mot[1];
 
-        float speed = ((MSEEntity) entity).getEntityStats().getSpeed();
+        float speed = ((MSEEntity) entity).getGeneralBehaviorHandler().getSpeed();
         return new float[]{
                 x * speed,
                 y * speed,

@@ -17,7 +17,7 @@ public class HologramHandler {
 
     // Positioning of text
     private static float height = 0.65F;
-    private static float spacing = 0.25F;
+    private static final float spacing = 0.25F;
 
     /**
      * Spawns a hologram at the given location.
@@ -158,8 +158,8 @@ public class HologramHandler {
      */
     private static class CallableSpawner implements Callable {
 
-        Location location;
-        String text;
+        final Location location;
+        final String text;
 
         CallableSpawner(Location location, String text) {
             this.location = location;

@@ -16,7 +16,7 @@ public class PrepareItemCraftListener implements BasicEventListener {
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {
 
         ItemMeta itemMeta = e.getRecipe().getResult().getItemMeta();
-        if (!(e.getInventory() instanceof CraftingInventory)
+        if (!(e.getInventory() != null)
                 || !itemMeta.hasDisplayName()
                 || !(itemMeta.getDisplayName().equals("Tranquilizer Arrow"))) {
             return;

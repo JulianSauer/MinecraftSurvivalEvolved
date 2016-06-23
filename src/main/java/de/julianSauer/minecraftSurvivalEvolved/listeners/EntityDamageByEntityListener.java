@@ -35,14 +35,14 @@ public class EntityDamageByEntityListener implements BasicEventListener {
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
             // Increase torpor
-            if (mseEntity.getEntityStats().getBaseStats().isTameable() && !mseEntity.getTamingHandler().isUnconscious())
+            if (mseEntity.getGeneralBehaviorHandler().getBaseStats().isTameable() && !mseEntity.getTamingHandler().isUnconscious())
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
         } else if (isMountedAttack(damager)) {
-            e.setDamage(getMSEEntityFromVehicle(damager).getEntityStats().getDamage());
+            e.setDamage(getMSEEntityFromVehicle(damager).getGeneralBehaviorHandler().getDamage());
 
         } else if (isNPCAttackEvent(damager)) {
-            e.setDamage(getMSEEntityFromEntity(damager).getEntityStats().getDamage());
+            e.setDamage(getMSEEntityFromEntity(damager).getGeneralBehaviorHandler().getDamage());
 
         }
 
@@ -59,9 +59,7 @@ public class EntityDamageByEntityListener implements BasicEventListener {
         if (!(damager instanceof Player))
             return false;
         Player player = (Player) damager;
-        if (getMSEEntityFromVehicle(player) == null)
-            return false;
-        return true;
+        return !(getMSEEntityFromVehicle(player) == null);
 
     }
 
@@ -82,8 +80,8 @@ public class EntityDamageByEntityListener implements BasicEventListener {
 
         List<MetadataValue> titleData = arrow.getMetadata("Tranquilizer Arrow");
 
-        for (MetadataValue metaValue : titleData)
-            return metaValue.asBoolean();
+        if (titleData.size() == 1)
+            return titleData.get(0).asBoolean();
         return false;
 
     }
