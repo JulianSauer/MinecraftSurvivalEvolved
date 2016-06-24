@@ -14,6 +14,12 @@ import org.bukkit.inventory.Inventory;
  */
 public class InventoryClickListener implements BasicInventoryListener {
 
+    InventoryGUI gui;
+
+    public InventoryClickListener() {
+        gui = new InventoryGUI();
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
 
@@ -25,19 +31,19 @@ public class InventoryClickListener implements BasicInventoryListener {
 
             if (inventory.getName().equals("Entity Options")) {
                 e.setCancelled(
-                        InventoryGUI.optionsMenuButtonClicked(e.getSlot(), player, mseEntity));
+                        gui.optionsMenuButtonClicked(e.getSlot(), player, mseEntity));
 
             } else if (inventory.getName().equals(mseEntity.getEntityType())) {
                 e.setCancelled(
-                        InventoryGUI.mainMenuButtonClicked(e.getSlot(), player, mseEntity));
+                        gui.mainMenuButtonClicked(e.getSlot(), player, mseEntity));
 
             } else if (inventory.getName().contains(" Inventory")) {
                 if (mseEntity.getTamingHandler().isTamed()) {
                     e.setCancelled(
-                            InventoryGUI.inventoryMenuButtonClicked(e.getSlot(), player, mseEntity));
+                            gui.inventoryMenuButtonClicked(e.getSlot(), player, mseEntity));
                 } else {
                     e.setCancelled(
-                            InventoryGUI.tamingMenuButtonClicked(e.getSlot(), player, mseEntity));
+                            gui.tamingMenuButtonClicked(e.getSlot(), player, mseEntity));
                 }
             }
         }

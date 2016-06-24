@@ -11,7 +11,7 @@ public class PlayerQuitListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        MSEMain.getPacketInjector().removePlayer(e.getPlayer());
+        MSEMain.getInstance().getPacketInjector().removePlayer(e.getPlayer());
     }
 
 }

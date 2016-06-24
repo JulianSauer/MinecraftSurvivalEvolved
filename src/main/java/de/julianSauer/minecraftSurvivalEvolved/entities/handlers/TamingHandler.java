@@ -242,7 +242,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
         mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
         BarHandler.sendTamedTextTo(newOwner, mseEntity.getName());
-        InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+        (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
         mseEntity.setPassiveGoals();
     }
 
@@ -263,7 +263,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
             mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
             BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
-            InventoryGUI.closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+            (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
             mseEntity.setPassiveGoals();
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);

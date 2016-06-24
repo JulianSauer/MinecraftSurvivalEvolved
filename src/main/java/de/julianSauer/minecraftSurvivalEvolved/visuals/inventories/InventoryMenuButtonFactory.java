@@ -12,6 +12,14 @@ import java.util.Map;
  */
 public class InventoryMenuButtonFactory implements ButtonFactory {
 
+    private InventoryGUI gui;
+    private ButtonIcons icons;
+
+    public InventoryMenuButtonFactory(InventoryGUI gui) {
+        this.gui = gui;
+        icons = new ButtonIcons();
+    }
+
     @Override
     public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
         Map<Integer, Button> buttonMap = new HashMap<>(1);
@@ -23,12 +31,12 @@ public class InventoryMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getBackButton();
+            return icons.getBackButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
-            InventoryGUI.openMainGUI(player, mseEntity);
+            gui.openMainGUI(player, mseEntity);
         }
 
     }

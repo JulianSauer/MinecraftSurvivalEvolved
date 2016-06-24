@@ -12,15 +12,15 @@ import java.util.Map;
 
 public class InventoryGUI {
 
-    private static ButtonFactory optionsMenuButtonFactory;
-    private static ButtonFactory mainMenuButtonFactory;
-    private static ButtonFactory inventoryMenuButtonFactory;
-    private static ButtonFactory tamingMenuButtonFactory;
+    private ButtonFactory optionsMenuButtonFactory;
+    private ButtonFactory mainMenuButtonFactory;
+    private ButtonFactory inventoryMenuButtonFactory;
+    private ButtonFactory tamingMenuButtonFactory;
 
-    static {
-        optionsMenuButtonFactory = new OptionsMenuButtonFactory();
-        mainMenuButtonFactory = new MainMenuButtonFactory();
-        inventoryMenuButtonFactory = new InventoryMenuButtonFactory();
+    public InventoryGUI() {
+        optionsMenuButtonFactory = new OptionsMenuButtonFactory(this);
+        mainMenuButtonFactory = new MainMenuButtonFactory(this);
+        inventoryMenuButtonFactory = new InventoryMenuButtonFactory(this);
         tamingMenuButtonFactory = new TamingButtonFactory();
     }
 
@@ -30,7 +30,7 @@ public class InventoryGUI {
      * @param player    Player that will see the GUI
      * @param mseEntity InventoryHolder
      */
-    public static void openTamingGUI(Player player, MSEEntity mseEntity) {
+    public void openTamingGUI(Player player, MSEEntity mseEntity) {
         openGenericGUI(player, mseEntity, tamingMenuButtonFactory, mseEntity.getInventory());
     }
 
@@ -40,7 +40,7 @@ public class InventoryGUI {
      * @param player    Player that will see the GUI
      * @param mseEntity InventoryHolder
      */
-    public static void openMainGUI(Player player, MSEEntity mseEntity) {
+    public void openMainGUI(Player player, MSEEntity mseEntity) {
         Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getEntityType());
         openGenericGUI(player, mseEntity, mainMenuButtonFactory, tamedGUI);
     }
@@ -51,7 +51,7 @@ public class InventoryGUI {
      * @param player    Player that will see the GUI
      * @param mseEntity InventoryHolder
      */
-    public static void openInventoryGUI(Player player, MSEEntity mseEntity) {
+    public void openInventoryGUI(Player player, MSEEntity mseEntity) {
         openGenericGUI(player, mseEntity, inventoryMenuButtonFactory, mseEntity.getInventory());
     }
 
@@ -62,7 +62,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      * @param levelUp   Set to true if a level up is accessible
      */
-    public static void openOptionsGUI(Player player, MSEEntity mseEntity, boolean levelUp) {
+    public void openOptionsGUI(Player player, MSEEntity mseEntity, boolean levelUp) {
         Inventory statsGUI = Bukkit.createInventory(mseEntity, 9, "Entity Options");
         optionsMenuButtonFactory.setGlowing(levelUp);
         openGenericGUI(player, mseEntity, optionsMenuButtonFactory, statsGUI);
@@ -74,7 +74,7 @@ public class InventoryGUI {
      * @param mseEntity Entity that is the InventoryHolder
      * @param players   Tamers that might be looking at this entity's inventory
      */
-    public static void closeTamingInventoriesOf(MSEEntity mseEntity, Player... players) {
+    public void closeTamingInventoriesOf(MSEEntity mseEntity, Player... players) {
 
         if (players == null || mseEntity == null)
             return;
@@ -93,7 +93,7 @@ public class InventoryGUI {
      * @param mseEntity Entity that the menu belongs to
      * @return True if a button was pressed
      */
-    public static boolean mainMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
+    public boolean mainMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = mainMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
@@ -110,7 +110,7 @@ public class InventoryGUI {
      * @param mseEntity Entity that the menu belongs to
      * @return True if a button was pressed
      */
-    public static boolean optionsMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
+    public boolean optionsMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = optionsMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
@@ -127,7 +127,7 @@ public class InventoryGUI {
      * @param mseEntity Entity that the menu belongs to
      * @return True if a button was pressed
      */
-    public static boolean inventoryMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
+    public boolean inventoryMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = inventoryMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
@@ -144,7 +144,7 @@ public class InventoryGUI {
      * @param mseEntity Entity that the menu belongs to
      * @return True if a button was pressed
      */
-    public static boolean tamingMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
+    public boolean tamingMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
         Button button = tamingMenuButtonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
@@ -161,7 +161,7 @@ public class InventoryGUI {
      * @param buttonFactory Provides the buttons
      * @param inventory     Inventory that will be used as a base for the UI
      */
-    private static void openGenericGUI(Player player, MSEEntity mseEntity, ButtonFactory buttonFactory, Inventory inventory) {
+    private void openGenericGUI(Player player, MSEEntity mseEntity, ButtonFactory buttonFactory, Inventory inventory) {
         Map<Integer, Button> buttons = buttonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             inventory.setItem(i, buttons.get(i).getButton());

@@ -13,6 +13,12 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
  */
 public class PlayerInteractListener implements BasicEventListener {
 
+    private InventoryGUI gui;
+
+    public PlayerInteractListener() {
+        gui = new InventoryGUI();
+    }
+
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
 
@@ -24,10 +30,10 @@ public class PlayerInteractListener implements BasicEventListener {
         Player player = e.getPlayer();
 
         if (mseEntity.getTamingHandler().isUnconscious() && !mseEntity.getTamingHandler().isTamed()) {
-            InventoryGUI.openTamingGUI(player, mseEntity);
+            gui.openTamingGUI(player, mseEntity);
         } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().getOwner().equals(player.getUniqueId())) {
             if (player.isSneaking())
-                InventoryGUI.openMainGUI(player, mseEntity);
+                gui.openMainGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }

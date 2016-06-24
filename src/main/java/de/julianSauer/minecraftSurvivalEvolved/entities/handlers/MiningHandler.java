@@ -22,7 +22,7 @@ public class MiningHandler {
 
     public MiningHandler(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
-        mineableBlocks = MSEMain.getConfigHandler().getMineableBlocksFor(mseEntity.getEntityType());
+        mineableBlocks = MSEMain.getInstance().getConfigHandler().getMineableBlocksFor(mseEntity.getEntityType());
         damageInPercent = 0;
     }
 

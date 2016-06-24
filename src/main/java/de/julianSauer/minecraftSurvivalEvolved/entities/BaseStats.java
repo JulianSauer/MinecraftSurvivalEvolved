@@ -36,7 +36,7 @@ public class BaseStats {
 
     private BaseStats(String entity) {
 
-        ConfigHandler config = MSEMain.getConfigHandler();
+        ConfigHandler config = MSEMain.getInstance().getConfigHandler();
 
         // Prevent spaces in .yml files
         entity = entity.replace(" ", "");

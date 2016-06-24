@@ -12,6 +12,12 @@ import java.util.Map;
  */
 public class TamingButtonFactory implements ButtonFactory {
 
+    private ButtonIcons icons;
+
+    public TamingButtonFactory() {
+        icons = new ButtonIcons();
+    }
+
     @Override
     public Map<Integer, Button> getButtons(MSEEntity mseEntity) {
         Map<Integer, Button> buttonMap = new HashMap<>(5);
@@ -23,7 +29,7 @@ public class TamingButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getForceFeedButton();
+            return icons.getForceFeedButton();
         }
 
         @Override

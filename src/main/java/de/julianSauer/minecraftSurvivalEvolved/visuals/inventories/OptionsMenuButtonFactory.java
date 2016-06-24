@@ -15,9 +15,14 @@ import java.util.Map;
  */
 public class OptionsMenuButtonFactory implements ButtonFactory {
 
+    private InventoryGUI gui;
+    private ButtonIcons icons;
+
     private boolean glow;
 
-    public OptionsMenuButtonFactory() {
+    public OptionsMenuButtonFactory(InventoryGUI gui) {
+        this.gui = gui;
+        icons = new ButtonIcons();
         glow = false;
     }
 
@@ -57,12 +62,12 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getBackButton();
+            return icons.getBackButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
-            InventoryGUI.openMainGUI(player, mseEntity);
+            gui.openMainGUI(player, mseEntity);
         }
     }
 
@@ -70,7 +75,7 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getChangeNameButton();
+            return icons.getChangeNameButton();
         }
 
         @Override
@@ -85,13 +90,13 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getPassiveModeButton();
+            return icons.getPassiveModeButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setNeutralGoals();
-            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+            gui.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
@@ -99,13 +104,13 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getNeutralModeButton();
+            return icons.getNeutralModeButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setAggressiveGoals();
-            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+            gui.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
@@ -113,13 +118,13 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getAggressiveModeButton();
+            return icons.getAggressiveModeButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             mseEntity.setPassiveGoals();
-            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+            gui.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
     }
 
@@ -127,14 +132,14 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getFollowingButton();
+            return icons.getFollowingButton();
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             if (player instanceof CraftPlayer)
                 mseEntity.toggleFollowing(((CraftPlayer) player).getHandle());
-            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+            gui.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
 
     }
@@ -149,14 +154,14 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
 
         @Override
         public ItemStack getButton() {
-            return ButtonIcons.getFollowingPlayerButton(player);
+            return icons.getFollowingPlayerButton(player);
         }
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
             if (player instanceof CraftPlayer)
                 mseEntity.toggleFollowing(((CraftPlayer) player).getHandle());
-            InventoryGUI.openOptionsGUI(player, mseEntity, true); // Updates the GUI
+            gui.openOptionsGUI(player, mseEntity, true); // Updates the GUI
         }
 
     }
@@ -166,8 +171,8 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public ItemStack getButton() {
             if (glow)
-                return ButtonIcons.makeGlow(ButtonIcons.getIncreaseHealthButton());
-            return ButtonIcons.getIncreaseHealthButton();
+                return icons.makeGlow(icons.getIncreaseHealthButton());
+            return icons.getIncreaseHealthButton();
         }
 
         @Override
@@ -181,8 +186,8 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public ItemStack getButton() {
             if (glow)
-                return ButtonIcons.makeGlow(ButtonIcons.getIncreaseDamageButton());
-            return ButtonIcons.getIncreaseDamageButton();
+                return icons.makeGlow(icons.getIncreaseDamageButton());
+            return icons.getIncreaseDamageButton();
         }
 
         @Override
@@ -196,8 +201,8 @@ public class OptionsMenuButtonFactory implements ButtonFactory {
         @Override
         public ItemStack getButton() {
             if (glow)
-                return ButtonIcons.makeGlow(ButtonIcons.getIncreaseFoodButton());
-            return ButtonIcons.getIncreaseFoodButton();
+                return icons.makeGlow(icons.getIncreaseFoodButton());
+            return icons.getIncreaseFoodButton();
         }
 
         @Override

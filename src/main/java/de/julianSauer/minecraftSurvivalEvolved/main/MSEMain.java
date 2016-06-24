@@ -16,9 +16,9 @@ public class MSEMain extends JavaPlugin {
 
     private static MSEMain instance;
 
-    private static ConfigHandler configHandler;
+    private ConfigHandler configHandler;
 
-    private static PacketInjector packetInjector;
+    private PacketInjector packetInjector;
 
     @Override
     public void onEnable() {
@@ -68,11 +68,11 @@ public class MSEMain extends JavaPlugin {
         return instance;
     }
 
-    public static ConfigHandler getConfigHandler() {
+    public ConfigHandler getConfigHandler() {
         return configHandler;
     }
 
-    public static PacketInjector getPacketInjector() {
+    public PacketInjector getPacketInjector() {
         return packetInjector;
     }
 

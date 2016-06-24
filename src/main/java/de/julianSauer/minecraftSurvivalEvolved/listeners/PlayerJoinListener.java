@@ -11,7 +11,7 @@ public class PlayerJoinListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        MSEMain.getPacketInjector().addPlayer(e.getPlayer());
+        MSEMain.getInstance().getPacketInjector().addPlayer(e.getPlayer());
     }
 
 }

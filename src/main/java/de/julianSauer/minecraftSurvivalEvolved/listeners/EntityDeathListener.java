@@ -15,6 +15,12 @@ import java.util.Arrays;
  */
 public class EntityDeathListener implements BasicEventListener {
 
+    private ButtonIcons icons;
+
+    public EntityDeathListener() {
+        icons = new ButtonIcons();
+    }
+
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
 
@@ -26,7 +32,7 @@ public class EntityDeathListener implements BasicEventListener {
 
         // Remove back button and force feed button
         ItemStack backButton = entityInventory.getItem(0);
-        if (ButtonIcons.isButtonIcon(backButton, ButtonIcons.getBackButton()) || ButtonIcons.isButtonIcon(backButton, ButtonIcons.getForceFeedButton()))
+        if (icons.isButtonIcon(backButton, icons.getBackButton()) || icons.isButtonIcon(backButton, icons.getForceFeedButton()))
             entityInventory.setItem(0, new ItemStack(Material.AIR));
 
         e.getDrops().addAll(Arrays.asList(entityInventory.getContents()));

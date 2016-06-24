@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ButtonIcons {
 
-    private static ItemStack createItemWith(String name, Material material) {
+    private ItemStack createItemWith(String name, Material material) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(name);
@@ -16,7 +16,7 @@ public class ButtonIcons {
         return itemStack;
     }
 
-    private static ItemStack createItemStackWithoutFlags(String name, Material material) {
+    private ItemStack createItemStackWithoutFlags(String name, Material material) {
         ItemStack itemStack = createItemWith(name, material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -25,55 +25,55 @@ public class ButtonIcons {
         return itemStack;
     }
 
-    public static ItemStack getOpenInventoryButton() {
+    public ItemStack getOpenInventoryButton() {
         return createItemWith("Open Inventory", Material.CHEST);
     }
 
-    public static ItemStack getOpenOptionsButton() {
+    public ItemStack getOpenOptionsButton() {
         return createItemWith("Open Entity Options", Material.BOOK);
     }
 
-    public static ItemStack getBackButton() {
+    public ItemStack getBackButton() {
         return createItemWith("Back", Material.BANNER);
     }
 
-    public static ItemStack getChangeNameButton() {
+    public ItemStack getChangeNameButton() {
         return createItemWith("Change Name", Material.NAME_TAG);
     }
 
-    public static ItemStack getPassiveModeButton() {
+    public ItemStack getPassiveModeButton() {
         return createItemWith("Currently Passive", Material.WOOD_SPADE);
     }
 
-    public static ItemStack getNeutralModeButton() {
+    public ItemStack getNeutralModeButton() {
         return createItemWith("Currently Neutral", Material.IRON_AXE);
     }
 
-    public static ItemStack getAggressiveModeButton() {
+    public ItemStack getAggressiveModeButton() {
         return createItemWith("Currently Aggressive", Material.DIAMOND_SWORD);
     }
 
-    public static ItemStack getIncreaseHealthButton() {
+    public ItemStack getIncreaseHealthButton() {
         return createItemStackWithoutFlags("Health", Material.NETHERRACK);
     }
 
-    public static ItemStack getIncreaseDamageButton() {
+    public ItemStack getIncreaseDamageButton() {
         return createItemStackWithoutFlags("Damage", Material.IRON_SWORD);
     }
 
-    public static ItemStack getIncreaseFoodButton() {
+    public ItemStack getIncreaseFoodButton() {
         return createItemStackWithoutFlags("Food", Material.RAW_BEEF);
     }
 
-    public static ItemStack getForceFeedButton() {
+    public ItemStack getForceFeedButton() {
         return createItemWith("Feed Narcotics", Material.LEASH);
     }
 
-    public static ItemStack getFollowingButton() {
+    public ItemStack getFollowingButton() {
         return createItemWith("Follow", Material.LEASH);
     }
 
-    public static ItemStack getFollowingPlayerButton(String player) {
+    public ItemStack getFollowingPlayerButton(String player) {
         return createItemWith("Following: " + player, Material.LEASH);
     }
 
@@ -83,7 +83,7 @@ public class ButtonIcons {
      * @param itemStack Item that will glow
      * @return The glowing button
      */
-    public static ItemStack makeGlow(ItemStack itemStack) {
+    public ItemStack makeGlow(ItemStack itemStack) {
         itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName("+" + itemMeta.getDisplayName());
@@ -97,7 +97,7 @@ public class ButtonIcons {
      * @param itemStack Glowing item
      * @return The normal button
      */
-    public static ItemStack stopGlow(ItemStack itemStack) {
+    public ItemStack stopGlow(ItemStack itemStack) {
         if (itemStack.containsEnchantment(Enchantment.LUCK))
             itemStack.removeEnchantment(Enchantment.LUCK);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -112,7 +112,7 @@ public class ButtonIcons {
      * @param reference Icon reference
      * @return True if the item is a button
      */
-    public static boolean isButtonIcon(ItemStack item, ItemStack reference) {
+    public boolean isButtonIcon(ItemStack item, ItemStack reference) {
         return item != null
                 && item.getType() == reference.getType()
                 && item.getItemMeta().hasDisplayName()
