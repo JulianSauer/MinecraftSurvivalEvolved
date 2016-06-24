@@ -51,15 +51,15 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         threadCurrentlyRunning = false;
         torporDepletion = 1;
         unconsciousnessUpdateInterval = 100L;
+        unconscious = false;
+        torpidity = 0;
+        tamingProgress = 0;
     }
 
     @Override
     public void initWithDefaults() {
         initialized = true;
-        unconscious = false;
         tamed = false;
-        torpidity = 0;
-        tamingProgress = 0;
     }
 
     @Override
@@ -72,37 +72,19 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
         initialized = true;
 
-        unconscious = data.getBoolean("MSEUnconscious");
         tamed = data.getBoolean("MSETamed");
-
-        if (unconscious)
-            torpidity = data.getInt("MSETorpidity");
-        else
-            torpidity = 0;
-
         if (tamed)
             owner = UUID.fromString(data.getString("MSEOwner"));
-        else if (unconscious) {
-            tamingProgress = data.getInt("MSETamingProgress");
-            tamer = UUID.fromString(data.getString("MSETamer"));
-        } else
-            tamingProgress = 0;
 
     }
 
     @Override
     public void saveData(NBTTagCompound data) {
-        if (!isInitialized())
-            initWithDefaults();
-
-        data.setBoolean("MSEUnconscious", isUnconscious());
         data.setBoolean("MSETamed", isTamed());
-        if (isTamed()) {
+        if (isTamed())
             data.setString("MSEOwner", getOwner().toString());
-        } else if (isUnconscious()) {
-            data.setInt("MSETamingProgress", getTamingProgress());
-            data.setString("MSETamer", getTamer().toString());
-        }
+        else if (threadCurrentlyRunning)
+            MSEMain.getInstance().getLogger().warning("Saving a taming process is currently not supported. Progress will be lost for " + mseEntity.getEntityType() + " at " + mseEntity.getLocation());
     }
 
     @Override

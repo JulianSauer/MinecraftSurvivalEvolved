@@ -87,8 +87,6 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     @Override
     public void saveData(NBTTagCompound data) {
-        if (!isInitialized())
-            initWithDefaults();
         data.setInt("MSELevel", getLevel());
         data.setBoolean("MSEIsAlpha", isAlpha());
         data.setInt("MSECurrentFoodValue", getCurrentFoodValue());
@@ -102,7 +100,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     public boolean isAlpha() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            return false;
         return (alphaPredatorMultiplier != 1);
     }
 

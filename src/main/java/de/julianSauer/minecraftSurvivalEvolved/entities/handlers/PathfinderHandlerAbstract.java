@@ -62,9 +62,6 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
 
     @Override
     public void saveData(NBTTagCompound data) {
-        if (!isInitialized())
-            initWithDefaults();
-
         data.setString("MSEEntityMode", entityMode.toString());
         data.setBoolean("MSEWandering", wandering);
     }

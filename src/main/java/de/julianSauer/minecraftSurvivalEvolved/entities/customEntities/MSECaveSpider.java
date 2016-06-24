@@ -62,6 +62,12 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     @Override
     public void b(NBTTagCompound data) {
         super.b(data);
+        if (!tamingHandler.isInitialized())
+            tamingHandler.initWithDefaults();
+        if (!generalBehaviorHandler.isInitialized())
+            generalBehaviorHandler.initWithDefaults();
+        if (!pathfinderHandler.isInitialized())
+            pathfinderHandler.initWithDefaults();
         tamingHandler.saveData(data);
         generalBehaviorHandler.saveData(data);
         pathfinderHandler.saveData(data);
