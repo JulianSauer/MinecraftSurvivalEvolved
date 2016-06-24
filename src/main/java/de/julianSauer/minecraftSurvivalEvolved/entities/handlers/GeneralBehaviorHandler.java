@@ -81,6 +81,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
         this.level = data.getInt("MSELevel");
         this.currentFoodValue = data.getInt("MSECurrentFoodValue");
         this.currentXp = data.getFloat("MSECurrentXp");
+        updateLevel(0);
         if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
     }
@@ -190,9 +191,8 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
             level = Calculator.getRandomInt(baseStats.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
-        if (!mseEntity.getTamingHandler().isTamed()) {
+        if (!mseEntity.getTamingHandler().isTamed())
             mseEntity.setCustomName(getDefaultName());
-        }
     }
 
     /**

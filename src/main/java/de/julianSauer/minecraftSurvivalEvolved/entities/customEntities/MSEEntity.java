@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.GeneralBehaviorHandler;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import org.bukkit.Location;
@@ -34,6 +35,21 @@ public interface MSEEntity extends Tameable, InventoryHolder {
      * @return NMS entity as CraftEntity
      */
     Entity getCraftEntity();
+
+    @Override
+    default void load(NBTTagCompound data) {
+        Tameable.super.load(data);
+        getGeneralBehaviorHandler().initWith(data);
+    }
+
+    default void save(NBTTagCompound data) {
+        Tameable.super.save(data);
+        data.setBoolean("MSEInitialized", false);
+        if (!getGeneralBehaviorHandler().isInitialized())
+            getGeneralBehaviorHandler().initWithDefaults();
+        getGeneralBehaviorHandler().saveData(data);
+        data.setBoolean("MSEInitialized", true);
+    }
 
     net.minecraft.server.v1_9_R1.EntityInsentient getHandle();
 

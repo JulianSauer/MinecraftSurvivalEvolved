@@ -52,24 +52,13 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
     @Override
     public void a(NBTTagCompound data) {
         super.a(data);
-        tamingHandler.initWith(data);
-        generalBehaviorHandler.initWith(data);
-        pathfinderHandler.initWith(data);
+        MSEEntity.super.load(data);
     }
 
     @Override
     public void b(NBTTagCompound data) {
         super.b(data);
-        if (!tamingHandler.isInitialized())
-            tamingHandler.initWithDefaults();
-        if (!generalBehaviorHandler.isInitialized())
-            generalBehaviorHandler.initWithDefaults();
-        if (!pathfinderHandler.isInitialized())
-            pathfinderHandler.initWithDefaults();
-        tamingHandler.saveData(data);
-        generalBehaviorHandler.saveData(data);
-        pathfinderHandler.saveData(data);
-        data.setBoolean("MSEInitialized", true);
+        MSEEntity.super.save(data);
     }
 
     @Override
