@@ -1,5 +1,5 @@
 name: MinecraftSurvivalEvolved
-version: 0.2
+version: 0.3
 author: EndermansEnd
 main: de.julianSauer.minecraftSurvivalEvolved.main.MSEMain
 load: STARTUP
