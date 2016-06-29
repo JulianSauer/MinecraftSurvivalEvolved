@@ -302,10 +302,13 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (isUnconscious() && torpidity <= 0) {
             if (mseEntity.getCraftEntity() instanceof LivingEntity && !mseEntity.getGeneralBehaviorHandler().isAlpha())
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(true);
+            if (!isTamed() && tamer != null)
+                (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+
+            tamingProgress = 0;
             unconscious = false;
-            if (unconsciousnessTimer != null && threadCurrentlyRunning) {
+            if (unconsciousnessTimer != null && threadCurrentlyRunning)
                 unconsciousnessTimer.cancel();
-            }
         } else if ((!isUnconscious() && torpidity >= mseEntity.getGeneralBehaviorHandler().getFortitude()) || resumeConsciousness) {
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
