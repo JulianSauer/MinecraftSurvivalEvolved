@@ -260,8 +260,6 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
      * Starts food depletion for this entity.
      */
     public void startFoodTimer() {
-        if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
         if (foodTimer != null)
             return;
         foodTimer = new FoodTimer();
@@ -278,6 +276,8 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
             if (!mseEntity.isAlive())
                 this.cancel();
+            if (!isInitialized())
+                return;
 
             currentFoodValue -= foodDepletion;
             if (mseEntity.getTamingHandler().isTamed()) // Hunger is updated by taming handler during a taming process

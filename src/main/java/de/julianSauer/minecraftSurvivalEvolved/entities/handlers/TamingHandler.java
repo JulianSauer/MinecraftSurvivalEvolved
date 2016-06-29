@@ -44,6 +44,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     private long unconsciousnessUpdateInterval;
 
     private boolean initialized;
+    private boolean resumeConsciousness; // True if the entity was being tamed before a server restart
 
     public TamingHandler(T mseEntity) {
         this.mseEntity = mseEntity;
@@ -51,9 +52,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         threadCurrentlyRunning = false;
         torporDepletion = 1;
         unconsciousnessUpdateInterval = 100L;
-        unconscious = false;
-        torpidity = 0;
-        tamingProgress = 0;
+        resumeConsciousness = false;
     }
 
     @Override
@@ -73,18 +72,33 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         initialized = true;
 
         tamed = data.getBoolean("MSETamed");
+        torpidity = data.getInt("MSETorpidity");
+        unconscious = data.getBoolean("MSEUnconscious");
+        resumeConsciousness = unconscious;
+
         if (tamed)
             owner = UUID.fromString(data.getString("MSEOwner"));
+        else if (unconscious) {
+            tamingProgress = data.getInt("MSETamingProgress");
+            tamer = UUID.fromString(data.getString("MSETamer"));
+        } else
+            tamingProgress = 0;
+
+        updateConsciousness();
 
     }
 
     @Override
     public void saveData(NBTTagCompound data) {
         data.setBoolean("MSETamed", isTamed());
+        data.setBoolean("MSEUnconscious", unconscious);
+        data.setInt("MSETorpidity", getTorpidity());
         if (isTamed())
             data.setString("MSEOwner", getOwner().toString());
-        else if (threadCurrentlyRunning)
-            MSEMain.getInstance().getLogger().warning("Saving a taming process is currently not supported. Progress will be lost for " + mseEntity.getEntityType() + " at " + mseEntity.getLocation());
+        else if (isUnconscious()) {
+            data.setInt("MSETamingProgress", getTamingProgress());
+            data.setString("MSETamer", getTamer().toString());
+        }
     }
 
     @Override
@@ -277,7 +291,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     /**
      * Updates the consciousness of the entity.
      */
-    private void updateConsciousness() {
+    public void updateConsciousness() {
 
         if (!initialized)
             throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
@@ -286,14 +300,19 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             return;
 
         if (isUnconscious() && torpidity <= 0) {
+            if (mseEntity.getCraftEntity() instanceof LivingEntity && !mseEntity.getGeneralBehaviorHandler().isAlpha())
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(true);
             unconscious = false;
             if (unconsciousnessTimer != null && threadCurrentlyRunning) {
                 unconsciousnessTimer.cancel();
             }
-        } else if (!isUnconscious() && torpidity >= mseEntity.getGeneralBehaviorHandler().getFortitude()) {
+        } else if ((!isUnconscious() && torpidity >= mseEntity.getGeneralBehaviorHandler().getFortitude()) || resumeConsciousness) {
+            if (mseEntity.getCraftEntity() instanceof LivingEntity)
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
+            resumeConsciousness = false;
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
-            unconsciousnessTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0, unconsciousnessUpdateInterval);
+            unconsciousnessTimer.runTaskTimer(MSEMain.getInstance(), 0, unconsciousnessUpdateInterval);
         }
 
     }
@@ -320,11 +339,22 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
     class UnconsciousnessTimer extends BukkitRunnable {
 
-        final UUID hologram;
+        UUID hologram;
+
+        private boolean initialized;
 
         public UnconsciousnessTimer() {
-            threadCurrentlyRunning = true;
 
+            threadCurrentlyRunning = true;
+            this.initialized = false;
+
+            if (mseEntity.getWorld().isLoaded(mseEntity.getChunkCoordinates()))
+                init();
+
+        }
+
+        private void init() {
+            this.initialized = true;
             if (!isTamed()) {
                 mseEntity.getGeneralBehaviorHandler().startFoodTimer();
                 mseEntity.setCustomName("");
@@ -339,6 +369,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
                 this.cancel();
                 return;
             }
+
+            if (!initialized)
+                init();
 
             decreaseTorpidityBy(torporDepletion);
             if (isTamed())
@@ -390,6 +423,13 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         }
 
         private String[] getHologramText() {
+            if (!mseEntity.getGeneralBehaviorHandler().isInitialized())
+                return new String[]{
+                        ChatColor.DARK_AQUA + "", // Name dummy
+                        ChatColor.DARK_AQUA + "Health: " + (int) mseEntity.getHealth() + "/" + (int) mseEntity.getMaxHealth(),
+                        ChatColor.DARK_PURPLE + "",
+                        ChatColor.GOLD + ""
+                };
             return new String[]{
                     ChatColor.DARK_AQUA + mseEntity.getGeneralBehaviorHandler().getDefaultName(),
                     ChatColor.DARK_AQUA + "Health: " + (int) mseEntity.getHealth() + "/" + (int) mseEntity.getMaxHealth(),

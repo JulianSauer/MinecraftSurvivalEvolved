@@ -109,7 +109,7 @@ public class HologramHandler {
      * @param hologram Used to access the hologram
      */
     public static void despawnHologram(UUID hologram) {
-        if (activeHolograms == null || !activeHolograms.containsKey(hologram))
+        if (activeHolograms == null || hologram == null || !activeHolograms.containsKey(hologram))
             return;
 
         List<ArmorStand> armorStands = activeHolograms.get(hologram);

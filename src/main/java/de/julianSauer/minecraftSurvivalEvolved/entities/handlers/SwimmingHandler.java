@@ -18,6 +18,11 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
     @Override
     public void handleMovement(float[] args) {
 
+        if (!((MSEEntity)entity).getGeneralBehaviorHandler().isInitialized()) {
+            ((MSEEntity)entity).callSuperMovement(args);
+            return;
+        }
+
         if (((MSEEntity) entity).getTamingHandler().isUnconscious())
             return;
 
