@@ -255,6 +255,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         decreaseTorpidityBy(getMaxTorpidity());
         mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
         mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
+        mseEntity.getGeneralBehaviorHandler().startFoodTimer();
         BarHandler.sendTamedTextTo(newOwner, mseEntity.getName());
         (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
         mseEntity.setPassiveGoals();

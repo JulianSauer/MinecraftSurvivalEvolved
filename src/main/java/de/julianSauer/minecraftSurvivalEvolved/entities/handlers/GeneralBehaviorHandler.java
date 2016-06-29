@@ -5,6 +5,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
+import net.minecraft.server.v1_9_R1.DamageSource;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import org.bukkit.Material;
@@ -236,10 +237,10 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
                 int saturation = baseStats.getFoodsaturationFor(item.getType().toString());
                 if (saturation <= 0)
                     continue;
-                if (currentFoodValue + saturation > baseStats.getMaxFoodValue())
+                if (currentFoodValue + saturation + foodDepletion > baseStats.getMaxFoodValue())
                     return 0;
 
-                currentFoodValue += saturation;
+                currentFoodValue += saturation + foodDepletion;
                 item.setAmount(item.getAmount() - 1);
                 if (item.getAmount() <= 0)
                     inventory.setItem(i, new ItemStack(Material.AIR, 0));
@@ -283,9 +284,10 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
             if (mseEntity.getTamingHandler().isTamed()) // Hunger is updated by taming handler during a taming process
                 updateHunger();
             if (currentFoodValue <= 0) {
-                mseEntity.setHealth(mseEntity.getHealth() - 0.5F);
+                mseEntity.damageEntity(DamageSource.GENERIC, 0.5F);
                 currentFoodValue = 0;
-            }
+            } else if (Calculator.getRandomInt(101) <= 30)
+                mseEntity.setHealth(mseEntity.getHealth() + 0.5F);
 
         }
     }
