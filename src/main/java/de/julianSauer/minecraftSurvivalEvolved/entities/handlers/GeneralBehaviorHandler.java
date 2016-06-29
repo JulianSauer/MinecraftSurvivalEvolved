@@ -45,7 +45,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public void initWithDefaults() {
         initialized = true;
 
-        if (Calculator.getRandomInt(101) <= baseStats.getAlphaProbability())
+        if (Calculator.applyProbability(baseStats.getAlphaProbability()))
             alphaPredatorMultiplier = 4;
         else
             alphaPredatorMultiplier = 1;
@@ -286,7 +286,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
             if (currentFoodValue <= 0) {
                 mseEntity.damageEntity(DamageSource.GENERIC, 0.5F);
                 currentFoodValue = 0;
-            } else if (Calculator.getRandomInt(101) <= 30)
+            } else if (Calculator.applyProbability(30))
                 mseEntity.setHealth(mseEntity.getHealth() + 0.5F);
 
         }

@@ -10,6 +10,16 @@ public class Calculator {
     }
 
     /**
+     * Uses a random value to determine if a chance is a hit or miss.
+     *
+     * @param chance Value in percent
+     * @return True if it's a hit
+     */
+    public static boolean applyProbability(int chance) {
+        return getRandomInt(101) <= chance;
+    }
+
+    /**
      * Creates a random int with 0 <= x < upper limit.
      *
      * @param upperLimit Limits the generated number

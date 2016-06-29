@@ -85,7 +85,7 @@ public class MiningHandler {
      */
     private boolean breakBlock(Block block, Material material) {
         if (block.getType() == material) {
-            if (Calculator.getRandomInt(101) <= damageInPercent) {
+            if (Calculator.applyProbability((int) damageInPercent)) {
                 block.breakNaturally();
                 return false;
             } else
