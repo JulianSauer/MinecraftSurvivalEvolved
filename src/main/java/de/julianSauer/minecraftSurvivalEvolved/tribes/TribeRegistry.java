@@ -1,5 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.tribes;
 
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +26,24 @@ public class TribeRegistry {
         return instance;
     }
 
-    public void saveTribes() {
+    /**
+     * Loads tribes from all tribe.yml files.
+     */
+    public void loadTribes() {
+        MSEMain plugin = MSEMain.getInstance();
+        plugin.getLogger().info("Loading Tribes");
+        tribes = plugin.getConfigHandler().getTribes();
+        plugin.getLogger().info("Tribes loaded");
+    }
 
+    /**
+     * Saves tribes to tribe.yml files.
+     */
+    public void saveTribes() {
+        MSEMain plugin = MSEMain.getInstance();
+        plugin.getLogger().info("Saving Tribes");
+        plugin.getConfigHandler().setTribes(tribes);
+        plugin.getLogger().info("Tribes saved");
     }
 
     public void registerTribe(Tribe tribe) {

@@ -25,11 +25,10 @@ public class Tribe {
     private Rank rankForDischarge;
     private Rank rankForPromoting;
 
-    public Tribe(Player founder, String name) {
+    public Tribe(String name) {
         uniqueID = MathHelper.a(new Random());
         this.name = name;
         members = new HashMap<>();
-        members.put(founder.getUniqueId(), Rank.LEADER);
 
         rankForRecruitment = Rank.LEADER;
         rankForDischarge = Rank.LEADER;
@@ -39,8 +38,17 @@ public class Tribe {
         tribeRegistry.registerTribe(this);
     }
 
+    public Tribe(Player founder, String name) {
+        this(name);
+        members.put(founder.getUniqueId(), Rank.LEADER);
+    }
+
     public UUID getUniqueID() {
         return uniqueID;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Set<UUID> getMembers() {
@@ -51,11 +59,25 @@ public class Tribe {
         return members.containsKey(player.getUniqueId());
     }
 
+    public Rank getRankOfMember(UUID playerUUID) {
+        return members.get(playerUUID);
+    }
+
+    public Rank getRankOfMember(Player player) {
+        return members.get(player.getUniqueId());
+    }
+
     private boolean checkTribeMembership(Player player) {
         if (members.containsKey(player.getUniqueId()))
             return true;
         MSEMain.getInstance().getLogger().log(Level.INFO, "Player " + player.getName() + " tried accessing the tribe " + this.name);
         return false;
+    }
+
+    public void add(UUID playerUUID, Rank rank) {
+        if (members.containsKey(playerUUID))
+            return;
+        members.put(playerUUID, rank);
     }
 
     /**

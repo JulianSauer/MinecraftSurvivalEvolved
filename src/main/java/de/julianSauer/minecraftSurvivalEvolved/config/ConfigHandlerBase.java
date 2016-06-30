@@ -24,7 +24,7 @@ abstract class ConfigHandlerBase {
         configFiles = new HashMap<>();
         configs = new HashMap<>();
         for (String configName : configNames) {
-            CustomConfig configFile = new CustomConfig(configName);
+            CustomConfig configFile = new CustomConfig("", configName);
             configFiles.put(configName, configFile);
             configs.put(configName, configFile.getConfig());
         }
@@ -254,6 +254,47 @@ abstract class ConfigHandlerBase {
         if (customConfig != null)
             return customConfig.getValues(true);
         return new HashMap<>();
+    }
+
+    /**
+     * Saves a value to a config. The config has to be added first.
+     *
+     * @param configName Name of the .yml file
+     * @param path       Path to the variable
+     * @param value      Value that will be set
+     */
+    protected void setValueInConfig(String configName, String path, Object value) {
+        FileConfiguration customConfig = configs.get(configName);
+        customConfig.set(path, value);
+        configFiles.get(configName).saveConfig();
+    }
+
+    /**
+     * Loads a config to the cache.
+     *
+     * @param folderName Name of the subdirectory; can be empty
+     * @param configName Name of the .yml file
+     */
+    protected void addConfigToCache(String folderName, String configName) {
+        if (configFiles.containsKey(configName) && configs.containsKey(configName))
+            return;
+        CustomConfig configFile = new CustomConfig(folderName, configName);
+        configFiles.put(configName, configFile);
+        configs.put(configName, configFile.getConfig());
+        if (!configExistsFor(configName))
+            configFile.saveConfig();
+    }
+
+    /**
+     * Unloads a config from the cache.
+     *
+     * @param configName Name of the .yml file
+     */
+    protected void removeConfigFromCache(String configName) {
+        if (configFiles.containsKey(configName))
+            configFiles.remove(configName);
+        if (configs.containsKey(configName))
+            configs.remove(configName);
     }
 
     /**

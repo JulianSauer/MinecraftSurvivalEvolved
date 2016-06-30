@@ -18,12 +18,12 @@ class CustomConfig {
 
     private FileConfiguration fileConfiguration;
 
-    public CustomConfig(String fileName) {
+    public CustomConfig(String folderName, String fileName) {
         this.fileName = fileName;
         File dataFolder = MSEMain.getInstance().getDataFolder();
         if (dataFolder == null)
             throw new IllegalStateException();
-        file = new File(dataFolder, fileName);
+        file = new File(dataFolder + folderName, fileName);
     }
 
     public void reloadConfig() {

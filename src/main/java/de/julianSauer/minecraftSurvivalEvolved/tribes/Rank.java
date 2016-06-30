@@ -3,7 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.tribes;
 /**
  * Represents the ranks a player can have in a tribe.
  */
-enum Rank {
+public enum Rank {
 
     LEADER,
     GENERAL,
@@ -41,6 +41,11 @@ enum Rank {
                 return false;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return this.name().substring(0, 1) + this.name().substring(1).toLowerCase();
     }
 
 }

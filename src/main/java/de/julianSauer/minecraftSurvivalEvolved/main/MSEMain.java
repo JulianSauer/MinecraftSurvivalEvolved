@@ -8,6 +8,7 @@ import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InBlockDigListe
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InUpdateSignListener;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,6 +29,8 @@ public class MSEMain extends JavaPlugin {
         configHandler = new ConfigHandler();
 
         EntityRegistry.registerCustomEntities();
+
+        TribeRegistry.getTribeRegistry().loadTribes();
 
         CustomRecipes customRecipes = new CustomRecipes();
         customRecipes.setUpNarcotics();
@@ -60,6 +63,7 @@ public class MSEMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        TribeRegistry.getTribeRegistry().saveTribes();
         HologramHandler.despawnAllHolograms();
         getLogger().info("Disabled");
     }

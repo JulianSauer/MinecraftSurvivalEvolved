@@ -1,10 +1,16 @@
 package de.julianSauer.minecraftSurvivalEvolved.config;
 
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Implements getter and setter methods for config files.
@@ -83,6 +89,51 @@ public class ConfigHandler extends ConfigHandlerBase {
             }
         }
         return ret;
+    }
+
+    public Map getTribes() {
+
+        File tribeFolder = new File(MSEMain.getInstance().getDataFolder() + "/Tribes");
+        File[] tribeFiles = tribeFolder.listFiles();
+        Map<UUID, Tribe> tribes = new HashMap<>();
+
+        for (File tribeFile : tribeFiles) {
+            String configName = tribeFile.getName();
+            addConfigToCache("/Tribes/", configName);
+            Tribe tribe = new Tribe(configName.substring(0, configName.length() - 4));
+
+            for (String path : getConfigurationSectionFromConfig(configName, "").getKeys(false)) {
+
+                String playerUUIDString = getStringFromConfig(configName, path + ".ID");
+                UUID playerUUID = UUID.fromString(playerUUIDString);
+                Rank rank = Rank.valueOf(getStringFromConfig(configName, path + ".Rank").toUpperCase());
+                if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                    MSEMain.getInstance().getLogger().warning("Player " + path + " (" + rank + ") in " + configName + " has a corrupt ID and will be ignored");
+                    continue;
+                }
+
+
+                tribe.add(playerUUID, rank);
+            }
+
+            tribes.put(tribe.getUniqueID(), tribe);
+            removeConfigFromCache(configName);
+        }
+        return tribes;
+
+    }
+
+    public void setTribes(Map<UUID, Tribe> tribes) {
+
+        for (Tribe tribe : tribes.values()) {
+            addConfigToCache("/Tribes/", tribe.getName() + ".yml");
+            for (UUID playerUUID : tribe.getMembers()) {
+                String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
+                setValueInConfig(tribe.getName() + ".yml", playerName + ".ID", playerUUID.toString());
+                setValueInConfig(tribe.getName() + ".yml", playerName + ".Rank", tribe.getRankOfMember(playerUUID).toString());
+            }
+        }
+
     }
 
     public Map<Material, Integer> getMineableBlocksFor(String entity) {
