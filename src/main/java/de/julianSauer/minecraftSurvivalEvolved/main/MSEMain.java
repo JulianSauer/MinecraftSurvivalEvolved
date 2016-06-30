@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.main;
 
+import de.julianSauer.minecraftSurvivalEvolved.commands.MSECommandExecutor;
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;

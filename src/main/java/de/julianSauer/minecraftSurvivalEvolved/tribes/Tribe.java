@@ -1,12 +1,15 @@
 package de.julianSauer.minecraftSurvivalEvolved.tribes;
 
-import de.julianSauer.minecraftSurvivalEvolved.main.MSECommandExecutor;
+import de.julianSauer.minecraftSurvivalEvolved.commands.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.MathHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Represents a tribe of players with different ranks.
@@ -51,8 +54,12 @@ public class Tribe {
         return name;
     }
 
-    public Set<UUID> getMembers() {
+    public Set<UUID> getMemberUUIDs() {
         return members.keySet();
+    }
+
+    public Set<OfflinePlayer> getMembers() {
+        return getMemberUUIDs().stream().map(Bukkit::getOfflinePlayer).collect(Collectors.toSet());
     }
 
     public boolean isMember(Player player) {
@@ -98,7 +105,7 @@ public class Tribe {
             if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForRecruitment))
                 members.put(recruitUUID, Rank.RECRUIT);
             else
-                executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+                executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
         }
 
     }
@@ -123,7 +130,7 @@ public class Tribe {
                     && Rank.rankIsHigher(members.get(executingMemberUUID), members.get(dischargedMemberUUID)))
                 members.remove(dischargedMemberUUID);
             else
-                executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+                executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
         }
 
     }
@@ -145,14 +152,17 @@ public class Tribe {
         UUID executingMemberUUID = executingMember.getUniqueId();
 
         if (!members.containsKey(promotedMemberUUID))
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_MEMBER_DOESNT_EXIST.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_MEMBER_DOESNT_EXIST.setParams(
+                    Bukkit.getOfflinePlayer(promotedMemberUUID).getName(),
+                    name
+            ));
 
         if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForPromoting)
                 && Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), newRank)) {
             members.remove(promotedMemberUUID);
             members.put(promotedMemberUUID, newRank);
         } else
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
 
     }
 
@@ -170,7 +180,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForRecruitment = newRank;
         else
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
     }
 
     /**
@@ -187,7 +197,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForDischarge = newRank;
         else
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
     }
 
     /**
@@ -204,7 +214,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForPromoting = newRank;
         else
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
     }
 
     public void deleteTribe(Player executingMember) {
@@ -214,7 +224,7 @@ public class Tribe {
         if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), Rank.LEADER)) {
             tribeRegistry.unregisterTribe(this);
         } else
-            executingMember.sendMessage(MSECommandExecutor.ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
     }
 
 }

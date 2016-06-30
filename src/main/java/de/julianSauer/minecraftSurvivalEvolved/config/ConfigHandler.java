@@ -127,7 +127,7 @@ public class ConfigHandler extends ConfigHandlerBase {
 
         for (Tribe tribe : tribes.values()) {
             addConfigToCache("/Tribes/", tribe.getName() + ".yml");
-            for (UUID playerUUID : tribe.getMembers()) {
+            for (UUID playerUUID : tribe.getMemberUUIDs()) {
                 String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
                 setValueInConfig(tribe.getName() + ".yml", playerName + ".ID", playerUUID.toString());
                 setValueInConfig(tribe.getName() + ".yml", playerName + ".Rank", tribe.getRankOfMember(playerUUID).toString());
