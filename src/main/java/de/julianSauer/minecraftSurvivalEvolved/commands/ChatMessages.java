@@ -20,6 +20,8 @@ public enum ChatMessages {
     TRIBE_EXISTS_ALREADY(ChatColor.RED + "The tribe %ARGS0% already exists"),
     TRIBE_DOESNT_EXIST(ChatColor.RED + "The tribe %ARGS0% does not exist"),
     TRIBE_NONE_EXIST(ChatColor.RED + "No tribes exist on this server"),
+    TRIBE_ALREADY_JOINED_A_TRIBE(ChatColor.RED + "You are already a member of the tribe %ARGS0%. Leave it to create your own one."),
+    TRIBE_CREATED("You successfully created the tribe %ARGS0%"),
     TRIBE_PRINT_MEMBERS("Tribe members:");
 
     ChatMessages(String message) {

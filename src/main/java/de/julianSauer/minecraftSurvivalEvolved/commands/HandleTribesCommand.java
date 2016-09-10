@@ -14,8 +14,10 @@ public class HandleTribesCommand extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if(args.length > 2)
+        if(args.length > 2) {
             sender.sendMessage(ChatMessages.WRONG_NUMBER_OF_ARGS.toString());
+            return;
+        }
 
         Collection<Tribe> tribes = tribeRegistry.getTribes();
         if(tribes.size() == 0) {
