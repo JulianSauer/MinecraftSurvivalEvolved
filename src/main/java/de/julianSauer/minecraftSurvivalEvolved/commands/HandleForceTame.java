@@ -2,6 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
@@ -36,7 +37,10 @@ public class HandleForceTame extends CommandHandler {
                         sender.sendMessage(ChatMessages.PRINT_HELP_FORCETAME.toString());
                     }
                 }
+                if(!mseEntity.getGeneralBehaviorHandler().isAlpha())
                 mseEntity.forceTame(player);
+                else
+                    sender.sendMessage(ChatMessages.TAME_ALPHA.toString());
 
             } else
                 sender.sendMessage(ChatMessages.NO_ENTITY_FOUND.toString());

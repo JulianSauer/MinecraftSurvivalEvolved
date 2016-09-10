@@ -14,6 +14,7 @@ public enum ChatMessages {
     PAGE_DOESNT_EXIST(ChatColor.RED + "Page #%ARGS0% does not exist"),
     PAGE_COUNT("Viewing page %ARGS0% of %ARGS1%:"),
     NO_ENTITY_FOUND(ChatColor.RED + "No entity was found at your viewing direction"),
+    TAME_ALPHA(ChatColor.RED + "You cannot tame alphas"),
     PRINT_HELP_FORCETAME("Usage: /mse forcetame [player]"),
     TRIBE_RANK_TOO_LOW(ChatColor.RED + "Your tribe rank is too low"),
     TRIBE_MEMBER_DOESNT_EXIST(ChatColor.RED + "The player %ARGS0% is not part of tribe %ARGS1%"),
