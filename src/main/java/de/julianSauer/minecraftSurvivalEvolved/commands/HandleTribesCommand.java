@@ -18,6 +18,11 @@ public class HandleTribesCommand extends CommandHandler {
             sender.sendMessage(ChatMessages.WRONG_NUMBER_OF_ARGS.toString());
 
         Collection<Tribe> tribes = tribeRegistry.getTribes();
+        if(tribes.size() == 0) {
+            sender.sendMessage(ChatMessages.TRIBE_NONE_EXIST.toString());
+            return;
+        }
+
         int page = 1;
 
         if (args.length == 2)
@@ -30,7 +35,7 @@ public class HandleTribesCommand extends CommandHandler {
 
         int pageCount = (int) Math.ceil((double) tribes.size() / 10.0);
         if (page > pageCount) {
-            sender.sendMessage(ChatMessages.VALUE_TOO_BIG.setParams("" + page));
+            sender.sendMessage(ChatMessages.PAGE_DOESNT_EXIST.setParams("" + page));
             return;
         }
 

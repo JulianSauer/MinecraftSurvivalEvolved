@@ -11,7 +11,7 @@ public enum ChatMessages {
     SENDER_NO_PLAYER(ChatColor.RED + "You have to be a player to be able to perform this command"),
     WRONG_NUMBER_OF_ARGS(ChatColor.RED + "Wrong number of arguments"),
     NOT_A_NUMBER(ChatColor.RED + "The %ARGS0% parameter is not a valid number"),
-    VALUE_TOO_BIG(ChatColor.RED + "The value %ARGS0% is too big"),
+    PAGE_DOESNT_EXIST(ChatColor.RED + "Page #%ARGS0% does not exist"),
     PAGE_COUNT("Viewing page %ARGS0% of %ARGS1%:"),
     NO_ENTITY_FOUND(ChatColor.RED + "No entity was found at your viewing direction"),
     PRINT_HELP_FORCETAME("Usage: /mse forcetame [player]"),
@@ -19,6 +19,7 @@ public enum ChatMessages {
     TRIBE_MEMBER_DOESNT_EXIST(ChatColor.RED + "The player %ARGS0% is not part of tribe %ARGS1%"),
     TRIBE_EXISTS_ALREADY(ChatColor.RED + "The tribe %ARGS0% already exists"),
     TRIBE_DOESNT_EXIST(ChatColor.RED + "The tribe %ARGS0% does not exist"),
+    TRIBE_NONE_EXIST(ChatColor.RED + "No tribes exist on this server"),
     TRIBE_PRINT_MEMBERS("Tribe members:");
 
     ChatMessages(String message) {

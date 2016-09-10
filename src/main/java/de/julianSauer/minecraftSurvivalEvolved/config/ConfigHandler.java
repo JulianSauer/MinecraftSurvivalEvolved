@@ -97,6 +97,9 @@ public class ConfigHandler extends ConfigHandlerBase {
         File[] tribeFiles = tribeFolder.listFiles();
         Map<UUID, Tribe> tribes = new HashMap<>();
 
+        if(tribeFiles == null)
+            return new HashMap<>();
+
         for (File tribeFile : tribeFiles) {
             String configName = tribeFile.getName();
             addConfigToCache("/Tribes/", configName);
