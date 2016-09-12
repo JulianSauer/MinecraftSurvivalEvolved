@@ -105,7 +105,7 @@ public class Tribe {
             if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForRecruitment))
                 members.put(recruitUUID, Rank.RECRUIT);
             else
-                executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+                executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
         }
 
     }
@@ -130,7 +130,7 @@ public class Tribe {
                     && Rank.rankIsHigher(members.get(executingMemberUUID), members.get(dischargedMemberUUID)))
                 members.remove(dischargedMemberUUID);
             else
-                executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+                executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
         }
 
     }
@@ -152,7 +152,7 @@ public class Tribe {
         UUID executingMemberUUID = executingMember.getUniqueId();
 
         if (!members.containsKey(promotedMemberUUID))
-            executingMember.sendMessage(ChatMessages.TRIBE_MEMBER_DOESNT_EXIST.setParams(
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_MEMBER_DOESNT_EXIST.setParams(
                     Bukkit.getOfflinePlayer(promotedMemberUUID).getName(),
                     name
             ));
@@ -162,7 +162,7 @@ public class Tribe {
             members.remove(promotedMemberUUID);
             members.put(promotedMemberUUID, newRank);
         } else
-            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
 
     }
 
@@ -180,7 +180,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForRecruitment = newRank;
         else
-            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
     }
 
     /**
@@ -197,7 +197,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForDischarge = newRank;
         else
-            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
     }
 
     /**
@@ -214,7 +214,7 @@ public class Tribe {
                 && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
             rankForPromoting = newRank;
         else
-            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
     }
 
     public void deleteTribe(Player executingMember) {
@@ -224,7 +224,7 @@ public class Tribe {
         if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), Rank.LEADER)) {
             tribeRegistry.unregisterTribe(this);
         } else
-            executingMember.sendMessage(ChatMessages.TRIBE_RANK_TOO_LOW.toString());
+            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
     }
 
 }

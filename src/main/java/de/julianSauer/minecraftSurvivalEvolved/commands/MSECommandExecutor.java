@@ -5,7 +5,6 @@ import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class MSECommandExecutor implements CommandExecutor {
 
@@ -34,7 +33,11 @@ public class MSECommandExecutor implements CommandExecutor {
 
         if (args.length >= 1) {
 
-            if ((args[0].equalsIgnoreCase("forcetame") || args[0].equalsIgnoreCase("ft"))) {
+            if (args[0].equalsIgnoreCase("help")) {
+                sender.sendMessage(ChatMessages.HELP1.toString());
+                sender.sendMessage(ChatMessages.HELP2.toString());
+
+            } else if ((args[0].equalsIgnoreCase("forcetame") || args[0].equalsIgnoreCase("ft"))) {
                 handleForceTame.process(sender, args);
 
             } else if (args[0].equalsIgnoreCase("tribe")) {

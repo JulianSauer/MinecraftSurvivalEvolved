@@ -7,29 +7,46 @@ import org.bukkit.ChatColor;
  */
 public enum ChatMessages {
 
-    NO_PERMISSION(ChatColor.RED + "Sorry but you don't have permission to do that"),
-    SENDER_NO_PLAYER(ChatColor.RED + "You have to be a player to be able to perform this command"),
-    WRONG_NUMBER_OF_ARGS(ChatColor.RED + "Wrong number of arguments"),
-    NOT_A_NUMBER(ChatColor.RED + "The %ARGS0% parameter is not a valid number"),
-    PAGE_DOESNT_EXIST(ChatColor.RED + "Page #%ARGS0% does not exist"),
+    ERROR_NO_PERMISSION(Format.ERROR + "Sorry but you don't have permission to do that"),
+    ERROR_SENDER_NO_PLAYER(Format.ERROR + "You have to be a player to be able to perform this command"),
+    ERROR_WRONG_NUMBER_OF_ARGS(Format.ERROR + "Wrong number of arguments"),
+    ERROR_NOT_A_NUMBER(Format.ERROR + "The %ARGS0% parameter is not a valid number"),
+    ERROR_PAGE_DOESNT_EXIST(Format.ERROR + "Page #%ARGS0% does not exist"),
+    ERROR_NO_ENTITY_FOUND(Format.ERROR + "No entity was found at your viewing direction"),
+    ERROR_ALPHA_TAME(Format.ERROR + "You cannot tame alphas"),
+    ERROR_TRIBE_EXISTS_ALREADY(Format.ERROR + "The tribe %ARGS0% already exists"),
+    ERROR_NO_TRIBES_EXIST(Format.ERROR + "No tribes exist on this server"),
+    ERROR_ALREADY_JOINED_A_TRIBE(Format.ERROR + "You are already a member of the tribe %ARGS0%. Leave it to create your own one."),
+    ERROR_TRIBE_RANK_TOO_LOW(Format.ERROR + "Your tribe rank is too low"),
+    ERROR_TRIBE_MEMBER_DOESNT_EXIST(Format.ERROR + "The player %ARGS0% is not part of tribe %ARGS1%"),
+    ERROR_TRIBE_DOESNT_EXIST(Format.ERROR + "The tribe %ARGS0% does not exist"),
+    HELP1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse <forcetame | tribe | tribes>"),
+    HELP2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Access to all Minecraft: Survival Evolved commands."),
+    HELP_FORCETAME1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse forcetame [<player>]"),
+    HELP_FORCETAME2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to tame an entity. Providing a player name sets the owner of the entity to that player."),
+    HELP_TRIBE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe <create | leave | <tribe name>>"),
+    HELP_TRIBE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to create, join and leave a tribe or list it's members."),
+    HELP_TRIBE_CREATE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe create <tribe name>"),
+    HELP_TRIBE_CREATE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to create a new tribe."),
+    HELP_TRIBE_LEAVE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe leave"),
+    HELP_TRIBE_LEAVE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to leave your current tribe (cannot be undone)."),
+    HELP_TRIBES1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribes"),
+    HELP_TRIBES2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to list all tribes on this server."),
     PAGE_COUNT("Viewing page %ARGS0% of %ARGS1%:"),
-    NO_ENTITY_FOUND(ChatColor.RED + "No entity was found at your viewing direction"),
-    TAME_ALPHA(ChatColor.RED + "You cannot tame alphas"),
-    PRINT_HELP_FORCETAME("Usage: /mse forcetame [player]"),
-    TRIBE_RANK_TOO_LOW(ChatColor.RED + "Your tribe rank is too low"),
-    TRIBE_MEMBER_DOESNT_EXIST(ChatColor.RED + "The player %ARGS0% is not part of tribe %ARGS1%"),
-    TRIBE_EXISTS_ALREADY(ChatColor.RED + "The tribe %ARGS0% already exists"),
-    TRIBE_DOESNT_EXIST(ChatColor.RED + "The tribe %ARGS0% does not exist"),
-    TRIBE_NONE_EXIST(ChatColor.RED + "No tribes exist on this server"),
-    TRIBE_ALREADY_JOINED_A_TRIBE(ChatColor.RED + "You are already a member of the tribe %ARGS0%. Leave it to create your own one."),
     TRIBE_CREATED("You successfully created the tribe %ARGS0%"),
     TRIBE_PRINT_MEMBERS("Tribe members:");
+
+    private static class Format {
+        private static String HELP_TITLE = ChatColor.RESET + "" + ChatColor.GREEN + "" + ChatColor.UNDERLINE;
+        private static String HELP_TEXT = ChatColor.RESET + "" + ChatColor.WHITE;
+        private static String ERROR = ChatColor.RESET + "" + ChatColor.RED;
+    }
+
+    private final String message;
 
     ChatMessages(String message) {
         this.message = message;
     }
-
-    private final String message;
 
     public String setParams(String... args) {
         String ret = this.toString();

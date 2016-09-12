@@ -2,7 +2,6 @@ package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
@@ -22,30 +21,42 @@ public class HandleForceTame extends CommandHandler {
     public void process(CommandSender sender, String... args) {
 
         if (!(sender instanceof Player))
-            sender.sendMessage(ChatMessages.SENDER_NO_PLAYER.toString());
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
 
         if (sender.hasPermission("MinecraftSurvivalEvolved.ForceTame")) {
 
             Player player = (Player) sender;
+
+            // Error or command: /mse forcetame help
+            if (args.length == 2 && args[1].equalsIgnoreCase("help")) {
+                sender.sendMessage(ChatMessages.HELP_FORCETAME1.toString());
+                sender.sendMessage(ChatMessages.HELP_FORCETAME2.toString());
+                return;
+            }
+
+            // Command: /mse forcetame
             MSEEntity mseEntity = getEntityInLineOfSightFor(player);
             if (mseEntity != null) {
 
-                // Force tame
+                // Command: /mse forcetame <player>
                 if (args.length == 2) {
                     player = Bukkit.getPlayer(args[1]);
                     if (player == null) {
-                        sender.sendMessage(ChatMessages.PRINT_HELP_FORCETAME.toString());
+                        sender.sendMessage(ChatMessages.HELP_FORCETAME1.toString());
+                        sender.sendMessage(ChatMessages.HELP_FORCETAME2.toString());
+                        return;
                     }
+
                 }
-                if(!mseEntity.getGeneralBehaviorHandler().isAlpha())
-                mseEntity.forceTame(player);
+                if (!mseEntity.getGeneralBehaviorHandler().isAlpha())
+                    mseEntity.forceTame(player);
                 else
-                    sender.sendMessage(ChatMessages.TAME_ALPHA.toString());
+                    sender.sendMessage(ChatMessages.ERROR_ALPHA_TAME.toString());
 
             } else
-                sender.sendMessage(ChatMessages.NO_ENTITY_FOUND.toString());
+                sender.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.toString());
         } else
-            sender.sendMessage(ChatMessages.NO_PERMISSION.toString());
+            sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.toString());
 
     }
 
