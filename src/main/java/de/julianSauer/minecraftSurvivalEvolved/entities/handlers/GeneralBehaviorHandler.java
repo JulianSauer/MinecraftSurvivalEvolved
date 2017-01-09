@@ -16,6 +16,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * General stats of an entity. Also grands access to base stats of an entity.
+ * 
+ * Note: The weird error printing is due to Minecraft catching all exceptions when loading an entity and simply removing
+ * it instead of printing it there.
  */
 public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
@@ -108,49 +111,49 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     public BaseStats getBaseStats() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return baseStats;
     }
 
-    public int getFortitude() {
+    public Integer getFortitude() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            return null;
         return (int) Calculator.calculateLevelDependentStatFor(baseStats.getFortitude(), level, baseStats.getLevelMultiplier());
     }
 
     public int getLevel() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return level;
     }
 
     public float getCurrentXp() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return currentXp;
     }
 
     public float getXpUntilLevelUp() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return baseStats.getXpUntilLevelUp();
     }
 
     public double getDamage() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), level, getMultiplier());
     }
 
     public double getMaxDamage() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), baseStats.getLevelCap(), getMultiplier());
     }
 
     public float getSpeed() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         float speedMultiplier = getMultiplier();
         speedMultiplier /= 2;
@@ -159,7 +162,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     public String getDefaultName() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         if (this.isAlpha())
             return "Alpha " + mseEntity.getEntityType() + " (" + level + ")";
@@ -169,13 +172,13 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     public int getCurrentFoodValue() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return currentFoodValue;
     }
 
     public float getMultiplier() {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return baseStats.getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
@@ -186,7 +189,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
      */
     public void updateLevel(int levelIncrease) {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         if (level == null)
             level = Calculator.getRandomInt(baseStats.getLevelCap()) + 1;
@@ -203,7 +206,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
      */
     public void increaseXp(float xpIncrease) {
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         currentXp += xpIncrease;
         float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp(), level, getMultiplier());
@@ -222,7 +225,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public int updateHunger() {
 
         if (!initialized)
-            throw new IllegalStateException(mseEntity.getName() + " has not been initialized properly.");
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         Inventory inventory = mseEntity.getInventory();
 
