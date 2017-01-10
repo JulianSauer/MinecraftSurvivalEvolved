@@ -28,7 +28,11 @@ public class Tribe {
     private Rank rankForDischarge;
     private Rank rankForPromoting;
 
-    public Tribe(String name) {
+    /**
+     * @param name Name of the tribe
+     * @param register Defines if the tribe should be cached in the TribeRegistry; set to false for a dummy object
+     */
+    public Tribe(String name, boolean register) {
         uniqueID = MathHelper.a(new Random());
         this.name = name;
         members = new HashMap<>();
@@ -38,11 +42,12 @@ public class Tribe {
         rankForPromoting = Rank.LEADER;
 
         tribeRegistry = TribeRegistry.getTribeRegistry();
-        tribeRegistry.registerTribe(this);
+        if (register)
+            tribeRegistry.registerTribe(this);
     }
 
     public Tribe(Player founder, String name) {
-        this(name);
+        this(name, true);
         members.put(founder.getUniqueId(), Rank.LEADER);
     }
 
@@ -112,7 +117,8 @@ public class Tribe {
 
     /**
      * Removes a player from the tribe. The executing player needs the permission to remove players and also a higher
-     * rank than the member that is being removed.
+     * rank than the member that is being removed. If a member is leaving the tribe, both parameters should be the same
+     * player.
      *
      * @param dischargedMember Removed tribe member
      * @param executingMember  Member that is trying to perform this action
@@ -126,10 +132,13 @@ public class Tribe {
         UUID executingMemberUUID = executingMember.getUniqueId();
 
         if (members.containsKey(dischargedMemberUUID)) {
-            if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForDischarge)
+            if ((Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForDischarge)
                     && Rank.rankIsHigher(members.get(executingMemberUUID), members.get(dischargedMemberUUID)))
+                    || executingMemberUUID.equals(dischargedMemberUUID)) {
+                TribeMemberRegistry tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
+                tribeMemberRegistry.getTribeMember(dischargedMemberUUID).setTribe(null);
                 members.remove(dischargedMemberUUID);
-            else
+            } else
                 executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
         }
 
@@ -217,11 +226,16 @@ public class Tribe {
             executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
     }
 
+    /**
+     * Deletes a tribe.
+     *
+     * @param executingMember Member that is trying to perform this action or null to skip a rank check
+     */
     public void deleteTribe(Player executingMember) {
-        if (!checkTribeMembership(executingMember))
+        if (executingMember != null && !checkTribeMembership(executingMember))
             return;
 
-        if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), Rank.LEADER)) {
+        if (executingMember == null || Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), Rank.LEADER)) {
             tribeRegistry.unregisterTribe(this);
         } else
             executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());

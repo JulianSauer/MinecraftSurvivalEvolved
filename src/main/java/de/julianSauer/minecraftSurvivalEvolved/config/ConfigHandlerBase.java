@@ -298,6 +298,22 @@ abstract class ConfigHandlerBase {
     }
 
     /**
+     * Finds a file within the plugin folder by name and deletes it. Cannot be undone.
+     *
+     * @param folderName Path to the file within the plugin folder
+     * @param fileName   Name of the file
+     */
+    protected void deleteFile(String folderName, String fileName) {
+        MSEMain.getInstance().getLogger().info("Trying to remove " + fileName);
+        addConfigToCache(folderName, fileName);
+        if (configFiles.containsKey(fileName)) {
+            MSEMain.getInstance().getLogger().info("Removing file " + fileName);
+            configFiles.get(fileName).deleteFile();
+        }
+        removeConfigFromCache(fileName);
+    }
+
+    /**
      * Prints a warning to the log if a value was not found under the specified path.
      *
      * @param configName Name of the config

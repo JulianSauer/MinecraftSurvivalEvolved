@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -91,19 +92,19 @@ public class ConfigHandler extends ConfigHandlerBase {
         return ret;
     }
 
-    public Map getTribes() {
+    public Map<UUID, Tribe> getTribes() {
 
         File tribeFolder = new File(MSEMain.getInstance().getDataFolder() + "/Tribes");
         File[] tribeFiles = tribeFolder.listFiles();
         Map<UUID, Tribe> tribes = new HashMap<>();
 
-        if(tribeFiles == null)
+        if (tribeFiles == null)
             return new HashMap<>();
 
         for (File tribeFile : tribeFiles) {
             String configName = tribeFile.getName();
             addConfigToCache("/Tribes/", configName);
-            Tribe tribe = new Tribe(configName.substring(0, configName.length() - 4));
+            Tribe tribe = new Tribe(configName.substring(0, configName.length() - 4), false);
 
             for (String path : getConfigurationSectionFromConfig(configName, "").getKeys(false)) {
 
@@ -126,7 +127,17 @@ public class ConfigHandler extends ConfigHandlerBase {
 
     }
 
+    /**
+     * Compares the given tribes with the ones found on the disk and adjusts those.
+     *
+     * @param tribes Cached tribes that are going to be written to disk
+     */
     public void setTribes(Map<UUID, Tribe> tribes) {
+
+        Collection<Tribe> markedForRemoval = getTribes().values();
+        markedForRemoval.removeAll(tribes.values());
+        for (Tribe tribe : markedForRemoval)
+            deleteFile("/Tribes/", tribe.getName() + ".yml");
 
         for (Tribe tribe : tribes.values()) {
             addConfigToCache("/Tribes/", tribe.getName() + ".yml");

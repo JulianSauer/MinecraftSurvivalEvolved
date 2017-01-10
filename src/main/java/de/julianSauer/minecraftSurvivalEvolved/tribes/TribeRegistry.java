@@ -54,17 +54,17 @@ public class TribeRegistry {
         tribeNames.put(tribe.getName(), tribe.getUniqueID());
     }
 
-    public void unregisterTribe(UUID tribeUUID) {
-        if (tribes.containsKey(tribeUUID)) {
-            String tribeName = tribes.get(tribeUUID).getName();
-            if (tribeNames.containsKey(tribeName))
-                tribeNames.remove(tribeName);
-            unregisterTribe(tribes.get(tribeUUID));
-        }
-    }
-
+    /**
+     * Removes a tribe from the registry. Changes are going to written to disk on server save.
+     *
+     * @param tribe Tribe that's going to be deleted
+     */
     public void unregisterTribe(Tribe tribe) {
-        tribes.remove(tribe.getUniqueID());
+        UUID tribeUUID = tribe.getUniqueID();
+        if (tribeNames.containsKey(tribe.getName()))
+            tribeNames.remove(tribe.getName());
+        if (tribes.containsKey(tribeUUID))
+            tribes.remove(tribeUUID);
     }
 
     public Collection<Tribe> getTribes() {

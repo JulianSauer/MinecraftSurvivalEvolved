@@ -65,4 +65,8 @@ class CustomConfig {
             MSEMain.getInstance().saveResource(fileName, false);
     }
 
+    protected void deleteFile() {
+        file.delete();
+    }
+
 }
