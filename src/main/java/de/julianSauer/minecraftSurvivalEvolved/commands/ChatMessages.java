@@ -28,7 +28,7 @@ public enum ChatMessages {
     HELP2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Access to all Minecraft: Survival Evolved commands."),
     HELP_FORCETAME1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse forcetame [<player>]"),
     HELP_FORCETAME2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to tame an entity. Providing a player name sets the owner of the entity to that player."),
-    HELP_TRIBE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe <create | leave | confirm | <tribe name>>"),
+    HELP_TRIBE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe <create | leave | <tribe name>>"),
     HELP_TRIBE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to create, join and leave a tribe or list it's members."),
     HELP_TRIBE_CREATE1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribe create <tribe name>"),
     HELP_TRIBE_CREATE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to create a new tribe."),
@@ -41,7 +41,8 @@ public enum ChatMessages {
     PAGE_COUNT("Viewing page %ARGS0% of %ARGS1%:"),
     TRIBE_CREATED("You successfully created the tribe %ARGS0%"),
     TRIBE_LEFT("You successfully left the tribe %ARGS0%"),
-    TRIBE_PRINT_MEMBERS("Tribe members:");
+    TRIBE_PRINT_MEMBERS("Members of tribe " + ChatColor.BOLD + "%ARGS0%:"),
+    TRIBE_PRINT_MEMBER("- %ARGS0% " + ChatColor.ITALIC + "(Rank: %ARGS1%)");
 
     private static class Format {
         private static String HELP_TITLE = ChatColor.RESET + "" + ChatColor.GREEN + "" + ChatColor.UNDERLINE;

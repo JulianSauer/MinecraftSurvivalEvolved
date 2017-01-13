@@ -30,13 +30,32 @@ public class HandleTribeCommand extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if (args.length == 2 && args[1].equalsIgnoreCase("leave")) {
+        if (args.length == 1) {
+            // Command: /mse tribe
+            if (sender instanceof Player) {
+                TribeMember member = tribeMemberRegistry.getTribeMember((Player) sender);
+                if (member == null || !member.hasTribe()) {
+                    sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.toString());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
+                } else
+                    printTribeInfo(sender, member.getTribe().getName());
+            } else
+                sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+
+        } else if (args.length == 2 && args[1].equalsIgnoreCase("leave")) {
             // Command: /mse tribe leave
-            leave((Player) sender);
+            if (sender instanceof Player)
+                leave((Player) sender);
+            else
+                sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
 
         } else if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
             // Command: /mse tribe confirm
-            confirmLeave((Player) sender);
+            if (sender instanceof Player)
+                confirmLeave((Player) sender);
+            else
+                sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
 
         } else if (args.length == 2 && !args[1].equals("")) {
 
@@ -44,11 +63,9 @@ public class HandleTribeCommand extends CommandHandler {
             if (args[1].equalsIgnoreCase("help")) {
                 sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
                 sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
-                return;
-            }
-
-            // Command: /mse tribe <tribe>
-            printTribeInfo(sender, args[1]);
+            } else
+                // Command: /mse tribe <tribe>
+                printTribeInfo(sender, args[1]);
 
         } else if (args.length == 3 && args[1].equalsIgnoreCase("create") && !args[2].equals("") && sender instanceof Player) {
 
@@ -56,11 +73,9 @@ public class HandleTribeCommand extends CommandHandler {
             if (args[2].equalsIgnoreCase("help")) {
                 sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.toString());
                 sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.toString());
-                return;
-            }
-
-            // Command: /mse tribe create <tribe>
-            create((Player) sender, args[2]);
+            } else
+                // Command: /mse tribe create <tribe>
+                create((Player) sender, args[2]);
 
         } else if (args.length == 3 && args[1].equalsIgnoreCase("leave") && args[2].equalsIgnoreCase("help")) {
             // Command: /mse tribe leave help
@@ -141,8 +156,11 @@ public class HandleTribeCommand extends CommandHandler {
     private void printTribeInfo(CommandSender sender, String tribeName) {
         if (tribeRegistry.tribeExists(tribeName)) {
             sender.sendMessage(ChatMessages.TRIBE_PRINT_MEMBERS.setParams(tribeName));
-            for (OfflinePlayer offlinePlayer : tribeRegistry.getTribe(tribeName).getMembers())
-                sender.sendMessage("- " + offlinePlayer.getName());
+            Tribe tribe = tribeRegistry.getTribe(tribeName);
+            for (OfflinePlayer offlinePlayer : tribe.getMembers())
+                sender.sendMessage(ChatMessages.TRIBE_PRINT_MEMBER.setParams(
+                        offlinePlayer.getName(),
+                        tribe.getRankOfMember(offlinePlayer.getUniqueId()).toString()));
         } else
             sender.sendMessage(ChatMessages.ERROR_TRIBE_DOESNT_EXIST.setParams(tribeName));
     }
