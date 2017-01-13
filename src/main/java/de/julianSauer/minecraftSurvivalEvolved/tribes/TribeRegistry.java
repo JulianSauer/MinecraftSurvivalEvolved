@@ -76,11 +76,17 @@ public class TribeRegistry {
     }
 
     public Tribe getTribe(String tribeName) {
-        return getTribe(tribeNames.get(tribeName));
+        for (String name : tribeNames.keySet())
+            if (tribeName.equalsIgnoreCase(name))
+                return getTribe(tribeNames.get(name));
+        return null;
     }
 
     public boolean tribeExists(String tribeName) {
-        return tribeNames.containsKey(tribeName);
+        for (String name : tribeNames.keySet())
+            if (tribeName.equalsIgnoreCase(name))
+                return true;
+        return false;
     }
 
 }
