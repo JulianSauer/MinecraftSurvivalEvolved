@@ -4,10 +4,19 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.GeneralBehavior
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public interface MSEEntity extends Tameable, InventoryHolder {
@@ -40,6 +49,7 @@ public interface MSEEntity extends Tameable, InventoryHolder {
     default void load(NBTTagCompound data) {
         Tameable.super.load(data);
         getGeneralBehaviorHandler().initWith(data);
+        setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
     }
 
     default void save(NBTTagCompound data) {
@@ -48,10 +58,13 @@ public interface MSEEntity extends Tameable, InventoryHolder {
         if (!getGeneralBehaviorHandler().isInitialized())
             getGeneralBehaviorHandler().initWithDefaults();
         getGeneralBehaviorHandler().saveData(data);
+        data.setString("MSEInventory", inventoryAsBase64String());
         data.setBoolean("MSEInitialized", true);
     }
 
     net.minecraft.server.v1_9_R1.EntityInsentient getHandle();
+
+    void setInventory(Inventory inventory);
 
     // Methods implemented by Minecraft
     String getName();
@@ -59,5 +72,61 @@ public interface MSEEntity extends Tameable, InventoryHolder {
     UUID getUniqueID();
 
     void setCustomName(String name);
+
+    /**
+     * Converts the inventory of this entity into a String.
+     * Method by graywolf336: https://gist.github.com/graywolf336/8153678
+     *
+     * @return Inventory as String
+     */
+    default String inventoryAsBase64String() {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BukkitObjectOutputStream dataOutput;
+
+        try {
+
+            dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeInt(getInventory().getSize());
+            for (int i = 0; i < getInventory().getSize(); i++)
+                dataOutput.writeObject(getInventory().getItem(i));
+            dataOutput.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Base64Coder.encodeLines(outputStream.toByteArray());
+
+    }
+
+    /**
+     * Converts a String into an inventory.
+     * Method by graywolf336: https://gist.github.com/graywolf336/8153678
+     *
+     * @param inventoryString The inventory formatted as a Base64 String
+     * @return An inventory
+     */
+    default Inventory inventoryFromBase64String(String inventoryString) {
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(inventoryString));
+        BukkitObjectInputStream dataInput;
+
+        try {
+
+            dataInput = new BukkitObjectInputStream(inputStream);
+
+            Inventory inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
+            for (int i = 0; i < inventory.getSize(); i++)
+                inventory.setItem(i, (ItemStack) dataInput.readObject());
+            dataInput.close();
+            return inventory;
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
 
 }

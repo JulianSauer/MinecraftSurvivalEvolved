@@ -78,6 +78,11 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         return inventory;
     }
 
+    @Override
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     public GeneralBehaviorHandler getGeneralBehaviorHandler() {
         return generalBehaviorHandler;
     }
