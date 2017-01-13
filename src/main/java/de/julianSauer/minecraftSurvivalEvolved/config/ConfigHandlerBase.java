@@ -304,10 +304,8 @@ abstract class ConfigHandlerBase {
      * @param fileName   Name of the file
      */
     protected void deleteFile(String folderName, String fileName) {
-        MSEMain.getInstance().getLogger().info("Trying to remove " + fileName);
         addConfigToCache(folderName, fileName);
         if (configFiles.containsKey(fileName)) {
-            MSEMain.getInstance().getLogger().info("Removing file " + fileName);
             configFiles.get(fileName).deleteFile();
         }
         removeConfigFromCache(fileName);
