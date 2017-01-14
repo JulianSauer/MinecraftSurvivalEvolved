@@ -64,7 +64,10 @@ public interface MSEEntity extends Tameable, InventoryHolder {
 
     net.minecraft.server.v1_9_R1.EntityInsentient getHandle();
 
-    void setInventory(Inventory inventory);
+    default void setInventory(Inventory inventory) {
+        for(int i=0; i<inventory.getSize(); i++)
+            getInventory().setItem(i, inventory.getItem(i));
+    }
 
     // Methods implemented by Minecraft
     String getName();
