@@ -1,14 +1,22 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
+import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.ButtonIcons;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles drops of custom entities.
@@ -28,15 +36,48 @@ public class EntityDeathListener implements BasicEventListener {
         if (mseEntity == null)
             return;
 
-        Inventory entityInventory = mseEntity.getInventory();
+        dropInventory(mseEntity.getInventory(), e.getDrops());
+        sendDeathMessage(mseEntity);
 
-        // Remove back button and force feed button
+    }
+
+    /**
+     * Removes the items used as buttons.
+     *
+     * @param entityInventory Inventory of the dying entity
+     * @param drops           Default items that are droppped by the entity type
+     */
+    private void dropInventory(Inventory entityInventory, List<ItemStack> drops) {
+
         ItemStack backButton = entityInventory.getItem(0);
         if (icons.isButtonIcon(backButton, icons.getBackButton()) || icons.isButtonIcon(backButton, icons.getForceFeedButton()))
             entityInventory.setItem(0, new ItemStack(Material.AIR));
 
-        e.getDrops().addAll(Arrays.asList(entityInventory.getContents()));
+        drops.addAll(Arrays.asList(entityInventory.getContents()));
         entityInventory.clear();
+
+    }
+
+    /**
+     * Informs the owners of the poor thing.
+     *
+     * @param mseEntity Entity that died
+     */
+    private void sendDeathMessage(MSEEntity mseEntity) {
+
+        UUID tribeUUID = mseEntity.getTamingHandler().getTribe();
+        if (tribeUUID == null)
+            return;
+        Tribe tribe = TribeRegistry.getTribeRegistry().getTribe(tribeUUID);
+
+        if (tribe != null)
+            BarHandler.sendEntityDeathMessageTo(new ArrayList<>(tribe.getMembers()), mseEntity.getName());
+
+        else {
+            Player owner = Bukkit.getPlayer(mseEntity.getTamingHandler().getOwner());
+            if (owner != null)
+                BarHandler.sendEntityDeathMessageTo(owner, mseEntity.getName());
+        }
 
     }
 

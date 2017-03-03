@@ -2,6 +2,8 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
@@ -19,11 +21,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
  * Implements taming functionality for entities that can be used to implement Tameable.
- *
+ * <p>
  * Note: The weird error printing is due to Minecraft catching all exceptions when loading an entity and simply removing
  * it instead of printing it there.
  */
@@ -39,8 +42,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     private int torporDepletion;
     private int torpidity;
 
-    private UUID owner;
     private UUID tamer;
+    private UUID owner;
+    private UUID tribe;
 
     private UnconsciousnessTimer unconsciousnessTimer;
     private boolean threadCurrentlyRunning;
@@ -79,9 +83,10 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         unconscious = data.getBoolean("MSEUnconscious");
         resumeConsciousness = unconscious;
 
-        if (tamed)
+        if (tamed) {
             owner = UUID.fromString(data.getString("MSEOwner"));
-        else if (unconscious) {
+            tribe = UUID.fromString(data.getString("MSETribe"));
+        } else if (unconscious) {
             tamingProgress = data.getInt("MSETamingProgress");
             tamer = UUID.fromString(data.getString("MSETamer"));
         } else
@@ -96,9 +101,11 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         data.setBoolean("MSETamed", isTamed());
         data.setBoolean("MSEUnconscious", unconscious);
         data.setInt("MSETorpidity", getTorpidity());
-        if (isTamed())
+        if (isTamed()) {
             data.setString("MSEOwner", getOwner().toString());
-        else if (isUnconscious()) {
+            if (tribe != null)
+                data.setString("MSETribe", tribe.toString());
+        } else if (isUnconscious()) {
             data.setInt("MSETamingProgress", getTamingProgress());
             data.setString("MSETamer", getTamer().toString());
         }
@@ -147,6 +154,12 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTamingProgress(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
     }
 
+    public UUID getTamer() {
+        if (!initialized)
+            new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
+        return tamer;
+    }
+
     public UUID getOwner() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
@@ -155,10 +168,10 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         return null;
     }
 
-    public UUID getTamer() {
+    public UUID getTribe() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return tamer;
+        return tribe;
     }
 
     public int getTorpidity() {
@@ -245,7 +258,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     }
 
     /**
-     * Tames this entity. Ignores if the entity is tameable or already tamed.
+     * Tames this entity.
      *
      * @param newOwner Player that will own the entity
      */
@@ -253,15 +266,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
-        tamed = true;
-        this.owner = newOwner.getUniqueId();
-        decreaseTorpidityBy(getMaxTorpidity());
-        mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
-        mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
-        mseEntity.getGeneralBehaviorHandler().startFoodTimer();
-        BarHandler.sendTamedTextTo(newOwner, mseEntity.getName());
-        (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
-        mseEntity.setPassiveGoals();
+        tamer = newOwner.getUniqueId();
+
+        setSuccessfullyTamed();
     }
 
     /**
@@ -277,16 +284,21 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (isTameable() && tamer != null && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
             tamed = true;
             owner = tamer;
+            Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(owner).getTribe();
+            if (tribe != null) {
+                this.tribe = tribe.getUniqueID();
+                BarHandler.sendEntityTamedMessageTo(new ArrayList<>(tribe.getMembers()), Bukkit.getPlayer(owner), mseEntity.getName());
+            } else {
+                BarHandler.sendEntityTamedMessageTo(Bukkit.getPlayer(owner), mseEntity.getName());
+            }
+
             decreaseTorpidityBy(getMaxTorpidity());
             mseEntity.getWorld().getWorld().playSound(mseEntity.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 5F, 0.5F);
             mseEntity.setCustomName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
-            BarHandler.sendTamedTextTo(Bukkit.getPlayer(owner), mseEntity.getName());
             (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
             mseEntity.setPassiveGoals();
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
-            return;
-        } else {
             return;
         }
 
