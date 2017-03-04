@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Maps player names to entities to mark them for a name change.
+ * Maps player names to entities to mark them for a name change. Needed when using signs as an interface.
  */
 public class NameChanger {
 

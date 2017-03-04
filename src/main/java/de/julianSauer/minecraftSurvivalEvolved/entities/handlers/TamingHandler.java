@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.gui.SignGUI;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
@@ -8,6 +9,7 @@ import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
+import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
@@ -284,6 +286,10 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (isTameable() && tamer != null && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
             tamed = true;
             owner = tamer;
+
+            NameChanger.markEntityForNameChange(owner, mseEntity);
+            SignGUI.sendSignToPlayer(Bukkit.getPlayer(owner));
+
             Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(owner).getTribe();
             if (tribe != null) {
                 this.tribe = tribe.getUniqueID();
