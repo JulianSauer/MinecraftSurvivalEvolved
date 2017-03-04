@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
+package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 

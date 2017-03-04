@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
+package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.visuals;
+package de.julianSauer.minecraftSurvivalEvolved.gui;
 
 import net.minecraft.server.v1_9_R1.BlockPosition;
 import net.minecraft.server.v1_9_R1.PacketPlayOutOpenSignEditor;

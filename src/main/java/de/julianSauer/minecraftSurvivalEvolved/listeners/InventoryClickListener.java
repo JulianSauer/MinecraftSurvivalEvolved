@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.inventories.InventoryGUI;
+import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

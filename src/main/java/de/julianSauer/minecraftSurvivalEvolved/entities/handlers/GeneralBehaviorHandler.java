@@ -4,7 +4,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.AlphaParticleSpawner;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.AlphaParticleSpawner;
 import net.minecraft.server.v1_9_R1.DamageSource;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;

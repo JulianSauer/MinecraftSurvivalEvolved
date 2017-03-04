@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.visuals;
+package de.julianSauer.minecraftSurvivalEvolved.gui.visuals;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;

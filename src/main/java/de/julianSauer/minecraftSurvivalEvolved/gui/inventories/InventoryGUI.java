@@ -1,8 +1,8 @@
-package de.julianSauer.minecraftSurvivalEvolved.visuals.inventories;
+package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.ScoreboardHandler;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.ScoreboardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;

@@ -10,7 +10,7 @@ import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InUpdateSignLis
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
-import de.julianSauer.minecraftSurvivalEvolved.visuals.HologramHandler;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
