@@ -12,11 +12,13 @@ public enum ChatMessages {
     ERROR_WRONG_NUMBER_OF_ARGS(Format.ERROR + "Wrong number of arguments"),
     ERROR_NOT_A_NUMBER(Format.ERROR + "The %ARGS0% parameter is not a valid number"),
     ERROR_PAGE_DOESNT_EXIST(Format.ERROR + "Page #%ARGS0% does not exist"),
+    ERROR_NO_PLAYER_FOUND(Format.ERROR + "Could not find player %ARGS0%"),
     ERROR_NO_ENTITY_FOUND(Format.ERROR + "No entity was found at your viewing direction"),
     ERROR_ALPHA_TAME(Format.ERROR + "You cannot tame alphas"),
     ERROR_TRIBE_EXISTS_ALREADY(Format.ERROR + "The tribe %ARGS0% already exists"),
     ERROR_NO_TRIBES_EXIST(Format.ERROR + "No tribes exist on this server"),
-    ERROR_ALREADY_JOINED_A_TRIBE(Format.ERROR + "You are already a member of the tribe %ARGS0%. Leave it to create your own one."),
+    ERROR_ALREADY_JOINED_A_TRIBE1(Format.ERROR + "You are already a member of the tribe %ARGS0%. Leave it to create your own one."),
+    ERROR_ALREADY_JOINED_A_TRIBE2(Format.ERROR + "The player %ARGS0% is already a member of another tribe."),
     ERROR_TRIBE_RANK_TOO_LOW(Format.ERROR + "Your tribe rank is too low"),
     ERROR_TRIBE_MEMBER_DOESNT_EXIST(Format.ERROR + "The player %ARGS0% is not part of tribe %ARGS1%"),
     ERROR_TRIBE_DOESNT_EXIST(Format.ERROR + "The tribe %ARGS0% does not exist"),
@@ -41,6 +43,8 @@ public enum ChatMessages {
     PAGE_COUNT("Viewing page %ARGS0% of %ARGS1%:"),
     TRIBE_CREATED("You successfully created the tribe %ARGS0%"),
     TRIBE_LEFT("You successfully left the tribe %ARGS0%"),
+    TRIBE_INVITED_PLAYER("You invited %ARGS0%"),
+    TRIBE_INVITE_RECEIVED("You received an invitation from %ARGS0% to join his tribe %ARGS1%. Use " + ChatColor.ITALIC + "/mse tribe confirm" + ChatColor.RESET + " within 20 seconds to join the tribe."),
     TRIBE_PRINT_MEMBERS("Members of tribe " + ChatColor.BOLD + "%ARGS0%:"),
     TRIBE_PRINT_MEMBER("- %ARGS0% " + ChatColor.ITALIC + "(Rank: %ARGS1%)");
 

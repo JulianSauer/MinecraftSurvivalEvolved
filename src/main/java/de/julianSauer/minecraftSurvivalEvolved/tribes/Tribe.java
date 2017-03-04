@@ -6,6 +6,7 @@ import net.minecraft.server.v1_9_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -29,7 +30,7 @@ public class Tribe {
     private Rank rankForPromoting;
 
     /**
-     * @param name Name of the tribe
+     * @param name     Name of the tribe
      * @param register Defines if the tribe should be cached in the TribeRegistry; set to false for a dummy object
      */
     public Tribe(String name, boolean register) {
@@ -79,6 +80,18 @@ public class Tribe {
         return members.get(player.getUniqueId());
     }
 
+    public Rank getRankForRecruitment() {
+        return rankForRecruitment;
+    }
+
+    public Rank getRankForDischarge() {
+        return rankForDischarge;
+    }
+
+    public Rank getRankForPromoting() {
+        return rankForPromoting;
+    }
+
     private boolean checkTribeMembership(Player player) {
         if (members.containsKey(player.getUniqueId()))
             return true;
@@ -90,6 +103,7 @@ public class Tribe {
         if (members.containsKey(playerUUID))
             return;
         members.put(playerUUID, rank);
+        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(playerUUID).setTribe(this);
     }
 
     /**

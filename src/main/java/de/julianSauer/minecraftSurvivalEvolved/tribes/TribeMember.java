@@ -19,6 +19,18 @@ public class TribeMember {
         return tribe != null;
     }
 
+    public boolean canRecruit() {
+        return Rank.rankIsEqualOrHigher(tribe.getRankOfMember(player), tribe.getRankForRecruitment());
+    }
+
+    public boolean canDischarge() {
+        return Rank.rankIsEqualOrHigher(tribe.getRankOfMember(player), tribe.getRankForDischarge());
+    }
+
+    public boolean canPromote() {
+        return Rank.rankIsEqualOrHigher(tribe.getRankOfMember(player), tribe.getRankForPromoting());
+    }
+
     public Tribe getTribe() {
         return tribe;
     }
