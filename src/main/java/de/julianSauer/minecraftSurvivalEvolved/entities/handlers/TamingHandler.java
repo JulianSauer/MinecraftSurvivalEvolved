@@ -316,6 +316,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             return;
 
         if (isUnconscious() && torpidity <= 0) {
+            // Wake up
             if (mseEntity.getCraftEntity() instanceof LivingEntity && !mseEntity.getGeneralBehaviorHandler().isAlpha())
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(true);
             if (!isTamed() && tamer != null)
@@ -325,10 +326,14 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             unconscious = false;
             if (unconsciousnessTimer != null && threadCurrentlyRunning)
                 unconsciousnessTimer.cancel();
+
         } else if ((!isUnconscious() && mseEntity.getGeneralBehaviorHandler().getFortitude() != null && torpidity >= mseEntity.getGeneralBehaviorHandler().getFortitude())
                 || resumeConsciousness) {
+            // Fall asleep
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
+            if(!mseEntity.getCraftEntity().isEmpty())
+                mseEntity.getCraftEntity().eject();
             resumeConsciousness = false;
             unconscious = true;
             unconsciousnessTimer = new UnconsciousnessTimer();
