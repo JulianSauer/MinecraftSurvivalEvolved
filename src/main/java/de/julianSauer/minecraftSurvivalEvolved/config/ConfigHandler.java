@@ -111,11 +111,10 @@ public class ConfigHandler extends ConfigHandlerBase {
                 String playerUUIDString = getStringFromConfig(configName, path + ".ID");
                 UUID playerUUID = UUID.fromString(playerUUIDString);
                 Rank rank = Rank.valueOf(getStringFromConfig(configName, path + ".Rank").toUpperCase());
-                if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
                     MSEMain.getInstance().getLogger().warning("Player " + path + " (" + rank + ") in " + configName + " has a corrupt ID and will be ignored");
                     continue;
                 }
-
 
                 tribe.loadMember(playerUUID, rank);
             }
