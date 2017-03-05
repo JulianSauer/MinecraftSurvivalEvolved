@@ -287,7 +287,11 @@ public class HandleTribeCommand extends CommandHandler {
             if (tribe.getMembers().isEmpty())
                 tribe.deleteTribe(null);
             pendingTribeLeaves.remove(playerUUID);
-            player.sendMessage(ChatMessages.TRIBE_LEFT.setParams(tribe.getName()));
+            player.sendMessage(ChatMessages.TRIBE_YOU_LEFT.setParams(tribe.getName()));
+            tribe.getMembers().stream()
+                    .filter(member -> member.isOnline())
+                    .forEach(member -> ((Player) member)
+                            .sendMessage(ChatMessages.TRIBE_MEMBER_LEFT.setParams(player.getName())));
 
         } else if (pendingTribeInvitations.get(playerUUID) != null) {
 
