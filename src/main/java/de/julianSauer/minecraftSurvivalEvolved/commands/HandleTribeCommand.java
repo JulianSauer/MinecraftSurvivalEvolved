@@ -1,7 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMember;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
@@ -217,7 +216,7 @@ public class HandleTribeCommand extends CommandHandler {
         } else if (pendingTribeInvitations.get(playerUUID) != null) {
 
             Tribe tribe = pendingTribeInvitations.get(playerUUID);
-            tribe.add(playerUUID, Rank.RECRUIT);
+            tribe.addNewMember(playerUUID);
 
         } else {
             player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.toString());

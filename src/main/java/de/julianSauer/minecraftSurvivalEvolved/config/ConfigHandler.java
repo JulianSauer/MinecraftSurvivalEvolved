@@ -117,7 +117,7 @@ public class ConfigHandler extends ConfigHandlerBase {
                 }
 
 
-                tribe.add(playerUUID, rank);
+                tribe.loadMember(playerUUID, rank);
             }
 
             tribes.put(tribe.getUniqueID(), tribe);

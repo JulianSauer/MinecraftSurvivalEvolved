@@ -6,7 +6,6 @@ import net.minecraft.server.v1_9_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -99,34 +98,26 @@ public class Tribe {
         return false;
     }
 
-    public void add(UUID playerUUID, Rank rank) {
-        if (members.containsKey(playerUUID))
-            return;
-        members.put(playerUUID, rank);
-        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(playerUUID).setTribe(this);
+    /**
+     * Adds a new player to the tribe.
+     *
+     * @param recruitUUID
+     */
+    public void addNewMember(UUID recruitUUID) {
+        loadMember(recruitUUID, Rank.RECRUIT);
+        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(recruitUUID).setTribe(this);
     }
 
     /**
-     * Recruites a new member to the tribe. The recruiter needs a rank that is high enough to recruit.
+     * Loads a player of this tribe.
      *
-     * @param recruit         New tribe member
-     * @param executingMember Member that is trying to perform this action
+     * @param playerUUID
+     * @param rank
      */
-    public void add(Player recruit, Player executingMember) {
-
-        if (!checkTribeMembership(executingMember))
+    public void loadMember(UUID playerUUID, Rank rank) {
+        if (members.containsKey(playerUUID))
             return;
-
-        UUID recruitUUID = recruit.getUniqueId();
-        UUID executingMemberUUID = executingMember.getUniqueId();
-
-        if (!members.containsKey(recruitUUID)) {
-            if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForRecruitment))
-                members.put(recruitUUID, Rank.RECRUIT);
-            else
-                executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
-        }
-
+        members.put(playerUUID, rank);
     }
 
     /**
