@@ -19,8 +19,4 @@ To debug the plugin you can add a run configuration for *Remote* and copy the te
 java -Xms512M -Xmx1024M -XX:MaxPermSize=128M -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar spigot-1.9.2.jar
 pause
 ```
-You can now connect to your server by clicking on *Make Projects* while the debug run configuration is selected:
-
-![Image of run configuration](https://proxy.spigotmc.org/c9297d1f639820db7784fb3ee5b793bdfd84d106?url=http%3A%2F%2Fi.imgur.com%2FNtJickZ.png)
-
-More detailed instructions on how to debug can be found [here](https://www.spigotmc.org/wiki/intellij-debug-your-plugin/).
+You can now connect to your server by clicking on the bug icon with your debug run configuration selected. More detailed instructions on how to debug can be found [here](https://www.spigotmc.org/wiki/intellij-debug-your-plugin/).
