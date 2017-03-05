@@ -14,35 +14,81 @@ public class HandleTribesCommand extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if (args.length > 2) {
-            sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.toString());
-            return;
+        switch (args.length) {
+
+            case 1:
+
+                processCommand(sender);
+                break;
+
+            case 2:
+
+                if (args[1].equalsIgnoreCase("help"))
+                    processCommandHelp(sender);
+                else
+                    processCommandPage(sender, args);
+                break;
+
+            default:
+
+                sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.toString());
+                break;
         }
 
-        // Command: /mse tribes help
-        if (args.length == 2 && args[1].equalsIgnoreCase("help")) {
-            sender.sendMessage(ChatMessages.HELP_TRIBES1.toString());
-            sender.sendMessage(ChatMessages.HELP_TRIBES2.toString());
+    }
+
+    /**
+     * Command: /mse tribes
+     * Prints the first 10 tribes of this server.
+     *
+     * @param sender
+     */
+    private void processCommand(CommandSender sender) {
+        printTribes(sender, 1);
+    }
+
+    /**
+     * Command: /mse tribes help
+     *
+     * @param sender
+     */
+    private void processCommandHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_TRIBES1.toString());
+        sender.sendMessage(ChatMessages.HELP_TRIBES2.toString());
+    }
+
+    /**
+     * Command: /mse tribes <page>
+     * Parses the user input to print a specific page of tribes
+     *
+     * @param sender
+     * @param args
+     */
+    private void processCommandPage(CommandSender sender, String args[]) {
+
+        int page;
+        try {
+            page = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatMessages.ERROR_NOT_A_NUMBER.setParams("second"));
             return;
         }
+        printTribes(sender, page);
 
-        // Command: /mse tribes
+    }
+
+    /**
+     * Prints 10 tribes of the server.
+     *
+     * @param sender
+     * @param page
+     */
+    private void printTribes(CommandSender sender, int page) {
+
         Collection<Tribe> tribes = tribeRegistry.getTribes();
         if (tribes.size() == 0) {
             sender.sendMessage(ChatMessages.ERROR_NO_TRIBES_EXIST.toString());
             return;
-        }
-
-        int page = 1;
-
-        // Command: /mse tribes <page>
-        if (args.length == 2) {
-            try {
-                page = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {
-                sender.sendMessage(ChatMessages.ERROR_NOT_A_NUMBER.setParams("second"));
-                return;
-            }
         }
 
         int pageCount = (int) Math.ceil((double) tribes.size() / 10.0);
