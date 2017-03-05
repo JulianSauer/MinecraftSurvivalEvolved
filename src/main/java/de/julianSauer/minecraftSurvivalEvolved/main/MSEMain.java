@@ -57,8 +57,6 @@ public class MSEMain extends JavaPlugin {
         PacketEventManager.registerPacketListener(new InBlockDigListener());
         PacketEventManager.registerPacketListener(new InUpdateSignListener());
 
-        instance = this;
-
         getLogger().info("Enabled");
 
     }
