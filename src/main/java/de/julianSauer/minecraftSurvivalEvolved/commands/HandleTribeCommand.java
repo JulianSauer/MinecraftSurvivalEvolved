@@ -216,7 +216,12 @@ public class HandleTribeCommand extends CommandHandler {
         } else if (pendingTribeInvitations.get(playerUUID) != null) {
 
             Tribe tribe = pendingTribeInvitations.get(playerUUID);
+            tribe.getMembers().stream()
+                    .filter(member -> member.isOnline())
+                    .forEach(member -> ((Player) member)
+                            .sendMessage(ChatMessages.TRIBE_NEW_MEMBER_RECRUITED.setParams(player.getName())));
             tribe.addNewMember(playerUUID);
+            player.sendMessage(ChatMessages.TRIBE_WELCOME_MESSAGE.setParams(tribe.getName()));
 
         } else {
             player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.toString());
