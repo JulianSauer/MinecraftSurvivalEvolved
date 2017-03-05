@@ -283,23 +283,17 @@ public class HandleTribeCommand extends CommandHandler {
         if (pendingTribeLeaves.contains(playerUUID)) {
 
             Tribe tribe = tribeMemberRegistry.getTribeOf(player);
-            tribe.remove(player, player);
+            tribe.remove(player);
             if (tribe.getMembers().isEmpty())
-                tribe.deleteTribe(null);
+                tribe.deleteTribe();
             pendingTribeLeaves.remove(playerUUID);
             player.sendMessage(ChatMessages.TRIBE_YOU_LEFT.setParams(tribe.getName()));
-            tribe.getMembers().stream()
-                    .filter(member -> member.isOnline())
-                    .forEach(member -> ((Player) member)
-                            .sendMessage(ChatMessages.TRIBE_MEMBER_LEFT.setParams(player.getName())));
+            tribe.sendMessageToMembers(ChatMessages.TRIBE_MEMBER_LEFT.setParams(player.getName()));
 
         } else if (pendingTribeInvitations.get(playerUUID) != null) {
 
             Tribe tribe = pendingTribeInvitations.get(playerUUID);
-            tribe.getMembers().stream()
-                    .filter(member -> member.isOnline())
-                    .forEach(member -> ((Player) member)
-                            .sendMessage(ChatMessages.TRIBE_NEW_MEMBER_RECRUITED.setParams(player.getName())));
+            tribe.sendMessageToMembers(ChatMessages.TRIBE_NEW_MEMBER_RECRUITED.setParams(player.getName()));
             tribe.addNewMember(playerUUID);
             pendingTribeInvitations.remove(playerUUID);
             player.sendMessage(ChatMessages.TRIBE_WELCOME_MESSAGE.setParams(tribe.getName()));
@@ -307,7 +301,6 @@ public class HandleTribeCommand extends CommandHandler {
         } else {
             player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.toString());
         }
-
 
     }
 

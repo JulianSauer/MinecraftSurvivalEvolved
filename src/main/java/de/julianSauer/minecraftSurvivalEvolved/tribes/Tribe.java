@@ -1,6 +1,5 @@
 package de.julianSauer.minecraftSurvivalEvolved.tribes;
 
-import de.julianSauer.minecraftSurvivalEvolved.commands.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.MathHelper;
 import org.bukkit.Bukkit;
@@ -83,12 +82,36 @@ public class Tribe {
         return rankForRecruitment;
     }
 
+    public void setRankForRecruitment(Rank newRank) {
+        rankForRecruitment = newRank;
+    }
+
     public Rank getRankForDischarge() {
         return rankForDischarge;
     }
 
+    public void setRankForDischarge(Rank newRank) {
+        rankForDischarge = newRank;
+    }
+
     public Rank getRankForPromoting() {
         return rankForPromoting;
+    }
+
+    public void setRankForPromoting(Rank newRank) {
+        rankForPromoting = newRank;
+    }
+
+    /**
+     * Loads a player of this tribe.
+     *
+     * @param playerUUID
+     * @param rank
+     */
+    public void loadMember(UUID playerUUID, Rank rank) {
+        if (members.containsKey(playerUUID))
+            return;
+        members.put(playerUUID, rank);
     }
 
     private boolean checkTribeMembership(Player player) {
@@ -109,141 +132,53 @@ public class Tribe {
     }
 
     /**
-     * Loads a player of this tribe.
-     *
-     * @param playerUUID
-     * @param rank
-     */
-    public void loadMember(UUID playerUUID, Rank rank) {
-        if (members.containsKey(playerUUID))
-            return;
-        members.put(playerUUID, rank);
-    }
-
-    /**
-     * Removes a player from the tribe. The executing player needs the permission to remove players and also a higher
-     * rank than the member that is being removed. If a member is leaving the tribe, both parameters should be the same
-     * player.
+     * Removes/kicks a player from the tribe.
      *
      * @param dischargedMember Removed tribe member
-     * @param executingMember  Member that is trying to perform this action
      */
-    public void remove(Player dischargedMember, Player executingMember) {
-
-        if (!checkTribeMembership(executingMember))
-            return;
+    public void remove(Player dischargedMember) {
 
         UUID dischargedMemberUUID = dischargedMember.getUniqueId();
-        UUID executingMemberUUID = executingMember.getUniqueId();
 
         if (members.containsKey(dischargedMemberUUID)) {
-            if ((Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForDischarge)
-                    && Rank.rankIsHigher(members.get(executingMemberUUID), members.get(dischargedMemberUUID)))
-                    || executingMemberUUID.equals(dischargedMemberUUID)) {
-                TribeMemberRegistry tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
-                tribeMemberRegistry.getTribeMember(dischargedMemberUUID).setTribe(null);
-                members.remove(dischargedMemberUUID);
-            } else
-                executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
+            TribeMemberRegistry tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
+            tribeMemberRegistry.getTribeMember(dischargedMemberUUID).setTribe(null);
+            members.remove(dischargedMemberUUID);
         }
 
     }
 
     /**
-     * Changes the rank for a tribe member. The executing member has to be allowed to promote/demote other members.
-     * Also the new rank can't be higher than the rank of the executing member
+     * Changes the rank of a tribe member.
      *
-     * @param promotedMember  Member who's rank is being changed
-     * @param newRank         New rank of the member
-     * @param executingMember Member that is trying to perform this action
+     * @param promotedMember Member who's rank is being changed
+     * @param newRank        New rank of the member
      */
-    public void promote(Player promotedMember, Rank newRank, Player executingMember) {
-
-        if (!checkTribeMembership(executingMember))
-            return;
+    public void promote(Player promotedMember, Rank newRank) {
 
         UUID promotedMemberUUID = promotedMember.getUniqueId();
-        UUID executingMemberUUID = executingMember.getUniqueId();
-
-        if (!members.containsKey(promotedMemberUUID))
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_MEMBER_DOESNT_EXIST.setParams(
-                    Bukkit.getOfflinePlayer(promotedMemberUUID).getName(),
-                    name
-            ));
-
-        if (Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), rankForPromoting)
-                && Rank.rankIsEqualOrHigher(members.get(executingMemberUUID), newRank)) {
-            members.remove(promotedMemberUUID);
-            members.put(promotedMemberUUID, newRank);
-        } else
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
+        members.remove(promotedMemberUUID);
+        members.put(promotedMemberUUID, newRank);
 
     }
 
     /**
-     * Increases or decreases the rank needed to recruit new members.
-     *
-     * @param newRank         New rank needed for recruitment
-     * @param executingMember Member that is trying to perform this action
+     * Deletes this tribe.
      */
-    public void setRankForRecruitment(Rank newRank, Player executingMember) {
-        if (!checkTribeMembership(executingMember))
-            return;
-
-        if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), rankForPromoting)
-                && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
-            rankForRecruitment = newRank;
-        else
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
+    public void deleteTribe() {
+        tribeRegistry.unregisterTribe(this);
     }
 
     /**
-     * Increases or decreases the rank needed to remove members.
+     * Sends a message to every tribe member that is online.
      *
-     * @param newRank         New rank needed for removing members
-     * @param executingMember Member that is trying to perform this action
+     * @param message
      */
-    public void setRankForDischarge(Rank newRank, Player executingMember) {
-        if (!checkTribeMembership(executingMember))
-            return;
-
-        if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), rankForPromoting)
-                && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
-            rankForDischarge = newRank;
-        else
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
-    }
-
-    /**
-     * Increases or decreases the rank needed to promote/demote players.
-     *
-     * @param newRank         New rank needed for promoting/demoting
-     * @param executingMember Member that is trying to perform this action
-     */
-    public void setRankForPromoting(Rank newRank, Player executingMember) {
-        if (!checkTribeMembership(executingMember))
-            return;
-
-        if (Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), rankForPromoting)
-                && Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), newRank))
-            rankForPromoting = newRank;
-        else
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
-    }
-
-    /**
-     * Deletes a tribe.
-     *
-     * @param executingMember Member that is trying to perform this action or null to skip a rank check
-     */
-    public void deleteTribe(Player executingMember) {
-        if (executingMember != null && !checkTribeMembership(executingMember))
-            return;
-
-        if (executingMember == null || Rank.rankIsEqualOrHigher(members.get(executingMember.getUniqueId()), Rank.LEADER)) {
-            tribeRegistry.unregisterTribe(this);
-        } else
-            executingMember.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
+    public void sendMessageToMembers(String message) {
+        getMembers().stream()
+                .filter(member -> member.isOnline())
+                .forEach(member -> ((Player) member)
+                        .sendMessage(message));
     }
 
 }
