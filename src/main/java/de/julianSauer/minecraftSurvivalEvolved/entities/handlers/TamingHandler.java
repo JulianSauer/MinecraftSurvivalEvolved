@@ -2,13 +2,14 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.gui.SignGUI;
+import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
-import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
-import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
-import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
 import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
@@ -86,8 +87,14 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         resumeConsciousness = unconscious;
 
         if (tamed) {
-            owner = UUID.fromString(data.getString("MSEOwner"));
-            tribe = UUID.fromString(data.getString("MSETribe"));
+
+            String ownerUUID = data.getString("MSEOwner");
+            String tribeUUID = data.getString("MSETribe");
+            if (ownerUUID != null && !ownerUUID.isEmpty())
+                owner = UUID.fromString(ownerUUID);
+            if (tribeUUID != null && !tribeUUID.isEmpty())
+                tribe = UUID.fromString(tribeUUID);
+
         } else if (unconscious) {
             tamingProgress = data.getInt("MSETamingProgress");
             tamer = UUID.fromString(data.getString("MSETamer"));
@@ -104,7 +111,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         data.setBoolean("MSEUnconscious", unconscious);
         data.setInt("MSETorpidity", getTorpidity());
         if (isTamed()) {
-            data.setString("MSEOwner", getOwner().toString());
+            if (owner != null)
+                data.setString("MSEOwner", getOwner().toString());
             if (tribe != null)
                 data.setString("MSETribe", tribe.toString());
         } else if (isUnconscious()) {
@@ -190,6 +198,39 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
         return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTorpidity(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
+    }
+
+    /**
+     * Checks if a player is the owner or a member of the owning tribe of this entity.
+     *
+     * @param player The possible owner
+     * @return True if the player is an owner
+     */
+    public boolean isOwner(UUID player) {
+        if (owner != null)
+            return owner.equals(player);
+        else if (tribe != null) {
+            Tribe owningTribe = TribeRegistry.getTribeRegistry().getTribe(tribe);
+            if(owningTribe == null)
+                return false;
+            return owningTribe.isMember(player);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if this one and another entity have the same owners.
+     *
+     * @param mseEntity The other entity
+     * @return True if they have the same owners
+     */
+    public boolean sameOwner(MSEEntity mseEntity) {
+        if (owner != null && mseEntity.getTamingHandler().getOwner() != null)
+            return owner.equals(mseEntity.getTamingHandler().getOwner());
+        else if (tribe != null && mseEntity.getTamingHandler().getTribe() != null)
+            return tribe.equals(mseEntity.getTamingHandler().getTribe());
+
+        return false;
     }
 
     /**
@@ -285,16 +326,16 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
         if (isTameable() && tamer != null && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
             tamed = true;
-            owner = tamer;
 
-            NameChanger.markEntityForNameChange(owner, mseEntity);
-            SignGUI.sendSignToPlayer(Bukkit.getPlayer(owner));
+            NameChanger.markEntityForNameChange(tamer, mseEntity);
+            SignGUI.sendSignToPlayer(Bukkit.getPlayer(tamer));
 
-            Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(owner).getTribe();
+            Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(tamer).getTribe();
             if (tribe != null) {
                 this.tribe = tribe.getUniqueID();
-                BarHandler.sendEntityTamedMessageTo(new ArrayList<>(tribe.getMembers()), Bukkit.getPlayer(owner), mseEntity.getName());
+                BarHandler.sendEntityTamedMessageTo(new ArrayList<>(tribe.getMembers()), Bukkit.getPlayer(tamer), mseEntity.getName());
             } else {
+                owner = tamer;
                 BarHandler.sendEntityTamedMessageTo(Bukkit.getPlayer(owner), mseEntity.getName());
             }
 
@@ -338,7 +379,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             // Fall asleep
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
-            if(!mseEntity.getCraftEntity().isEmpty())
+            if (!mseEntity.getCraftEntity().isEmpty())
                 mseEntity.getCraftEntity().eject();
             resumeConsciousness = false;
             unconscious = true;

@@ -2,7 +2,6 @@ package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
 import com.google.common.base.Predicate;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityCreeper;
 import net.minecraft.server.v1_9_R1.EntityMonster;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
@@ -76,17 +75,23 @@ public interface PathfinderHandler extends Persistentable {
 
     void toggleFollowing(EntityPlayer player);
 
+    /**
+     * Checks if the target should be attacked.
+     *
+     * @param mseEntity Attacking entity
+     * @return True, if an attack is valid
+     */
     default Predicate getNeutralPredicate(MSEEntity mseEntity) {
         return input -> {
             if (input instanceof EntityCreeper)
                 return false;
+
             if (input instanceof MSEEntity) {
                 MSEEntity entity = (MSEEntity) input;
-                if (entity.getTamingHandler().getOwner() != null)
-                    return !entity.getTamingHandler().getOwner().equals(mseEntity.getTamingHandler().getOwner());
+                return !mseEntity.getTamingHandler().sameOwner(entity);
             } else if (input instanceof EntityPlayer) {
-                if (mseEntity.getTamingHandler() != null && mseEntity.getTamingHandler().getOwner() != null)
-                    return !mseEntity.getTamingHandler().getOwner().equals(((Entity) input).getUniqueID());
+                EntityPlayer player = (EntityPlayer) input;
+                return !mseEntity.getTamingHandler().isOwner(player.getUniqueID());
             }
             return true;
         };
