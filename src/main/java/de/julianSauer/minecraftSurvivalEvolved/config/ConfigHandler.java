@@ -104,17 +104,24 @@ public class ConfigHandler extends ConfigHandlerBase {
         for (File tribeFile : tribeFiles) {
             String configName = tribeFile.getName();
             addConfigToCache("/Tribes/", configName);
-            Tribe tribe = new Tribe(configName.substring(0, configName.length() - 4), false);
+
+            String tribeName = configName.substring(0, configName.length() - 4);
+            String tribeUUIDString = getStringFromConfig(configName, tribeName + ".ID");
+            UUID tribeUUID = UUID.fromString(tribeUUIDString);
+            Tribe tribe = new Tribe(tribeName, false, tribeUUID);
 
             for (String path : getConfigurationSectionFromConfig(configName, "").getKeys(false)) {
 
+                if (path.equals(tribeName))
+                    continue;
+
                 String playerUUIDString = getStringFromConfig(configName, path + ".ID");
-                UUID playerUUID = UUID.fromString(playerUUIDString);
-                Rank rank = Rank.valueOf(getStringFromConfig(configName, path + ".Rank").toUpperCase());
                 if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-                    MSEMain.getInstance().getLogger().warning("Player " + path + " (" + rank + ") in " + configName + " has a corrupt ID and will be ignored");
+                    MSEMain.getInstance().getLogger().warning("Player " + path + " in " + configName + " has a corrupt ID and will be ignored");
                     continue;
                 }
+                UUID playerUUID = UUID.fromString(playerUUIDString);
+                Rank rank = Rank.valueOf(getStringFromConfig(configName, path + ".Rank").toUpperCase());
 
                 tribe.loadMember(playerUUID, rank);
             }
@@ -140,6 +147,7 @@ public class ConfigHandler extends ConfigHandlerBase {
 
         for (Tribe tribe : tribes.values()) {
             addConfigToCache("/Tribes/", tribe.getName() + ".yml");
+            setValueInConfig(tribe.getName() + ".yml", tribe.getName() + ".ID", tribe.getUniqueID().toString());
             for (UUID playerUUID : tribe.getMemberUUIDs()) {
                 String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
                 setValueInConfig(tribe.getName() + ".yml", playerName + ".ID", playerUUID.toString());

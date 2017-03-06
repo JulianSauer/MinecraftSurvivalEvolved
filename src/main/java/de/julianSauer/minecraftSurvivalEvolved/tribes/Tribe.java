@@ -32,7 +32,16 @@ public class Tribe {
      * @param register Defines if the tribe should be cached in the TribeRegistry; set to false for a dummy object
      */
     public Tribe(String name, boolean register) {
-        uniqueID = MathHelper.a(new Random());
+        this(name, register, MathHelper.a(new Random()));
+    }
+
+    /**
+     * @param name     Name of the tribe
+     * @param register Defines if the tribe should be cached in the TribeRegistry; set to false for a dummy object
+     * @param uniqueID ID of this tribe
+     */
+    public Tribe(String name, boolean register, UUID uniqueID) {
+        this.uniqueID = uniqueID;
         this.name = name;
         members = new HashMap<>();
 
@@ -68,6 +77,10 @@ public class Tribe {
 
     public boolean isMember(Player player) {
         return members.containsKey(player.getUniqueId());
+    }
+
+    public boolean isMember(UUID player) {
+        return members.containsKey(player);
     }
 
     public Rank getRankOfMember(UUID playerUUID) {
