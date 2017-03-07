@@ -336,7 +336,6 @@ public class HandleTribeCommand extends CommandHandler {
             player.sendMessage(ChatMessages.ERROR_TRIBE_EXISTS_ALREADY.setParams(tribeName));
         else {
             new Tribe(player, tribeName);
-            tribeMemberRegistry.registerPlayer(player);
             player.sendMessage(ChatMessages.TRIBE_CREATED.setParams(tribeName));
         }
 

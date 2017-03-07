@@ -60,6 +60,7 @@ public class Tribe {
     public Tribe(Player founder, String name) {
         this(name, true);
         this.founder = founder.getUniqueId();
+        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(founder).setTribe(this);
         members.put(founder.getUniqueId(), Rank.FOUNDER);
     }
 
