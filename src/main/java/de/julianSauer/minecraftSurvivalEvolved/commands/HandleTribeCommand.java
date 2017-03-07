@@ -62,7 +62,7 @@ public class HandleTribeCommand extends CommandHandler {
                         processCommandCreate(sender, args);
 
                     } else
-                        sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+                        sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
 
                 } else if (args[1].equalsIgnoreCase("leave") && args[2].equalsIgnoreCase("help")) {
                     processCommandLeaveHelp(sender);
@@ -71,16 +71,16 @@ public class HandleTribeCommand extends CommandHandler {
                     processCommandConfirmHelp(sender);
 
                 } else {
-                    sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.toString());
-                    sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
-                    sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
+                    sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
                 }
                 break;
 
             default:
-                sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.toString());
-                sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
-                sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
+                sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
+                sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
+                sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
                 break;
 
         }
@@ -101,7 +101,7 @@ public class HandleTribeCommand extends CommandHandler {
             } else
                 printTribeInfo(sender, member.getTribe().getName());
         } else
-            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
     }
 
     /**
@@ -115,7 +115,7 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandLeave(CommandSender sender) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
             return;
         }
 
@@ -156,7 +156,7 @@ public class HandleTribeCommand extends CommandHandler {
         if (sender instanceof Player)
             confirmAction((Player) sender);
         else
-            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
     }
 
     /**
@@ -168,8 +168,8 @@ public class HandleTribeCommand extends CommandHandler {
      */
     private void processCommandInfo(CommandSender sender, String args[]) {
         if (args[1].equalsIgnoreCase("help")) {
-            sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
-            sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
+            sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
+            sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
         } else
             printTribeInfo(sender, args[1]);
     }
@@ -206,7 +206,7 @@ public class HandleTribeCommand extends CommandHandler {
             invitedPlayer.sendMessage(ChatMessages.TRIBE_INVITE_RECEIVED
                     .setParams(invitingPlayer.getDisplayName(), invitingTribeMember.getTribe().getName()));
         } else
-            invitingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.toString());
+            invitingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
 
     }
 
@@ -241,8 +241,8 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandCreate(CommandSender sender, String args[]) {
 
         if (args[2].equalsIgnoreCase("help")) {
-            sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.toString());
-            sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.toString());
+            sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.setParams());
+            sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.setParams());
         } else
             createTribe((Player) sender, args[2]);
 
@@ -254,8 +254,8 @@ public class HandleTribeCommand extends CommandHandler {
      * @param sender
      */
     private void processCommandLeaveHelp(CommandSender sender) {
-        sender.sendMessage(ChatMessages.HELP_TRIBE_LEAVE1.toString());
-        sender.sendMessage(ChatMessages.HELP_TRIBE_LEAVE2.toString());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_LEAVE1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_LEAVE2.setParams());
     }
 
     /**
@@ -264,8 +264,8 @@ public class HandleTribeCommand extends CommandHandler {
      * @param sender
      */
     private void processCommandConfirmHelp(CommandSender sender) {
-        sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM1.toString());
-        sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM2.toString());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM2.setParams());
     }
 
     /**
@@ -303,7 +303,7 @@ public class HandleTribeCommand extends CommandHandler {
             player.sendMessage(ChatMessages.TRIBE_WELCOME_MESSAGE.setParams(tribe.getName()));
 
         } else {
-            player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.toString());
+            player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.setParams());
         }
 
     }
@@ -342,9 +342,9 @@ public class HandleTribeCommand extends CommandHandler {
     }
 
     private void sendNoTribeMembershipErrorTo(CommandSender sender) {
-        sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.toString());
-        sender.sendMessage(ChatMessages.HELP_TRIBE1.toString());
-        sender.sendMessage(ChatMessages.HELP_TRIBE2.toString());
+        sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
     }
 
 }

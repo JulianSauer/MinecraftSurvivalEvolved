@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 /**
  * Currently all messages for players are stored here.
  */
-public enum ChatMessages {
+enum ChatMessages {
 
     ERROR_NO_PERMISSION(Format.ERROR + "Sorry but you don't have permission to do that."),
     ERROR_SENDER_NO_PLAYER(Format.ERROR + "You have to be a player to be able to perform this command."),
@@ -69,15 +69,10 @@ public enum ChatMessages {
     }
 
     public String setParams(String... args) {
-        String ret = this.toString();
+        String ret = message;
         for (int i = 0; i < args.length; i++)
             ret = ret.replace("%ARGS" + i + "%", args[i]);
         return ret;
-    }
-
-    @Override
-    public String toString() {
-        return message;
     }
 
 }

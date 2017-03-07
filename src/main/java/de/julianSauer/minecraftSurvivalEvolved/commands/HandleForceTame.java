@@ -21,7 +21,7 @@ public class HandleForceTame extends CommandHandler {
     public void process(CommandSender sender, String... args) {
 
         if (!(sender instanceof Player))
-            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.toString());
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
 
         if (sender.hasPermission("MinecraftSurvivalEvolved.ForceTame")) {
 
@@ -29,8 +29,8 @@ public class HandleForceTame extends CommandHandler {
 
             // Error or command: /mse forcetame help
             if (args.length == 2 && args[1].equalsIgnoreCase("help")) {
-                sender.sendMessage(ChatMessages.HELP_FORCETAME1.toString());
-                sender.sendMessage(ChatMessages.HELP_FORCETAME2.toString());
+                sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
+                sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
                 return;
             }
 
@@ -42,8 +42,8 @@ public class HandleForceTame extends CommandHandler {
                 if (args.length == 2) {
                     player = Bukkit.getPlayer(args[1]);
                     if (player == null) {
-                        sender.sendMessage(ChatMessages.HELP_FORCETAME1.toString());
-                        sender.sendMessage(ChatMessages.HELP_FORCETAME2.toString());
+                        sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
+                        sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
                         return;
                     }
 
@@ -51,12 +51,12 @@ public class HandleForceTame extends CommandHandler {
                 if (!mseEntity.getGeneralBehaviorHandler().isAlpha())
                     mseEntity.forceTame(player);
                 else
-                    sender.sendMessage(ChatMessages.ERROR_ALPHA_TAME.toString());
+                    sender.sendMessage(ChatMessages.ERROR_ALPHA_TAME.setParams());
 
             } else
-                sender.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.toString());
+                sender.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.setParams());
         } else
-            sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.toString());
+            sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.setParams());
 
     }
 

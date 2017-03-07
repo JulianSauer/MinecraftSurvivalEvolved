@@ -31,7 +31,7 @@ public class HandleTribesCommand extends CommandHandler {
 
             default:
 
-                sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.toString());
+                sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
                 break;
         }
 
@@ -53,8 +53,8 @@ public class HandleTribesCommand extends CommandHandler {
      * @param sender
      */
     private void processCommandHelp(CommandSender sender) {
-        sender.sendMessage(ChatMessages.HELP_TRIBES1.toString());
-        sender.sendMessage(ChatMessages.HELP_TRIBES2.toString());
+        sender.sendMessage(ChatMessages.HELP_TRIBES1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBES2.setParams());
     }
 
     /**
@@ -87,7 +87,7 @@ public class HandleTribesCommand extends CommandHandler {
 
         Collection<Tribe> tribes = tribeRegistry.getTribes();
         if (tribes.size() == 0) {
-            sender.sendMessage(ChatMessages.ERROR_NO_TRIBES_EXIST.toString());
+            sender.sendMessage(ChatMessages.ERROR_NO_TRIBES_EXIST.setParams());
             return;
         }
 

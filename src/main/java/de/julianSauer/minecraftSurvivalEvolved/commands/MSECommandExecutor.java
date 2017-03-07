@@ -34,8 +34,8 @@ public class MSECommandExecutor implements CommandExecutor {
         if (args.length >= 1) {
 
             if (args[0].equalsIgnoreCase("help")) {
-                sender.sendMessage(ChatMessages.HELP1.toString());
-                sender.sendMessage(ChatMessages.HELP2.toString());
+                sender.sendMessage(ChatMessages.HELP1.setParams());
+                sender.sendMessage(ChatMessages.HELP2.setParams());
 
             } else if ((args[0].equalsIgnoreCase("forcetame") || args[0].equalsIgnoreCase("ft"))) {
                 handleForceTame.process(sender, args);
