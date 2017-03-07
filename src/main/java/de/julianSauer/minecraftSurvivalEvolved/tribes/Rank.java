@@ -5,6 +5,7 @@ package de.julianSauer.minecraftSurvivalEvolved.tribes;
  */
 public enum Rank {
 
+    FOUNDER,
     LEADER,
     GENERAL,
     OFFICER,

@@ -131,6 +131,8 @@ public class HandleTribeCommand extends CommandHandler {
             player.sendMessage(ChatMessages.WARNING_DELETE_TRIBE.setParams(tribe.getName()));
         } else {
             player.sendMessage(ChatMessages.WARNING_LEAVE_TRIBE.setParams(tribe.getName()));
+            if (tribe.isFounder(player))
+                player.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams());
         }
         pendingTribeLeaves.add(player.getUniqueId());
 
@@ -283,12 +285,14 @@ public class HandleTribeCommand extends CommandHandler {
         if (pendingTribeLeaves.contains(playerUUID)) {
 
             Tribe tribe = tribeMemberRegistry.getTribeOf(player);
-            tribe.remove(player);
-            if (tribe.getMembers().isEmpty())
-                tribe.deleteTribe();
+            UUID newFounder = tribe.remove(player);
             pendingTribeLeaves.remove(playerUUID);
             player.sendMessage(ChatMessages.TRIBE_YOU_LEFT.setParams(tribe.getName()));
             tribe.sendMessageToMembers(ChatMessages.TRIBE_MEMBER_LEFT.setParams(player.getName()));
+            if (newFounder != null) {
+                String founderName = Bukkit.getOfflinePlayer(newFounder).getName();
+                tribe.sendMessageToMembers(ChatMessages.TRIBE_NEW_FOUNDER.setParams(founderName));
+            }
 
         } else if (pendingTribeInvitations.get(playerUUID) != null) {
 

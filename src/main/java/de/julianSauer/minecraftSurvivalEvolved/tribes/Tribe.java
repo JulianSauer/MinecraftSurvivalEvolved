@@ -21,6 +21,9 @@ public class Tribe {
 
     private Map<UUID, Rank> members;
 
+    // Has all rights
+    private UUID founder;
+
     private String name;
 
     private Rank rankForRecruitment;
@@ -56,7 +59,8 @@ public class Tribe {
 
     public Tribe(Player founder, String name) {
         this(name, true);
-        members.put(founder.getUniqueId(), Rank.LEADER);
+        this.founder = founder.getUniqueId();
+        members.put(founder.getUniqueId(), Rank.FOUNDER);
     }
 
     public UUID getUniqueID() {
@@ -81,6 +85,14 @@ public class Tribe {
 
     public boolean isMember(UUID player) {
         return members.containsKey(player);
+    }
+
+    public boolean isFounder(Player member) {
+        return member.getUniqueId().equals(founder);
+    }
+
+    public UUID getFounder() {
+        return founder;
     }
 
     public Rank getRankOfMember(UUID playerUUID) {
@@ -124,6 +136,8 @@ public class Tribe {
     public void loadMember(UUID playerUUID, Rank rank) {
         if (members.containsKey(playerUUID))
             return;
+        if (rank.equals(Rank.FOUNDER))
+            founder = playerUUID;
         members.put(playerUUID, rank);
     }
 
@@ -145,11 +159,12 @@ public class Tribe {
     }
 
     /**
-     * Removes/kicks a player from the tribe.
+     * Removes/kicks a player from the tribe. Transfers ownership if the leaving member is the owner.
      *
      * @param dischargedMember Removed tribe member
+     * @return The UUID of the new founder if one was determined or null
      */
-    public void remove(Player dischargedMember) {
+    public UUID remove(Player dischargedMember) {
 
         UUID dischargedMemberUUID = dischargedMember.getUniqueId();
 
@@ -159,6 +174,48 @@ public class Tribe {
             members.remove(dischargedMemberUUID);
         }
 
+        if (members.isEmpty()) {
+            deleteTribe();
+            return null;
+        }
+
+        // Transfer ownership of this tribe to highest ranked member
+        if (founder.equals(dischargedMemberUUID)) {
+            transferOwnership();
+            return founder;
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Transfer ownership of this tribe to the highest ranked member.
+     *
+     * @return UUID of the new founder
+     */
+    public void transferOwnership() {
+        Map.Entry<UUID, Rank> founderCandidate = null;
+        for (UUID member : members.keySet()) {
+
+            Rank currentRank = members.get(member);
+            if (founderCandidate == null) {
+                founderCandidate = new AbstractMap.SimpleEntry<>(member, currentRank);
+                continue;
+            }
+            if (Rank.rankIsHigher(currentRank, founderCandidate.getValue()))
+                founderCandidate = new AbstractMap.SimpleEntry<>(member, currentRank);
+
+        }
+        transferOwnership(founderCandidate.getKey());
+    }
+
+    public void transferOwnership(UUID newFounder) {
+        if (members.containsKey(newFounder)) {
+            members.remove(newFounder);
+            members.put(newFounder, Rank.FOUNDER);
+            founder = newFounder;
+        }
     }
 
     /**
