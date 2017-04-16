@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.handlers;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.BaseStats;
+import de.julianSauer.minecraftSurvivalEvolved.entities.BaseAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
@@ -24,9 +24,9 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     private final T mseEntity;
 
-    private final BaseStats baseStats;
+    private final BaseAttributes baseAttributes;
 
-    private int alphaPredatorMultiplier; // baseStats are multiplied by this value; set to 1 if not an alpha
+    private int alphaPredatorMultiplier; // baseAttributes are multiplied by this value; set to 1 if not an alpha
     private int currentFoodValue;
     private int foodDepletion;
     private Integer level;
@@ -39,7 +39,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
     public GeneralBehaviorHandler(T mseEntity) {
         this.mseEntity = mseEntity;
-        baseStats = BaseStats.getBaseAttributesFor(mseEntity.getEntityType());
+        baseAttributes = BaseAttributes.getBaseAttributesFor(mseEntity.getEntityType());
         foodDepletion = 5;
         initialized = false;
     }
@@ -48,13 +48,13 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public void initWithDefaults() {
         initialized = true;
 
-        if (Calculator.applyProbability(baseStats.getAlphaProbability()))
+        if (Calculator.applyProbability(baseAttributes.getAlphaProbability()))
             alphaPredatorMultiplier = 4;
         else
             alphaPredatorMultiplier = 1;
 
         updateLevel(0);
-        currentFoodValue = baseStats.getMaxFoodValue();
+        currentFoodValue = baseAttributes.getMaxFoodValue();
         currentXp = 0;
         if (mseEntity.getTamingHandler().isTamed())
             startFoodTimer();
@@ -109,16 +109,16 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
         return (alphaPredatorMultiplier != 1);
     }
 
-    public BaseStats getBaseStats() {
+    public BaseAttributes getBaseAttributes() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return baseStats;
+        return baseAttributes;
     }
 
     public Integer getFortitude() {
         if (!initialized)
             return null;
-        return (int) Calculator.calculateLevelDependentStatFor(baseStats.getFortitude(), level, getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(baseAttributes.getFortitude(), level, getMultiplier());
     }
 
     public int getLevel() {
@@ -136,19 +136,19 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public float getXpUntilLevelUp() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return baseStats.getXpUntilLevelUp();
+        return baseAttributes.getXpUntilLevelUp();
     }
 
     public double getDamage() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), level, getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), level, getMultiplier());
     }
 
     public double getMaxDamage() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return Calculator.calculateLevelDependentStatFor(baseStats.getDamage(), baseStats.getLevelCap(), getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), baseAttributes.getLevelCap(), getMultiplier());
     }
 
     public float getSpeed() {
@@ -157,7 +157,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
 
         float speedMultiplier = getMultiplier();
         speedMultiplier /= 2;
-        return (float) Calculator.calculateLevelDependentStatFor(baseStats.getSpeed(), level, speedMultiplier);
+        return (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getSpeed(), level, speedMultiplier);
     }
 
     public String getDefaultName() {
@@ -179,7 +179,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public float getMultiplier() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return baseStats.getLevelMultiplier() * alphaPredatorMultiplier;
+        return baseAttributes.getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
     /**
@@ -192,7 +192,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         if (level == null)
-            level = Calculator.getRandomInt(baseStats.getLevelCap()) + 1;
+            level = Calculator.getRandomInt(baseAttributes.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
         if (!mseEntity.getTamingHandler().isTamed())
@@ -209,11 +209,11 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
         currentXp += xpIncrease;
-        float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp(), level, getMultiplier());
+        float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getXpUntilLevelUp(), level, getMultiplier());
         while (currentXp >= currentXpForLevelUp) {
             currentXp -= currentXpForLevelUp;
             updateLevel(1);
-            currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseStats.getXpUntilLevelUp(), level, getMultiplier());
+            currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getXpUntilLevelUp(), level, getMultiplier());
         }
     }
 
@@ -235,12 +235,12 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
                 continue;
 
             Material itemMaterial = item.getType();
-            if (baseStats.getPreferredFood().containsKey(itemMaterial)) {
+            if (baseAttributes.getPreferredFood().containsKey(itemMaterial)) {
 
-                int saturation = baseStats.getFoodsaturationFor(item.getType().toString());
+                int saturation = baseAttributes.getFoodsaturationFor(item.getType().toString());
                 if (saturation <= 0)
                     continue;
-                if (currentFoodValue + saturation + foodDepletion > baseStats.getMaxFoodValue())
+                if (currentFoodValue + saturation + foodDepletion > baseAttributes.getMaxFoodValue())
                     return 0;
 
                 currentFoodValue += saturation + foodDepletion;
@@ -250,12 +250,12 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
                 else
                     inventory.setItem(i, item);
 
-                return baseStats.getPreferredFood().get(itemMaterial);
+                return baseAttributes.getPreferredFood().get(itemMaterial);
             }
         }
         if (!mseEntity.getTamingHandler().isTamed())
             // Taming bar decreases if entity is not fed continuously
-            return baseStats.getHighestFoodSaturation() < baseStats.getMaxFoodValue() - currentFoodValue ? -10 : 0;
+            return baseAttributes.getHighestFoodSaturation() < baseAttributes.getMaxFoodValue() - currentFoodValue ? -10 : 0;
         return 0;
 
     }

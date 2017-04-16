@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Loads base stats of entities from config.
+ * Loads a basic set of attributes for entities from config.
  */
-public class BaseStats {
+public class BaseAttributes {
 
-    private static HashMap<String, BaseStats> cache;
+    private static HashMap<String, BaseAttributes> cache;
 
     private final boolean tameable;
 
@@ -34,7 +34,7 @@ public class BaseStats {
     private final Map<Material, Integer> preferredFood;
     private final Map<String, Integer> foodSaturations;
 
-    private BaseStats(String entity) {
+    private BaseAttributes(String entity) {
 
         ConfigHandler config = MSEMain.getInstance().getConfigHandler();
 
@@ -62,15 +62,15 @@ public class BaseStats {
      * Returns an object containing basic attributes of an entity from disk/cache.
      *
      * @param entity Name of the entity
-     * @return BaseStats for this entity
+     * @return Basic Attributes for this entity
      */
-    public static BaseStats getBaseAttributesFor(String entity) {
+    public static BaseAttributes getBaseAttributesFor(String entity) {
         if (cache == null)
             cache = new HashMap();
 
-        BaseStats ret = cache.get(entity);
+        BaseAttributes ret = cache.get(entity);
         if (ret == null) {
-            ret = new BaseStats(entity);
+            ret = new BaseAttributes(entity);
             cache.put(entity, ret);
         }
         return ret;

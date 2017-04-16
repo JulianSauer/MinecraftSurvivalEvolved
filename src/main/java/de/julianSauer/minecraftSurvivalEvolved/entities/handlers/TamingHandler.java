@@ -135,7 +135,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public boolean isTameable() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return mseEntity.getGeneralBehaviorHandler().getBaseStats().isTameable() && !tamed && !mseEntity.getGeneralBehaviorHandler().isAlpha();
+        return mseEntity.getGeneralBehaviorHandler().getBaseAttributes().isTameable() && !tamed && !mseEntity.getGeneralBehaviorHandler().isAlpha();
     }
 
     public boolean isUnconscious() {
@@ -161,7 +161,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             MSEMain.getInstance().getLogger().info("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
-        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTamingProgress(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseAttributes().getMaxTamingProgress(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
     }
 
     public UUID getTamer() {
@@ -193,7 +193,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public int getMaxTorpidity() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseStats().getMaxTorpidity(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(mseEntity.getGeneralBehaviorHandler().getBaseAttributes().getMaxTorpidity(), mseEntity.getGeneralBehaviorHandler().getLevel(), mseEntity.getGeneralBehaviorHandler().getMultiplier());
     }
 
     /**
