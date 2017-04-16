@@ -118,7 +118,7 @@ public class GeneralBehaviorHandler<T extends EntityInsentient & MSEEntity> impl
     public Integer getFortitude() {
         if (!initialized)
             return null;
-        return (int) Calculator.calculateLevelDependentStatFor(baseStats.getFortitude(), level, baseStats.getLevelMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(baseStats.getFortitude(), level, getMultiplier());
     }
 
     public int getLevel() {
