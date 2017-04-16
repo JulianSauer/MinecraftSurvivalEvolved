@@ -115,7 +115,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
                 data.setString("MSEOwner", getOwner().toString());
             if (tribe != null)
                 data.setString("MSETribe", tribe.toString());
-        } else if (isUnconscious()) {
+        } else if (isUnconscious() && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
             data.setInt("MSETamingProgress", getTamingProgress());
             data.setString("MSETamer", getTamer().toString());
         }
@@ -141,7 +141,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public boolean isUnconscious() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        return unconscious && !mseEntity.getGeneralBehaviorHandler().isAlpha();
+        return unconscious;
     }
 
     public int getTamingProgress() {
@@ -187,10 +187,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
     public int getTorpidity() {
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
-        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
-            MSEMain.getInstance().getLogger().info("Tried accessing functionality that is limited to non-alpha entities ("
-                    + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
-                    + mseEntity.locZ + ")");
         return torpidity;
     }
 
@@ -211,7 +207,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
             return owner.equals(player);
         else if (tribe != null) {
             Tribe owningTribe = TribeRegistry.getTribeRegistry().getTribe(tribe);
-            if(owningTribe == null)
+            if (owningTribe == null)
                 return false;
             return owningTribe.isMember(player);
         }
@@ -243,9 +239,8 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
-        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
-            return;
-        tamer = lastDamager;
+        if (!mseEntity.getGeneralBehaviorHandler().isAlpha())
+            tamer = lastDamager;
         increaseTorpidityBy(torpidityIncrease);
     }
 
@@ -359,15 +354,16 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
         if (!initialized)
             new IllegalStateException(mseEntity.getName() + " has not been initialized properly.").printStackTrace();
 
-        if (mseEntity.getGeneralBehaviorHandler().isAlpha())
-            return;
-
         if (isUnconscious() && torpidity <= 0) {
             // Wake up
-            if (mseEntity.getCraftEntity() instanceof LivingEntity && !mseEntity.getGeneralBehaviorHandler().isAlpha())
-                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(true);
-            if (!isTamed() && tamer != null)
+            if (mseEntity.getCraftEntity() instanceof LivingEntity) {
+                boolean removeNoneAlphas = !mseEntity.getGeneralBehaviorHandler().isAlpha();
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(removeNoneAlphas);
+            }
+            if (!isTamed() && tamer != null) {
                 (new InventoryGUI()).closeTamingInventoriesOf(mseEntity, Bukkit.getPlayer(tamer));
+                tamer = null;
+            }
 
             tamingProgress = 0;
             unconscious = false;
@@ -427,12 +423,13 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
 
         private void init() {
             this.initialized = true;
-            if (!isTamed()) {
+            if (isTamed() || mseEntity.getGeneralBehaviorHandler().isAlpha())
+                hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), ChatColor.RED + "Unconscious");
+            else {
                 mseEntity.getGeneralBehaviorHandler().startFoodTimer();
                 mseEntity.setCustomName("");
                 hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), getHologramText());
-            } else
-                hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), ChatColor.RED + "Unconscious");
+            }
         }
 
         public void run() {
@@ -446,7 +443,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Pe
                 init();
 
             decreaseTorpidityBy(torporDepletion);
-            if (isTamed())
+            if (isTamed() || mseEntity.getGeneralBehaviorHandler().isAlpha())
                 return;
 
             updateTamingProcess();
