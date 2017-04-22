@@ -80,11 +80,11 @@ public class ScoreboardHandler {
 
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
             objective = scoreboard.registerNewObjective(mseEntity.getEntityType(), "Dummy");
-            objective.setDisplayName(mseEntity.getGeneralBehaviorHandler().getDefaultName());
+            objective.setDisplayName(mseEntity.getEntityAttributes().getDefaultName());
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.getScore("Health").setScore((int) ((EntityLiving) mseEntity).getHealth()); // TODO: Replace with MSEEntity#getHealth()
-            objective.getScore("Torpor").setScore(mseEntity.getTamingHandler().getTorpidity());
-            objective.getScore("Food").setScore(mseEntity.getGeneralBehaviorHandler().getCurrentFoodValue());
+            objective.getScore("Torpor").setScore(mseEntity.getEntityAttributes().getTorpidity());
+            objective.getScore("Food").setScore(mseEntity.getEntityAttributes().getCurrentFoodValue());
         }
 
         @Override
@@ -94,8 +94,8 @@ public class ScoreboardHandler {
                 return;
             }
             objective.getScore("Health").setScore((int) ((EntityLiving) mseEntity).getHealth());
-            objective.getScore("Torpor").setScore(mseEntity.getTamingHandler().getTorpidity());
-            objective.getScore("Food").setScore(mseEntity.getGeneralBehaviorHandler().getCurrentFoodValue());
+            objective.getScore("Torpor").setScore(mseEntity.getEntityAttributes().getTorpidity());
+            objective.getScore("Food").setScore(mseEntity.getEntityAttributes().getCurrentFoodValue());
         }
 
         @Override

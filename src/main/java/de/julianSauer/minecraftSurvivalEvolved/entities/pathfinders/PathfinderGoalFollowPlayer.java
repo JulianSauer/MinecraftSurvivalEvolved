@@ -18,7 +18,7 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     public PathfinderGoalFollowPlayer(MSEEntity mseEntity, EntityPlayer player) {
         this.mseEntity = mseEntity;
         this.player = player;
-        this.speed = mseEntity.getGeneralBehaviorHandler().getSpeed() * 10;
+        this.speed = mseEntity.getEntityAttributes().getSpeed() * 10;
         this.distanceSquared = 4.0;
         this.a(3);
     }

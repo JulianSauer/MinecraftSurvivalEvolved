@@ -29,10 +29,10 @@ public class PlayerInteractListener implements BasicEventListener {
 
         Player player = e.getPlayer();
 
-        if (mseEntity.getTamingHandler().isUnconscious() && !mseEntity.getTamingHandler().isTamed() && !mseEntity.getGeneralBehaviorHandler().isAlpha()) {
+        if (mseEntity.getEntityAttributes().isUnconscious() && !mseEntity.getEntityAttributes().isTamed() && !mseEntity.getEntityAttributes().isAlpha()) {
             gui.openTamingGUI(player, mseEntity);
-        } else if (mseEntity.getTamingHandler().isTamed() && mseEntity.getTamingHandler().isOwner(player.getUniqueId())) {
-            if (player.isSneaking() || mseEntity.getTamingHandler().isUnconscious())
+        } else if (mseEntity.getEntityAttributes().isTamed() && mseEntity.getEntityAttributes().isOwner(player.getUniqueId())) {
+            if (player.isSneaking() || mseEntity.getEntityAttributes().isUnconscious())
                 gui.openMainGUI(player, mseEntity);
             else if (entity.isEmpty())
                 entity.setPassenger(player);

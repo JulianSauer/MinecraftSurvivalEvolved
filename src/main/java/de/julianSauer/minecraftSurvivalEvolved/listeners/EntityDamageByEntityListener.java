@@ -35,14 +35,14 @@ public class EntityDamageByEntityListener implements BasicEventListener {
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
             // Increase torpor
-            if (mseEntity.getGeneralBehaviorHandler().getBaseAttributes().isTameable())
+            if (mseEntity.getEntityAttributes().getBaseAttributes().isTameable())
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
 
         } else if (isMountedAttack(damager)) {
-            e.setDamage(getMSEEntityFromVehicle(damager).getGeneralBehaviorHandler().getDamage());
+            e.setDamage(getMSEEntityFromVehicle(damager).getEntityAttributes().getDamage());
 
         } else if (isNPCAttackEvent(damager)) {
-            e.setDamage(getMSEEntityFromEntity(damager).getGeneralBehaviorHandler().getDamage());
+            e.setDamage(getMSEEntityFromEntity(damager).getEntityAttributes().getDamage());
 
         }
 

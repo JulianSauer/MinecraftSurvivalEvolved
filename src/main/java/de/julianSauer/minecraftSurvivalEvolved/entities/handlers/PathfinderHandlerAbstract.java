@@ -29,7 +29,6 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
 
     public PathfinderHandlerAbstract(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
-        initialized = false;
 
         goalB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "b");
         goalC = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "c");
@@ -42,9 +41,9 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
 
     @Override
     public void initWithDefaults() {
-        initialized = true;
         setDefaultGoals();
         wandering = false;
+        initialized = true;
     }
 
     @Override
@@ -54,14 +53,16 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
             return;
         }
 
-        initialized = true;
         entityMode = EntityMode.valueOf(data.getString("MSEEntityMode"));
         wandering = data.getBoolean("MSEWandering");
         updateGoals();
+        initialized = true;
     }
 
     @Override
     public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
         data.setString("MSEEntityMode", entityMode.toString());
         data.setBoolean("MSEWandering", wandering);
     }

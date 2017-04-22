@@ -48,7 +48,7 @@ public class HandleForceTame extends CommandHandler {
                     }
 
                 }
-                if (!mseEntity.getGeneralBehaviorHandler().isAlpha())
+                if (!mseEntity.getEntityAttributes().isAlpha())
                     mseEntity.forceTame(player);
                 else
                     sender.sendMessage(ChatMessages.ERROR_ALPHA_TAME.setParams());

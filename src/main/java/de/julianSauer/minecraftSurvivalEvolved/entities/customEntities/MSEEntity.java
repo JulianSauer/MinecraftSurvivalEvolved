@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.GeneralBehaviorHandler;
+import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public interface MSEEntity extends Tameable, InventoryHolder {
 
-    GeneralBehaviorHandler getGeneralBehaviorHandler();
+    EntityAttributes getEntityAttributes();
 
     String getEntityType();
 
@@ -48,16 +48,13 @@ public interface MSEEntity extends Tameable, InventoryHolder {
     @Override
     default void load(NBTTagCompound data) {
         Tameable.super.load(data);
-        getGeneralBehaviorHandler().initWith(data);
+        getEntityAttributes().initWith(data);
         setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
     }
 
     default void save(NBTTagCompound data) {
         Tameable.super.save(data);
         data.setBoolean("MSEInitialized", false);
-        if (!getGeneralBehaviorHandler().isInitialized())
-            getGeneralBehaviorHandler().initWithDefaults();
-        getGeneralBehaviorHandler().saveData(data);
         data.setString("MSEInventory", inventoryAsBase64String());
         data.setBoolean("MSEInitialized", true);
     }

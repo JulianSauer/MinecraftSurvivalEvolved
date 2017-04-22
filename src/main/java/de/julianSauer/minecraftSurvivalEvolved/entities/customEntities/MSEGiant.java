@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 
 public class MSEGiant extends EntityGiantZombie implements MSEEntity {
 
-    private GeneralBehaviorHandler generalBehaviorHandler;
+    private EntityAttributes entityAttributes;
 
     private TamingHandler tamingHandler;
 
@@ -30,9 +31,9 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         super(world);
         entityType = getName();
 
+        entityAttributes = new EntityAttributes(this);
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
-        generalBehaviorHandler = new GeneralBehaviorHandler(this);
         movementHandler = new RidingHandler(this);
         pathfinderHandler = new PathfinderHandlerMonster(this);
         pitchWhileTaming = 0;
@@ -78,8 +79,9 @@ public class MSEGiant extends EntityGiantZombie implements MSEEntity {
         return inventory;
     }
 
-    public GeneralBehaviorHandler getGeneralBehaviorHandler() {
-        return generalBehaviorHandler;
+    @Override
+    public EntityAttributes getEntityAttributes() {
+        return entityAttributes;
     }
 
     @Override
