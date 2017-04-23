@@ -1,10 +1,10 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.visuals;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.messages.BarMessages;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,18 +24,21 @@ public class BarHandler {
      * @param entityType Type of the tamed entity
      */
     public static void sendEntityTamedMessageTo(Player receiver, String entityType) {
-        sendMessageTo(receiver, "You have tamed a " + entityType + "!", BarColor.GREEN, BarStyle.SOLID);
+        sendMessageTo(receiver, BarMessages.TAMED_SUCCESSFULLY.presetParams(entityType));
     }
 
     /**
      * Informs a tribe that a member has tamed an entity with success.
      *
+     * @param tribe        Message will be written to tribe log
      * @param tribeMembers Tribe members who receive the message
      * @param owner        The tribe member who tamed the entity
      * @param entityType   Type of the tamed entity
      */
-    public static void sendEntityTamedMessageTo(List<OfflinePlayer> tribeMembers, Player owner, String entityType) {
-        sendMessageTo(tribeMembers, "Your tribe member " + owner.getName() + " has tamed a " + entityType + "!", BarColor.GREEN, BarStyle.SOLID);
+    public static void sendEntityTamedMessageTo(Tribe tribe, List<OfflinePlayer> tribeMembers, Player owner, String entityType) {
+        BarMessages message = BarMessages.TRIBE_MEMBER_TAMED_SUCCESSFULLY.presetParams(owner.getName(), entityType);
+        sendMessageTo(tribeMembers, message);
+        tribe.getLogger().log(message.getChatColor() + message.toString());
     }
 
     /**
@@ -45,43 +48,42 @@ public class BarHandler {
      * @param deadEntity Entity that died
      */
     public static void sendEntityDeathMessageTo(Player receiver, String deadEntity) {
-        sendMessageTo(receiver, "Your " + deadEntity + " died", BarColor.RED, BarStyle.SOLID);
+        sendMessageTo(receiver, BarMessages.TAME_DIED.presetParams(deadEntity));
     }
 
     /**
      * Informs a tribe that one of their entities died.
      *
+     * @param tribe        Message will be written to tribe log
      * @param tribeMembers Tribe members who recieve the message
      * @param deadEntity   Entity that died
      */
-    public static void sendEntityDeathMessageTo(List<OfflinePlayer> tribeMembers, String deadEntity) {
-        sendMessageTo(tribeMembers, "Your " + deadEntity + " died", BarColor.RED, BarStyle.SOLID);
+    public static void sendEntityDeathMessageTo(Tribe tribe, List<OfflinePlayer> tribeMembers, String deadEntity) {
+        BarMessages message = BarMessages.TAME_DIED.presetParams(deadEntity);
+        sendMessageTo(tribeMembers, message);
+        tribe.getLogger().log(message.getChatColor() + message.toString());
     }
 
     /**
      * Sends a message to a single person.
      *
-     * @param receiver Player who receives the message
-     * @param message  Content of the text
-     * @param barColor Color of the Bar
-     * @param barStyle Style of the Bar
+     * @param receiver   Player who receives the message
+     * @param barMessage Content of the message
      */
-    private static void sendMessageTo(Player receiver, String message, BarColor barColor, BarStyle barStyle) {
+    private static void sendMessageTo(Player receiver, BarMessages barMessage) {
         List receiverAsList = new ArrayList<OfflinePlayer>();
         receiverAsList.add(receiver);
-        sendMessageTo(receiverAsList, message, barColor, barStyle);
+        sendMessageTo(receiverAsList, barMessage);
     }
 
     /**
      * Sends a message to multiple players.
      *
-     * @param receivers Players who receive the message
-     * @param message   Content of the message
-     * @param barColor  Color of the bar
-     * @param barStyle  Style of the bar
+     * @param receivers  Players who receive the message
+     * @param barMessage Content of the message
      */
-    private static void sendMessageTo(List<OfflinePlayer> receivers, String message, BarColor barColor, BarStyle barStyle) {
-        BossBar bossBar = Bukkit.createBossBar(message, barColor, barStyle);
+    private static void sendMessageTo(List<OfflinePlayer> receivers, BarMessages barMessage) {
+        BossBar bossBar = Bukkit.createBossBar(barMessage.toString(), barMessage.getColor(), barMessage.getStyle());
         receivers.stream()
                 .filter(player -> player.isOnline())
                 .forEach(player -> bossBar.addPlayer((Player) player));

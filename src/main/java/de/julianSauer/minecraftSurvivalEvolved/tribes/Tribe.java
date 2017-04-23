@@ -3,6 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.tribes;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.MathHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -248,7 +249,7 @@ public class Tribe {
     }
 
     /**
-     * Sends a message to every tribe member that is online.
+     * Sends a message to every tribe member that is online and saves it to the tribe log.
      *
      * @param message
      */
@@ -257,6 +258,7 @@ public class Tribe {
                 .filter(member -> member.isOnline())
                 .forEach(member -> ((Player) member)
                         .sendMessage(message));
+        tribeLogger.log(message);
     }
 
 }

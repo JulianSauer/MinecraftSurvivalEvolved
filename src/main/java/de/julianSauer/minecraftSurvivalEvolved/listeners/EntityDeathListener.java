@@ -71,7 +71,7 @@ public class EntityDeathListener implements BasicEventListener {
         Tribe tribe = TribeRegistry.getTribeRegistry().getTribe(tribeUUID);
 
         if (tribe != null)
-            BarHandler.sendEntityDeathMessageTo(new ArrayList<>(tribe.getMembers()), mseEntity.getName());
+            BarHandler.sendEntityDeathMessageTo(tribe, new ArrayList<>(tribe.getMembers()), mseEntity.getName());
 
         else {
             Player owner = Bukkit.getPlayer(mseEntity.getEntityAttributes().getOwner());

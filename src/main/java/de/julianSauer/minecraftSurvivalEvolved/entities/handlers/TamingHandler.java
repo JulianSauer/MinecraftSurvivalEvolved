@@ -169,7 +169,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(tamer).getTribe();
             if (tribe != null) {
                 entityAttributes.setTribe(tribe.getUniqueID());
-                BarHandler.sendEntityTamedMessageTo(new ArrayList<>(tribe.getMembers()), Bukkit.getPlayer(tamer), mseEntity.getName());
+                BarHandler.sendEntityTamedMessageTo(tribe, new ArrayList<>(tribe.getMembers()), Bukkit.getPlayer(tamer), mseEntity.getName());
             } else {
                 BarHandler.sendEntityTamedMessageTo(Bukkit.getPlayer(tamer), mseEntity.getName());
                 entityAttributes.setOwner(tamer);
