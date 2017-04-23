@@ -8,10 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Implements getter and setter methods for config files.
@@ -109,6 +106,8 @@ public class ConfigHandler extends ConfigHandlerBase {
             String tribeUUIDString = getStringFromConfig(configName, tribeName + ".ID");
             UUID tribeUUID = UUID.fromString(tribeUUIDString);
             Tribe tribe = new Tribe(tribeName, false, tribeUUID);
+            List<String> log = getStringListFromConfig(configName, tribe.getName() + ".Log");
+            tribe.getLogger().setLog(log);
 
             for (String path : getConfigurationSectionFromConfig(configName, "").getKeys(false)) {
 
@@ -146,8 +145,10 @@ public class ConfigHandler extends ConfigHandlerBase {
             deleteFile("/Tribes/", tribe.getName() + ".yml");
 
         for (Tribe tribe : tribes.values()) {
-            addConfigToCache("/Tribes/", tribe.getName() + ".yml");
-            setValueInConfig(tribe.getName() + ".yml", tribe.getName() + ".ID", tribe.getUniqueID().toString());
+            String configName = tribe.getName() + ".yml";
+            addConfigToCache("/Tribes/", configName);
+            setValueInConfig(configName, tribe.getName() + ".ID", tribe.getUniqueID().toString());
+            setValueInConfig(configName, tribe.getName() + ".Log", tribe.getLogger().getLog());
             for (UUID playerUUID : tribe.getMemberUUIDs()) {
                 String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
                 setValueInConfig(tribe.getName() + ".yml", playerName + ".ID", playerUUID.toString());

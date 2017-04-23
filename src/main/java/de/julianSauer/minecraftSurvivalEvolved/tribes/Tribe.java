@@ -30,12 +30,20 @@ public class Tribe {
     private Rank rankForDischarge;
     private Rank rankForPromoting;
 
+    private TribeLogger tribeLogger;
+
     /**
-     * @param name     Name of the tribe
-     * @param register Defines if the tribe should be cached in the TribeRegistry; set to false for a dummy object
+     * Creates a new tribe.
+     *
+     * @param founder Player who will own the tribe
+     * @param name
      */
-    public Tribe(String name, boolean register) {
-        this(name, register, MathHelper.a(new Random()));
+    public Tribe(Player founder, String name) {
+        this(name, true, MathHelper.a(new Random()));
+        this.founder = founder.getUniqueId();
+        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(founder).setTribe(this);
+        members.put(founder.getUniqueId(), Rank.FOUNDER);
+        tribeLogger.log("Tribe was founded by " + founder.getName());
     }
 
     /**
@@ -47,6 +55,8 @@ public class Tribe {
         this.uniqueID = uniqueID;
         this.name = name;
         members = new HashMap<>();
+        tribeLogger = new TribeLogger();
+        tribeLogger.setTribe(this);
 
         rankForRecruitment = Rank.LEADER;
         rankForDischarge = Rank.LEADER;
@@ -55,13 +65,6 @@ public class Tribe {
         tribeRegistry = TribeRegistry.getTribeRegistry();
         if (register)
             tribeRegistry.registerTribe(this);
-    }
-
-    public Tribe(Player founder, String name) {
-        this(name, true);
-        this.founder = founder.getUniqueId();
-        TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(founder).setTribe(this);
-        members.put(founder.getUniqueId(), Rank.FOUNDER);
     }
 
     public UUID getUniqueID() {
@@ -126,6 +129,10 @@ public class Tribe {
 
     public void setRankForPromoting(Rank newRank) {
         rankForPromoting = newRank;
+    }
+
+    public TribeLogger getLogger() {
+        return tribeLogger;
     }
 
     /**
