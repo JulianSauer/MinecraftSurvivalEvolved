@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMember;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;

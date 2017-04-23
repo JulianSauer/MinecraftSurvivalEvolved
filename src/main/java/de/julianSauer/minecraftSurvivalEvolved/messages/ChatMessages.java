@@ -1,11 +1,11 @@
-package de.julianSauer.minecraftSurvivalEvolved.commands;
+package de.julianSauer.minecraftSurvivalEvolved.messages;
 
 import org.bukkit.ChatColor;
 
 /**
  * Currently all messages for players are stored here.
  */
-enum ChatMessages {
+public enum ChatMessages implements Messages {
 
     ERROR_NO_PERMISSION(Format.ERROR + "Sorry but you don't have permission to do that."),
     ERROR_SENDER_NO_PLAYER(Format.ERROR + "You have to be a player to be able to perform this command."),
@@ -53,26 +53,51 @@ enum ChatMessages {
     TRIBE_PRINT_MEMBERS(Format.INFO + "Members of tribe " + ChatColor.ITALIC + "%ARGS0%:"),
     TRIBE_PRINT_MEMBER(Format.INFO + "- %ARGS0% " + ChatColor.ITALIC + "(Rank: %ARGS1%)");
 
-    private static class Format {
-        private static String HELP_TITLE = ChatColor.RESET + "" + ChatColor.GREEN + "" + ChatColor.UNDERLINE;
-        private static String HELP_TEXT = ChatColor.RESET + "" + ChatColor.WHITE;
-        private static String ERROR = ChatColor.RESET + "" + ChatColor.RED;
-        private static String WARNING = ChatColor.RESET + "" + ChatColor.GOLD;
-        private static String INFO = ChatColor.RESET + "" + ChatColor.YELLOW;
-        private static String SUCCESS = ChatColor.RESET + "" + ChatColor.GREEN;
+    private enum Format {
+        HELP_TITLE(ChatColor.RESET + "" + ChatColor.GREEN + "" + ChatColor.UNDERLINE),
+        HELP_TEXT(ChatColor.RESET + "" + ChatColor.WHITE),
+        ERROR(ChatColor.RESET + "" + ChatColor.RED),
+        WARNING(ChatColor.RESET + "" + ChatColor.GOLD),
+        INFO(ChatColor.RESET + "" + ChatColor.YELLOW),
+        SUCCESS(ChatColor.RESET + "" + ChatColor.GREEN);
+
+        private final String format;
+
+        Format(String format) {
+            this.format = format;
+        }
+
+        @Override
+        public String toString() {
+            return format;
+        }
+
     }
 
     private final String message;
+
+    private String[] params;
 
     ChatMessages(String message) {
         this.message = message;
     }
 
-    public String setParams(String... args) {
-        String ret = message;
-        for (int i = 0; i < args.length; i++)
-            ret = ret.replace("%ARGS" + i + "%", args[i]);
-        return ret;
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        if(params == null)
+            params = new String[]{""};
+        return Messages.super.setParams(params);
+    }
+
+    @Override
+    public ChatMessages presetParams(String... params) {
+        this.params = params;
+        return this;
     }
 
 }

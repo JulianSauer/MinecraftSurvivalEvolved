@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.commands;
 
+import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import org.bukkit.command.CommandSender;
 
