@@ -29,7 +29,9 @@ public class HandleForceTame extends CommandHandler {
             Player player = (Player) sender;
 
             // Error or command: /mse forcetame help
-            if (args.length == 2 && args[1].equalsIgnoreCase("help")) {
+            if (args.length >= 2) {
+                if (!args[1].equalsIgnoreCase("help"))
+                    sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
                 sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
                 sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
                 return;
@@ -49,10 +51,11 @@ public class HandleForceTame extends CommandHandler {
                     }
 
                 }
-                if (!mseEntity.getEntityAttributes().isAlpha())
+                if (mseEntity.getEntityAttributes().isTameable())
                     mseEntity.forceTame(player);
                 else
-                    sender.sendMessage(ChatMessages.ERROR_ALPHA_TAME.setParams());
+                    sender.sendMessage(ChatMessages.ERROR_NOT_TAMEABLE.setParams());
+
 
             } else
                 sender.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.setParams());

@@ -23,13 +23,24 @@ public class HandleTribeCommand extends CommandHandler {
     private Set<UUID> pendingTribeLeaves;
     private Map<UUID, Tribe> pendingTribeInvitations;
 
+    Set<String> tribeNameExceptions = new HashSet<>();
+
     HandleTribeCommand() {
         super();
         tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
         pendingTribeLeaves = new HashSet<>();
         pendingTribeInvitations = new HashMap<>();
-    }
 
+        tribeNameExceptions.add("");
+        tribeNameExceptions.add("leave");
+        tribeNameExceptions.add("confirm");
+        tribeNameExceptions.add("invite");
+        tribeNameExceptions.add("create");
+        tribeNameExceptions.add("promote");
+        tribeNameExceptions.add("demote");
+        tribeNameExceptions.add("kick");
+        tribeNameExceptions.add("help");
+    }
 
     @Override
     public void process(CommandSender sender, String... args) {
@@ -49,14 +60,43 @@ public class HandleTribeCommand extends CommandHandler {
                 } else if (args[1].equalsIgnoreCase("confirm")) {
                     processCommandConfirm(sender);
 
-                } else if (!args[1].equals("")) {
+                } else if (args[1].equalsIgnoreCase("help")) {
+                    sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
+                } else if (args[1].equalsIgnoreCase("invite")) {
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_INVITE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_INVITE2.setParams());
+
+                } else if (args[1].equalsIgnoreCase("create")) {
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.setParams());
+
+                } else if (args[1].equalsIgnoreCase("promote")) {
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE2.setParams());
+
+                } else if (args[1].equalsIgnoreCase("demote")) {
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_DEMOTE1.setParams());
+                    sender.sendMessage(ChatMessages.HELP_TRIBE_DEMOTE2.setParams());
+
+                } else if (args[1].equalsIgnoreCase("kick")) {
+
+                } else if (isTribeNameException(args[1])) {
+                    sender.sendMessage(ChatMessages.ERROR_INVALID_TRIBE_NAME.setParams(args[1]));
+                } else {
                     processCommandInfo(sender, args);
                 }
                 break;
 
             case 3:
 
-                if (sender instanceof Player) {
+                if (args[1].equalsIgnoreCase("leave")) {
+                    processCommandLeaveHelp(sender);
+
+                } else if (args[1].equalsIgnoreCase("confirm")) {
+                    processCommandConfirmHelp(sender);
+
+                } else if (sender instanceof Player) {
                     if (args[1].equals("invite")) {
                         processCommandInvite((Player) sender, args);
 
@@ -68,15 +108,7 @@ public class HandleTribeCommand extends CommandHandler {
 
                     } else if (args[1].equalsIgnoreCase("demote") && !args[2].equals("")) {
                         processCommandPromoteOrDemote(sender, args, false);
-
-                    } else
-                        sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
-
-                } else if (args[1].equalsIgnoreCase("leave") && args[2].equalsIgnoreCase("help")) {
-                    processCommandLeaveHelp(sender);
-
-                } else if (args[1].equalsIgnoreCase("confirm") && args[2].equalsIgnoreCase("help")) {
-                    processCommandConfirmHelp(sender);
+                    }
 
                 } else {
                     sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
@@ -190,6 +222,12 @@ public class HandleTribeCommand extends CommandHandler {
      */
     private void processCommandInvite(Player invitingPlayer, String args[]) {
 
+        if (args[2].equalsIgnoreCase("help")) {
+            invitingPlayer.sendMessage(ChatMessages.HELP_TRIBE_INVITE1.setParams());
+            invitingPlayer.sendMessage(ChatMessages.HELP_TRIBE_INVITE2.setParams());
+            return;
+        }
+
         TribeMember invitingTribeMember = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(invitingPlayer);
 
         if (!invitingTribeMember.hasTribe()) {
@@ -251,6 +289,8 @@ public class HandleTribeCommand extends CommandHandler {
         if (args[2].equalsIgnoreCase("help")) {
             sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.setParams());
             sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.setParams());
+        } else if (isTribeNameException(args[2])) {
+            sender.sendMessage(ChatMessages.ERROR_INVALID_TRIBE_NAME.setParams(args[1]));
         } else
             createTribe((Player) sender, args[2]);
 
@@ -403,6 +443,13 @@ public class HandleTribeCommand extends CommandHandler {
         sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
+    }
+
+    private boolean isTribeNameException(String name) {
+        for (String exception : tribeNameExceptions)
+            if (name.equalsIgnoreCase(exception))
+                return true;
+        return false;
     }
 
 }
