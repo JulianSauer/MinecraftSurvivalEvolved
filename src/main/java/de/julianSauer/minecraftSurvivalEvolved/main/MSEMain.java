@@ -3,6 +3,7 @@ package de.julianSauer.minecraftSurvivalEvolved.main;
 import de.julianSauer.minecraftSurvivalEvolved.commands.MSECommandExecutor;
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.*;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InBlockDigListener;
@@ -10,7 +11,6 @@ import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.InUpdateSignLis
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketEventManager;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.packets.PacketInjector;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
-import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

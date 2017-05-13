@@ -1,8 +1,8 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import de.julianSauer.minecraftSurvivalEvolved.gui.SignGUI;
+import de.julianSauer.minecraftSurvivalEvolved.utils.NameChanger;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

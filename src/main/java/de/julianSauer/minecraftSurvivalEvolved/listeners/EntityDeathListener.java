@@ -1,10 +1,10 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.ButtonIcons;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
-import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
-import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.ButtonIcons;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -95,7 +95,7 @@ public enum ChatMessages implements Messages {
 
     @Override
     public String toString() {
-        if(params == null)
+        if (params == null)
             params = new String[]{""};
         return Messages.super.setParams(params);
     }
