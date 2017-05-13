@@ -2,6 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMember;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
@@ -61,6 +62,12 @@ public class HandleTribeCommand extends CommandHandler {
 
                     } else if (args[1].equalsIgnoreCase("create") && !args[2].equals("")) {
                         processCommandCreate(sender, args);
+
+                    } else if (args[1].equalsIgnoreCase("promote") && !args[2].equals("")) {
+                        processCommandPromoteOrDemote(sender, args, true);
+
+                    } else if (args[1].equalsIgnoreCase("demote") && !args[2].equals("")) {
+                        processCommandPromoteOrDemote(sender, args, false);
 
                     } else
                         sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
@@ -246,6 +253,56 @@ public class HandleTribeCommand extends CommandHandler {
             sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE2.setParams());
         } else
             createTribe((Player) sender, args[2]);
+
+    }
+
+    /**
+     * Command: /mse tribe promote <player>
+     *
+     * @param sender
+     * @param args
+     * @param promote True if the target should be promoted, false if demoted
+     */
+    private void processCommandPromoteOrDemote(CommandSender sender, String args[], boolean promote) {
+
+        if (args[2].equalsIgnoreCase("help")) {
+            sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE1.setParams());
+            sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE2.setParams());
+            return;
+
+        }
+
+        Player executingPlayer = (Player) sender;
+        TribeMemberRegistry registry = TribeMemberRegistry.getTribeMemberRegistry();
+        TribeMember executingMember = registry.getTribeMember(executingPlayer);
+
+        if (!executingMember.hasTribe()) {
+            sendNoTribeMembershipErrorTo(executingPlayer);
+            return;
+        }
+
+        String playerName = args[2];
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        TribeMember targetMember = registry.getTribeMember(targetPlayer);
+
+        if (targetPlayer == null) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(playerName));
+            return;
+        }
+
+        if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+            sender.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(playerName));
+
+        } else if (executingMember.canPromote() && Rank.rankIsHigher(executingMember, targetMember)) {
+            if (promote)
+                targetMember.setRank(Rank.getNextHigher(targetMember.getRank()));
+            else
+                targetMember.setRank(Rank.getNextLower(targetMember.getRank()));
+            sender.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
+            targetPlayer.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
+
+        } else
+            executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
 
     }
 

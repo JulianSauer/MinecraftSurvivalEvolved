@@ -43,4 +43,12 @@ public class TribeMember {
         return player.getUniqueId();
     }
 
+    public Rank getRank() {
+        return tribe.getRankOfMember(player);
+    }
+
+    public void setRank(Rank newRank) {
+        tribe.setRankOf(player, newRank);
+    }
+
 }

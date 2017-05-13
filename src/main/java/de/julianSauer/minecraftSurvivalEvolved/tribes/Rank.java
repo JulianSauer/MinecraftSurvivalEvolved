@@ -32,6 +32,17 @@ public enum Rank {
      * @param lower  Rank that should be lower
      * @return False if the first rank is not higher
      */
+    public static boolean rankIsHigher(TribeMember higher, TribeMember lower) {
+        return rankIsHigher(higher.getRank(), lower.getRank());
+    }
+
+    /**
+     * Checks if the first rank is higher than the second.
+     *
+     * @param higher Rank that should be higher
+     * @param lower  Rank that should be lower
+     * @return False if the first rank is not higher
+     */
     static boolean rankIsHigher(Rank higher, Rank lower) {
         if (higher == lower)
             return false;
@@ -42,6 +53,25 @@ public enum Rank {
                 return false;
         }
         return false;
+    }
+
+    public static Rank getNextHigher(Rank currentRank) {
+        Rank nextHigher = FOUNDER;
+        for (Rank rank : Rank.values()) {
+            if (rank == currentRank)
+                break;
+            nextHigher = rank;
+        }
+        return nextHigher;
+    }
+
+    public static Rank getNextLower(Rank currentRank) {
+        Rank[] ranks = Rank.values();
+        for (int i = 0; i < ranks.length - 1; i++) {
+            if (ranks[i] == currentRank)
+                return ranks[i + 1];
+        }
+        return Rank.RECRUIT;
     }
 
     @Override

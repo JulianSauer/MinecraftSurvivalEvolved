@@ -1,9 +1,9 @@
 package de.julianSauer.minecraftSurvivalEvolved.tribes;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
 import net.minecraft.server.v1_9_R1.MathHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -230,14 +230,15 @@ public class Tribe {
     /**
      * Changes the rank of a tribe member.
      *
-     * @param promotedMember Member who's rank is being changed
-     * @param newRank        New rank of the member
+     * @param member  Member who's rank is being changed
+     * @param newRank New rank of the member
      */
-    public void promote(Player promotedMember, Rank newRank) {
+    public void setRankOf(Player member, Rank newRank) {
 
-        UUID promotedMemberUUID = promotedMember.getUniqueId();
-        members.remove(promotedMemberUUID);
-        members.put(promotedMemberUUID, newRank);
+        UUID memberUUID = member.getUniqueId();
+        members.remove(memberUUID);
+        members.put(memberUUID, newRank);
+        tribeLogger.log(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(member.getName(), newRank.toString()));
 
     }
 
