@@ -21,47 +21,73 @@ public class HandleForceTame extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player)) {
             sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
+            return;
+        }
 
         if (sender.hasPermission("MinecraftSurvivalEvolved.ForceTame")) {
 
             Player player = (Player) sender;
 
-            // Error or command: /mse forcetame help
-            if (args.length >= 2) {
-                if (!args[1].equalsIgnoreCase("help"))
+            switch (args.length) {
+                case 1:
+                    processCommand(player, args);
+                    break;
+
+                case 2:
+                    if (args[1].equalsIgnoreCase("help"))
+                        processCommandHelp(player);
+                    else
+                        processCommand(player, args);
+                    break;
+
+                default:
                     sender.sendMessage(ChatMessages.ERROR_WRONG_NUMBER_OF_ARGS.setParams());
-                sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
-                sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
-                return;
+                    processCommandHelp(sender);
+                    break;
             }
 
-            // Command: /mse forcetame
-            MSEEntity mseEntity = getEntityInLineOfSightFor(player);
-            if (mseEntity != null) {
-
-                // Command: /mse forcetame <player>
-                if (args.length == 2) {
-                    player = Bukkit.getPlayer(args[1]);
-                    if (player == null) {
-                        sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
-                        sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
-                        return;
-                    }
-
-                }
-                if (mseEntity.getEntityAttributes().isTameable())
-                    mseEntity.forceTame(player);
-                else
-                    sender.sendMessage(ChatMessages.ERROR_NOT_TAMEABLE.setParams());
-
-
-            } else
-                sender.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.setParams());
         } else
             sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.setParams());
 
+    }
+
+    /**
+     * Command: /mse forcetame <player>
+     *
+     * @param player
+     * @param args
+     */
+    private void processCommand(Player player, String[] args) {
+        MSEEntity mseEntity = getEntityInLineOfSightFor(player);
+        if (mseEntity != null) {
+
+            if (args.length == 2) {
+                Player target = Bukkit.getPlayer(args[1]);
+                if (target == null) {
+                    player.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(args[1]));
+                    return;
+                } else
+                    player = target;
+
+            }
+            if (mseEntity.getEntityAttributes().isTameable())
+                mseEntity.forceTame(player);
+            else
+                player.sendMessage(ChatMessages.ERROR_NOT_TAMEABLE.setParams());
+        } else
+            player.sendMessage(ChatMessages.ERROR_NO_ENTITY_FOUND.setParams());
+    }
+
+    /**
+     * Command: /mse forcetame help
+     *
+     * @param sender
+     */
+    private void processCommandHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());
+        sender.sendMessage(ChatMessages.HELP_FORCETAME2.setParams());
     }
 
     /**

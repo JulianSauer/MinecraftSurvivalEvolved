@@ -27,7 +27,7 @@ public class HandleTribesCommand extends CommandHandler {
                 if (args[1].equalsIgnoreCase("help"))
                     processCommandHelp(sender);
                 else
-                    processCommandPage(sender, args);
+                    processCommand(sender, args);
                 break;
 
             default:
@@ -40,7 +40,7 @@ public class HandleTribesCommand extends CommandHandler {
 
     /**
      * Command: /mse tribes
-     * Prints the first 10 tribes of this server.
+     * Prints the first 9 tribes of this server.
      *
      * @param sender
      */
@@ -65,7 +65,7 @@ public class HandleTribesCommand extends CommandHandler {
      * @param sender
      * @param args
      */
-    private void processCommandPage(CommandSender sender, String args[]) {
+    private void processCommand(CommandSender sender, String args[]) {
 
         int page;
         try {
@@ -79,7 +79,7 @@ public class HandleTribesCommand extends CommandHandler {
     }
 
     /**
-     * Prints 10 tribes of the server.
+     * Prints 9 tribes of the server.
      *
      * @param sender
      * @param page
