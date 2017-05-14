@@ -76,7 +76,8 @@ public class HandleTribeCommand extends CommandHandler {
                 } else if (args[1].equalsIgnoreCase("demote")) {
                     processCommandDemoteHelp(sender);
 
-                } else if (args[1].equalsIgnoreCase("kick")) {
+                } else if (args[1].equalsIgnoreCase("discharge") || args[1].equalsIgnoreCase("kick")) {
+                    processCommandDischargeHelp(sender);
 
                 } else if (isTribeNameException(args[1])) {
                     sender.sendMessage(ChatMessages.ERROR_INVALID_TRIBE_NAME.setParams(args[1]));
@@ -108,6 +109,8 @@ public class HandleTribeCommand extends CommandHandler {
 
                     } else if (args[1].equalsIgnoreCase("demote") && !args[2].equals("")) {
                         processCommandPromoteOrDemote(sender, args, false);
+                    } else if (args[1].equalsIgnoreCase("discharge") || args[1].equalsIgnoreCase("kick")) {
+                        processCommandDischarge((Player) sender, args);
                     }
 
                 } else {
@@ -422,8 +425,10 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandPromoteOrDemote(CommandSender sender, String args[], boolean promote) {
 
         if (args[2].equalsIgnoreCase("help")) {
-            sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE1.setParams());
-            sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE2.setParams());
+            if (promote)
+                processCommandPromoteHelp(sender);
+            else
+                processCommandDemoteHelp(sender);
             return;
 
         }
@@ -490,6 +495,62 @@ public class HandleTribeCommand extends CommandHandler {
     }
 
     /**
+     * Command: /mse [discharge | kick] <player>
+     *
+     * @param executingPlayer
+     * @param args
+     */
+    private void processCommandDischarge(Player executingPlayer, String[] args) {
+
+        if (args[2].equalsIgnoreCase("help")) {
+            processCommandDischargeHelp(executingPlayer);
+            return;
+
+        }
+
+        TribeMemberRegistry registry = TribeMemberRegistry.getTribeMemberRegistry();
+        TribeMember executingMember = registry.getTribeMember(executingPlayer);
+
+        if (executingMember == null || !executingMember.hasTribe()) {
+            sendNoTribeMembershipErrorTo(executingPlayer);
+            return;
+        }
+
+        String playerName = args[2];
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        TribeMember targetMember = registry.getTribeMember(targetPlayer);
+
+        if (targetPlayer == null || targetMember == null) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(playerName));
+            return;
+        }
+
+        if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(playerName));
+
+        } else if (executingMember.canDischarge() && Rank.rankIsHigher(executingMember, targetMember)) {
+            Tribe tribe = targetMember.getTribe();
+            tribe.remove(targetPlayer);
+            String message = ChatMessages.TRIBE_DISCHARGED_MEMBER.setParams(targetPlayer.getName(), executingPlayer.getName());
+            tribe.sendMessageToMembers(message);
+            targetPlayer.sendMessage(message);
+
+        } else
+            executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
+
+    }
+
+    /**
+     * Command: /mse [discharge | kick] help
+     *
+     * @param sender
+     */
+    private void processCommandDischargeHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_TRIBE_DISCHARGE1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_DISCHARGE2.setParams());
+    }
+
+    /**
      * Can be used to confirm a tribe action if called within 20 seconds after the initial request.
      *
      * @param player The player who wants to leave his tribe
@@ -536,7 +597,7 @@ public class HandleTribeCommand extends CommandHandler {
 
         TribeMember tribeMember = tribeMemberRegistry.getTribeMember(player);
 
-        if(tribeMember == null)
+        if (tribeMember == null)
             MSEMain.getInstance().getLogger().warning("Could not create tribe " + tribeName + ". Founder " + player.getName() + " is offline."); // Throws NPE afterwards
 
         if (tribeMember.hasTribe())
