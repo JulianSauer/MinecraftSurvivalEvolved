@@ -266,7 +266,7 @@ public class HandleTribeCommand extends CommandHandler {
 
         Player player = (Player) sender;
         TribeMember member = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(player);
-        if (!member.hasTribe()) {
+        if (member == null || !member.hasTribe()) {
             sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
             return;
         }
@@ -328,7 +328,7 @@ public class HandleTribeCommand extends CommandHandler {
 
         TribeMember invitingTribeMember = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(invitingPlayer);
 
-        if (!invitingTribeMember.hasTribe()) {
+        if (invitingTribeMember == null || !invitingTribeMember.hasTribe()) {
             sendNoTribeMembershipErrorTo(invitingPlayer);
             return;
         }
@@ -341,7 +341,8 @@ public class HandleTribeCommand extends CommandHandler {
             return;
         }
 
-        if (TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(invitedPlayer).hasTribe()) {
+        TribeMember invitedTribeMember = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(invitedPlayer);
+        if (invitedTribeMember == null || invitedTribeMember.hasTribe()) {
             invitingPlayer.sendMessage(ChatMessages.ERROR_ALREADY_JOINED_A_TRIBE2.setParams(playerName));
 
         } else if (invitingTribeMember.canRecruit()) {
@@ -431,7 +432,7 @@ public class HandleTribeCommand extends CommandHandler {
         TribeMemberRegistry registry = TribeMemberRegistry.getTribeMemberRegistry();
         TribeMember executingMember = registry.getTribeMember(executingPlayer);
 
-        if (!executingMember.hasTribe()) {
+        if (executingMember == null || !executingMember.hasTribe()) {
             sendNoTribeMembershipErrorTo(executingPlayer);
             return;
         }
@@ -440,7 +441,7 @@ public class HandleTribeCommand extends CommandHandler {
         Player targetPlayer = Bukkit.getPlayer(playerName);
         TribeMember targetMember = registry.getTribeMember(targetPlayer);
 
-        if (targetPlayer == null) {
+        if (targetPlayer == null || targetMember == null) {
             executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(playerName));
             return;
         }
@@ -534,6 +535,9 @@ public class HandleTribeCommand extends CommandHandler {
     private void createTribe(Player player, String tribeName) {
 
         TribeMember tribeMember = tribeMemberRegistry.getTribeMember(player);
+
+        if(tribeMember == null)
+            MSEMain.getInstance().getLogger().warning("Could not create tribe " + tribeName + ". Founder " + player.getName() + " is offline."); // Throws NPE afterwards
 
         if (tribeMember.hasTribe())
             player.sendMessage(ChatMessages.ERROR_ALREADY_JOINED_A_TRIBE1.setParams(tribeMember.getTribe().getName()));
