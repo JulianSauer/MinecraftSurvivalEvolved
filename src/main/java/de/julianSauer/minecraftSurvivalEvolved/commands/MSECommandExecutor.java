@@ -30,8 +30,6 @@ public class MSECommandExecutor implements CommandExecutor {
         if (!command.getName().equalsIgnoreCase("mse"))
             return false;
 
-        // TODO: Print help
-
         if (args.length >= 1) {
 
             if (args[0].equalsIgnoreCase("help")) {
@@ -47,6 +45,9 @@ public class MSECommandExecutor implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("tribes")) {
                 handleTribesCommand.process(sender, args);
             }
+        } else {
+            sender.sendMessage(ChatMessages.HELP1.setParams());
+            sender.sendMessage(ChatMessages.HELP2.setParams());
         }
 
         return true;
