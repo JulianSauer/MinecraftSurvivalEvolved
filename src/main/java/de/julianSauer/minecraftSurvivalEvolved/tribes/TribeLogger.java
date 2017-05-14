@@ -36,9 +36,11 @@ public class TribeLogger {
         this.log = log;
     }
 
-    public List<String> getLatestEntries(int entryNumber) {
+    public List<String> getLatestEntries(int entries) {
         int size = log.size();
-        return log.subList(size - entryNumber, size);
+        if (entries > size)
+            entries = size;
+        return log.subList(size - entries, size);
     }
 
     public Tribe getTribe() {

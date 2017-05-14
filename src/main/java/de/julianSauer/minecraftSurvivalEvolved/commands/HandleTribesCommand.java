@@ -92,7 +92,8 @@ public class HandleTribesCommand extends CommandHandler {
             return;
         }
 
-        printPage(sender, tribes.stream().map(Tribe::getName).collect(Collectors.toList()), page, 10);
+        Collection<String> tribeNames = tribes.stream().map(Tribe::getName).collect(Collectors.toList());
+        printPage(sender, tribeNames, page, 9, true, null);
 
     }
 

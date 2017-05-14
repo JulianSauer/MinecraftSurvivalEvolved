@@ -27,8 +27,10 @@ public abstract class CommandHandler {
      * @param content        Contains all entries
      * @param page           Defines the range depending on entriesPerPage
      * @param entriesPerPage Defines how many entries will be printed
+     * @param sort           If set to true the entries will be sorted alphabetically
+     * @param headline       Set to null for default headline
      */
-    void printPage(CommandSender sender, Collection<String> content, int page, int entriesPerPage) {
+    void printPage(CommandSender sender, Collection<String> content, int page, int entriesPerPage, boolean sort, String headline) {
 
         int pageCount = (int) Math.ceil((double) content.size() / (double) entriesPerPage);
         if (page > pageCount) {
@@ -36,13 +38,17 @@ public abstract class CommandHandler {
             return;
         }
 
-        sender.sendMessage(ChatMessages.PAGE_COUNT.setParams(
-                "" + (page),
-                "" + pageCount)
-        );
+        if (headline != null)
+            sender.sendMessage(headline);
+        else
+            sender.sendMessage(ChatMessages.PAGE_COUNT.setParams(
+                    "" + (page),
+                    "" + pageCount)
+            );
 
         String[] entries = content.toArray(new String[0]);
-        Arrays.sort(entries);
+        if (sort)
+            Arrays.sort(entries);
 
         int start = (page - 1) * entriesPerPage;
         int end = start + entriesPerPage;

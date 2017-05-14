@@ -2,10 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.commands;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMember;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -34,6 +31,7 @@ public class HandleTribeCommand extends CommandHandler {
         tribeNameExceptions.add("");
         tribeNameExceptions.add("leave");
         tribeNameExceptions.add("confirm");
+        tribeNameExceptions.add("log");
         tribeNameExceptions.add("invite");
         tribeNameExceptions.add("create");
         tribeNameExceptions.add("promote");
@@ -60,9 +58,13 @@ public class HandleTribeCommand extends CommandHandler {
                 } else if (args[1].equalsIgnoreCase("confirm")) {
                     processCommandConfirm(sender);
 
+                } else if (args[1].equalsIgnoreCase("log")) {
+                    processCommandLog(sender, 9);
+
                 } else if (args[1].equalsIgnoreCase("help")) {
                     sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
                     sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
+
                 } else if (args[1].equalsIgnoreCase("invite")) {
                     sender.sendMessage(ChatMessages.HELP_TRIBE_INVITE1.setParams());
                     sender.sendMessage(ChatMessages.HELP_TRIBE_INVITE2.setParams());
@@ -95,6 +97,9 @@ public class HandleTribeCommand extends CommandHandler {
 
                 } else if (args[1].equalsIgnoreCase("confirm")) {
                     processCommandConfirmHelp(sender);
+
+                } else if (args[1].equalsIgnoreCase("log")) {
+                    processCommandLog(sender, args);
 
                 } else if (sender instanceof Player) {
                     if (args[1].equals("invite")) {
@@ -197,6 +202,57 @@ public class HandleTribeCommand extends CommandHandler {
             confirmAction((Player) sender);
         else
             sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
+    }
+
+    /**
+     * Command: /mse tribe log
+     *
+     * @param sender
+     * @param args
+     */
+    private void processCommandLog(CommandSender sender, String[] args) {
+
+        if (args[2].equalsIgnoreCase("help")) {
+            processCommandLogHelp(sender);
+            return;
+        }
+
+        int entries;
+        try {
+            entries = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatMessages.ERROR_NOT_A_NUMBER.setParams("second"));
+            return;
+        }
+
+        processCommandLog(sender, entries);
+
+    }
+
+    /**
+     * Command: /mse tribe log
+     *
+     * @param sender
+     * @param entries
+     */
+    private void processCommandLog(CommandSender sender, int entries) {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
+            return;
+        }
+
+        Player player = (Player) sender;
+        TribeMember member = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(player);
+        if (!member.hasTribe()) {
+            sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
+            return;
+        }
+
+        TribeLogger logger = member.getTribe().getLogger();
+        String headline = ChatMessages.TRIBE_LOG.setParams("" + entries, "" + logger.getLog().size());
+        printPage(sender, member.getTribe().getLogger().getLatestEntries(entries), 1, entries, false, headline);
+
     }
 
     /**
@@ -364,6 +420,16 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandConfirmHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM2.setParams());
+    }
+
+    /**
+     * Command: /mse tribe log help
+     *
+     * @param sender
+     */
+    private void processCommandLogHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_TRIBE_LOG1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_LOG2.setParams());
     }
 
     /**

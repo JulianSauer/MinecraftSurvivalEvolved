@@ -47,6 +47,8 @@ public enum ChatMessages implements Messages {
     HELP_TRIBE_LEAVE2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to leave your current tribe."),
     HELP_TRIBE_CONFIRM1(Format.HELP_TITLE + "Usage: " + Format.HELP_TEXT + "/mse tribe confirm."),
     HELP_TRIBE_CONFIRM2(Format.HELP_TITLE + "Description: " + Format.HELP_TEXT + "Confirms the current tribe action. Has to be used within 20 seconds or it will expire."),
+    HELP_TRIBE_LOG1(Format.HELP_TITLE + "Usage: " + Format.HELP_TEXT + "/mse tribe log <page>"),
+    HELP_TRIBE_LOG2(Format.HELP_TITLE + "Description: " + Format.HELP_TEXT + "Prints the latest log entries of your tribe."),
     HELP_TRIBES1(Format.HELP_TITLE + "Usage:" + Format.HELP_TEXT + " /mse tribes."),
     HELP_TRIBES2(Format.HELP_TITLE + "Description:" + Format.HELP_TEXT + " Can be used to list all tribes on this server."),
     PAGE_COUNT(Format.INFO + "Viewing page %ARGS0% of %ARGS1%:"),
@@ -59,6 +61,7 @@ public enum ChatMessages implements Messages {
     TRIBE_NEW_MEMBER_RECRUITED(Format.INFO + "The player %ARGS0% has joined the tribe."),
     TRIBE_WELCOME_MESSAGE(Format.SUCCESS + "You joined the tribe " + ChatColor.ITALIC + "%ARGS0%!"),
     TRIBE_MEMBER_RANK_CHANGED(Format.INFO + "The player %ARGS0% is now a %ARGS1%"),
+    TRIBE_LOG(Format.INFO + "%ARGS0% of %ARGS1% log entries:"),
     TRIBE_PRINT_MEMBERS(Format.INFO + "Members of tribe " + ChatColor.ITALIC + "%ARGS0%:"),
     TRIBE_PRINT_MEMBER(Format.INFO + "- %ARGS0% " + ChatColor.ITALIC + "(Rank: %ARGS1%)");
 
