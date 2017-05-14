@@ -21,6 +21,7 @@ public enum ChatMessages implements Messages {
     ERROR_ALREADY_JOINED_A_TRIBE2(Format.ERROR + "The player %ARGS0% is already a member of a tribe."),
     ERROR_DIFFERENT_TRIBE(Format.ERROR + "The player %ARGS0% is not a member of your tribe."),
     ERROR_TRIBE_RANK_TOO_LOW(Format.ERROR + "Your tribe rank is too low."),
+    ERROR_ONLY_ONE_FOUNDER(Format.ERROR + "There can be only one founder. Use /mse tribe transfer <player> to transfer the ownership."),
     ERROR_TRIBE_MEMBER_DOESNT_EXIST(Format.ERROR + "The player %ARGS0% is not part of tribe %ARGS1%."),
     ERROR_TRIBE_DOESNT_EXIST(Format.ERROR + "The tribe %ARGS0% does not exist."),
     ERROR_NO_TRIBE_MEMBERSHIP(Format.ERROR + "You are not part of any tribe currently."),

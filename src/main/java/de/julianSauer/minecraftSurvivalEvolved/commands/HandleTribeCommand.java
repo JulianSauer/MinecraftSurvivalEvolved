@@ -449,12 +449,19 @@ public class HandleTribeCommand extends CommandHandler {
             sender.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(playerName));
 
         } else if (executingMember.canPromote() && Rank.rankIsHigher(executingMember, targetMember)) {
-            if (promote)
-                targetMember.setRank(Rank.getNextHigher(targetMember.getRank()));
-            else
+            if (promote) {
+                Rank newRank = Rank.getNextHigher(targetMember.getRank());
+                if (newRank == Rank.FOUNDER)
+                    sender.sendMessage(ChatMessages.ERROR_ONLY_ONE_FOUNDER.setParams());
+                else if (newRank == executingMember.getRank())
+                    sender.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
+                else {
+                    targetMember.setRank(newRank);
+                    sender.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
+                    targetPlayer.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
+                }
+            } else
                 targetMember.setRank(Rank.getNextLower(targetMember.getRank()));
-            sender.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
-            targetPlayer.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(playerName, targetMember.getRank().toString()));
 
         } else
             executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
