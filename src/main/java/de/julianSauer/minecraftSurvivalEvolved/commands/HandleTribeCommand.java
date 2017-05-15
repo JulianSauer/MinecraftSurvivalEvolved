@@ -19,6 +19,7 @@ public class HandleTribeCommand extends CommandHandler {
     private TribeMemberRegistry tribeMemberRegistry;
     private Set<UUID> pendingTribeLeaves;
     private Map<UUID, Tribe> pendingTribeInvitations;
+    private Map<UUID, AbstractMap.SimpleEntry<UUID, Tribe>> pendingTribeTransfers; // Current founder, <new founder, tribe>
 
     Set<String> tribeNameExceptions = new HashSet<>();
 
@@ -27,6 +28,7 @@ public class HandleTribeCommand extends CommandHandler {
         tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
         pendingTribeLeaves = new HashSet<>();
         pendingTribeInvitations = new HashMap<>();
+        pendingTribeTransfers = new HashMap<>();
 
         tribeNameExceptions.add("");
         tribeNameExceptions.add("leave");
@@ -92,6 +94,9 @@ public class HandleTribeCommand extends CommandHandler {
                 else if (args[1].equalsIgnoreCase("discharge") || args[1].equalsIgnoreCase("kick"))
                     processCommandDischargeHelp(sender);
 
+                else if (args[1].equalsIgnoreCase("transfer"))
+                    processCommandTransferHelp(sender);
+
                 else if (isTribeNameException(args[1]))
                     sender.sendMessage(ChatMessages.ERROR_INVALID_TRIBE_NAME.setParams(args[1]));
 
@@ -122,8 +127,15 @@ public class HandleTribeCommand extends CommandHandler {
                     } else if (args[1].equalsIgnoreCase("discharge") || args[1].equalsIgnoreCase("kick")) {
                         processCommandDischarge((Player) sender, args[2]);
                         break;
+
                     } else if (args[1].equalsIgnoreCase("log")) {
                         processCommandLog((Player) sender, args[2]);
+                        break;
+
+                    } else if (args[1].equalsIgnoreCase("transfer")) {
+                        processCommandTransfer((Player) sender, args[2]);
+                        break;
+
                     }
 
                 } else {
@@ -159,6 +171,9 @@ public class HandleTribeCommand extends CommandHandler {
 
                 else if (args[1].equalsIgnoreCase("discharge") || args[1].equalsIgnoreCase("kick"))
                     processCommandDischargeHelp(sender);
+
+                else if (args[1].equalsIgnoreCase("transfer"))
+                    processCommandTransferHelp(sender);
 
                 else
                     processCommandHelp(sender);
@@ -239,7 +254,7 @@ public class HandleTribeCommand extends CommandHandler {
         } else {
             player.sendMessage(ChatMessages.WARNING_LEAVE_TRIBE.setParams(tribe.getName()));
             if (tribe.isFounder(player))
-                player.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams());
+                player.sendMessage(ChatMessages.WARNING_LEAVE_TRIBE_OWNERSHIP.setParams());
         }
         pendingTribeLeaves.add(player.getUniqueId());
 
@@ -298,6 +313,14 @@ public class HandleTribeCommand extends CommandHandler {
             tribe.addNewMember(playerUUID);
             pendingTribeInvitations.remove(playerUUID);
             player.sendMessage(ChatMessages.TRIBE_WELCOME_MESSAGE.setParams(tribe.getName()));
+
+        } else if (pendingTribeTransfers.containsKey(playerUUID)) {
+
+            Tribe tribe = pendingTribeTransfers.get(playerUUID).getValue();
+            tribe.setRankOf(player, Rank.LEADER);
+            UUID newFounder = pendingTribeTransfers.get(playerUUID).getKey();
+            tribe.setFounder(newFounder);
+            tribe.sendMessageToMembers(ChatMessages.TRIBE_NEW_FOUNDER.setParams(Bukkit.getPlayer(newFounder).getName()));
 
         } else {
             player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.setParams());
@@ -474,7 +497,7 @@ public class HandleTribeCommand extends CommandHandler {
      *
      * @param executingPlayer
      * @param targetPlayerName
-     * @param promote         True if the target should be promoted, false if demoted
+     * @param promote          True if the target should be promoted, false if demoted
      */
     private void processCommandPromoteOrDemote(Player executingPlayer, String targetPlayerName, boolean promote) {
 
@@ -557,7 +580,6 @@ public class HandleTribeCommand extends CommandHandler {
         if (targetPlayerName.equalsIgnoreCase("help")) {
             processCommandDischargeHelp(executingPlayer);
             return;
-
         }
 
         TribeMemberRegistry registry = TribeMemberRegistry.getTribeMemberRegistry();
@@ -599,6 +621,70 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandDischargeHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_DISCHARGE1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE_DISCHARGE2.setParams());
+    }
+
+    /**
+     * Command: /mse tribe transfer <player>
+     *
+     * @param executingPlayer
+     * @param targetPlayerName
+     */
+    private void processCommandTransfer(Player executingPlayer, String targetPlayerName) {
+
+        if (targetPlayerName.equalsIgnoreCase("help")) {
+            processCommandTransferHelp(executingPlayer);
+            return;
+        }
+
+        TribeMemberRegistry registry = TribeMemberRegistry.getTribeMemberRegistry();
+        TribeMember executingMember = registry.getTribeMember(executingPlayer);
+
+        if (executingMember == null || !executingMember.hasTribe()) {
+            sendNoTribeMembershipErrorTo(executingPlayer);
+            return;
+        }
+
+        Tribe tribe = executingMember.getTribe();
+        if (!tribe.isFounder(executingPlayer)) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
+            return;
+        }
+
+        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
+        TribeMember targetMember = registry.getTribeMember(targetPlayer);
+
+        if (targetPlayer == null || targetMember == null) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(targetPlayerName));
+            return;
+        }
+
+        if (!targetMember.hasTribe() || !tribe.getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+            executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
+
+        } else {
+            executingPlayer.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams(tribe.getName(), targetPlayer.getName()));
+            pendingTribeTransfers.put(executingMember.getUniqueId(), new AbstractMap.SimpleEntry<>(targetMember.getUniqueId(), tribe));
+            // Player has 20 seconds to confirm the action.
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    pendingTribeTransfers.remove(executingMember.getUniqueId());
+                    this.cancel();
+                }
+            }.runTaskTimerAsynchronously(MSEMain.getInstance(), 400, 0);
+
+        }
+
+    }
+
+    /**
+     * Command: /mse tribe transfer help
+     *
+     * @param sender
+     */
+    private void processCommandTransferHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_TRIBE_TRANSFER1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_TRANSFER2.setParams());
     }
 
     /**

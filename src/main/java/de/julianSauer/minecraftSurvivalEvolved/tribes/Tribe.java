@@ -43,7 +43,7 @@ public class Tribe {
         this(name, true, MathHelper.a(new Random()));
         this.founder = founder.getUniqueId();
         TribeMember foundingMember = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(founder);
-        if(foundingMember == null)
+        if (foundingMember == null)
             MSEMain.getInstance().getLogger().warning("Could not create tribe " + name + ". Founder " + founder.getName() + " is offline."); // Throws NPE afterwards
         foundingMember.setTribe(this);
         members.put(founder.getUniqueId(), Rank.FOUNDER);
@@ -97,6 +97,12 @@ public class Tribe {
 
     public boolean isFounder(Player member) {
         return member.getUniqueId().equals(founder);
+    }
+
+    public void setFounder(UUID newFounder) {
+        members.remove(newFounder);
+        members.put(newFounder, Rank.FOUNDER);
+        founder = newFounder;
     }
 
     public UUID getFounder() {
