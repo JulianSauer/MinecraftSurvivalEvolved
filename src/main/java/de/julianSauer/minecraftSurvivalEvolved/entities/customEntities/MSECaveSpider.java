@@ -6,6 +6,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGo
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
@@ -168,6 +169,11 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     @Override
     public boolean isFollowing() {
         return pathfinderHandler.isFollowing();
+    }
+
+    @Override
+    public void playAttackSound() {
+        getCraftEntity().getWorld().playSound(getLocation(), Sound.ENTITY_SPIDER_AMBIENT, 1, 1);
     }
 
 }

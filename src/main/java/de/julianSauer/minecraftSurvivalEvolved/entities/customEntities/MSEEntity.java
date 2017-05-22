@@ -6,6 +6,7 @@ import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -72,6 +73,8 @@ public interface MSEEntity extends Tameable, InventoryHolder {
     UUID getUniqueID();
 
     void setCustomName(String name);
+
+    void playAttackSound();
 
     /**
      * Converts the inventory of this entity into a String.

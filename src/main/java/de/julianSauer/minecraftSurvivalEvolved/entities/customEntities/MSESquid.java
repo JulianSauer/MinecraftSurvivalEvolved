@@ -5,6 +5,7 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.inventory.Inventory;
@@ -163,6 +164,11 @@ public class MSESquid extends EntitySquid implements MSEEntity {
     @Override
     public boolean isFollowing() {
         return pathfinderHandler.isFollowing();
+    }
+
+    @Override
+    public void playAttackSound() {
+        getCraftEntity().getWorld().playSound(getLocation(), Sound.ENTITY_SQUID_AMBIENT, 1, 1);
     }
 
 }
