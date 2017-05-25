@@ -5,12 +5,13 @@ import de.julianSauer.minecraftSurvivalEvolved.messages.BarMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BarHandler {
 
@@ -30,14 +31,13 @@ public class BarHandler {
     /**
      * Informs a tribe that a member has tamed an entity with success.
      *
-     * @param tribe        Message will be written to tribe log
-     * @param tribeMembers Tribe members who receive the message
-     * @param owner        The tribe member who tamed the entity
-     * @param entityType   Type of the tamed entity
+     * @param tribe      Message will be written to tribe log
+     * @param owner      The tribe member who tamed the entity
+     * @param entityType Type of the tamed entity
      */
-    public static void sendEntityTamedMessageTo(Tribe tribe, List<OfflinePlayer> tribeMembers, Player owner, String entityType) {
+    public static void sendEntityTamedMessageTo(Tribe tribe, Player owner, String entityType) {
         BarMessages message = BarMessages.TRIBE_MEMBER_TAMED_SUCCESSFULLY.presetParams(owner.getName(), entityType);
-        sendMessageTo(tribeMembers, message);
+        sendMessageTo(tribe.getMembers(), message);
         tribe.getLogger().log(message.getChatColor() + message.toString());
     }
 
@@ -51,16 +51,29 @@ public class BarHandler {
         sendMessageTo(receiver, BarMessages.TAME_DIED.presetParams(deadEntity));
     }
 
+
     /**
      * Informs a tribe that one of their entities died.
      *
-     * @param tribe        Message will be written to tribe log
-     * @param tribeMembers Tribe members who recieve the message
-     * @param deadEntity   Entity that died
+     * @param tribe      Message will be written to tribe log
+     * @param deadEntity Entity that died
      */
-    public static void sendEntityDeathMessageTo(Tribe tribe, List<OfflinePlayer> tribeMembers, String deadEntity) {
+    public static void sendEntityDeathMessageTo(Tribe tribe, String deadEntity) {
         BarMessages message = BarMessages.TAME_DIED.presetParams(deadEntity);
-        sendMessageTo(tribeMembers, message);
+        sendMessageTo(tribe.getMembers(), message);
+        tribe.getLogger().log(message.getChatColor() + message.toString());
+    }
+
+    /**
+     * Informs a tribe that one of their members died.
+     *
+     * @param tribe        Message will be written to tribe log
+     * @param deathMessage Contains reason for death
+     */
+    public static void sendPlayerDeathMessageTo(Tribe tribe, String deathMessage) {
+        BarMessages message = BarMessages.CUSTOM_MESSAGE;
+        message.setCustomValues(deathMessage, BarColor.RED);
+        sendMessageTo(tribe.getMembers(), message);
         tribe.getLogger().log(message.getChatColor() + message.toString());
     }
 
@@ -71,7 +84,7 @@ public class BarHandler {
      * @param barMessage Content of the message
      */
     private static void sendMessageTo(Player receiver, BarMessages barMessage) {
-        List receiverAsList = new ArrayList<OfflinePlayer>();
+        Set receiverAsList = new HashSet<>();
         receiverAsList.add(receiver);
         sendMessageTo(receiverAsList, barMessage);
     }
@@ -82,7 +95,7 @@ public class BarHandler {
      * @param receivers  Players who receive the message
      * @param barMessage Content of the message
      */
-    private static void sendMessageTo(List<OfflinePlayer> receivers, BarMessages barMessage) {
+    private static void sendMessageTo(Set<OfflinePlayer> receivers, BarMessages barMessage) {
         BossBar bossBar = Bukkit.createBossBar(barMessage.toString(), barMessage.getColor(), barMessage.getStyle());
         receivers.stream()
                 .filter(player -> player.isOnline())

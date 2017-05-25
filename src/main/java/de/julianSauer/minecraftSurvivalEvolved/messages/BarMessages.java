@@ -8,10 +8,11 @@ public enum BarMessages implements Messages {
 
     TAME_DIED("Your %ARGS0% died!", BarColor.RED, BarStyle.SOLID),
     TAMED_SUCCESSFULLY("You have tamed a %ARGS0%!", BarColor.GREEN, BarStyle.SOLID),
-    TRIBE_MEMBER_TAMED_SUCCESSFULLY("%ARGS0% has tamed a %ARGS1%!", BarColor.GREEN, BarStyle.SOLID);
+    TRIBE_MEMBER_TAMED_SUCCESSFULLY("%ARGS0% has tamed a %ARGS1%!", BarColor.GREEN, BarStyle.SOLID),
+    CUSTOM_MESSAGE("", BarColor.WHITE, BarStyle.SOLID);
 
-    private final String message;
-    private final BarColor color;
+    private String message;
+    private BarColor color;
     private final BarStyle style;
 
     private String[] params;
@@ -70,6 +71,11 @@ public enum BarMessages implements Messages {
     public BarMessages presetParams(String... args) {
         params = args;
         return this;
+    }
+
+    public void setCustomValues(String message, BarColor color) {
+        this.message = message;
+        this.color = color;
     }
 
 }
