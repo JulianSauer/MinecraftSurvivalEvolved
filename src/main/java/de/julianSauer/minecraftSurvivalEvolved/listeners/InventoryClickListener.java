@@ -27,24 +27,38 @@ public class InventoryClickListener implements BasicInventoryListener {
 
             Inventory inventory = e.getClickedInventory();
             Player player = (Player) e.getWhoClicked();
-            MSEEntity mseEntity = (MSEEntity) inventory.getHolder();
 
-            if (inventory.getName().equals("Entity Options")) {
-                e.setCancelled(
-                        gui.optionsMenuButtonClicked(e.getSlot(), player, mseEntity));
+            if (e.getClickedInventory().getHolder() instanceof MSEEntity) {
 
-            } else if (inventory.getName().equals(mseEntity.getEntityType())) {
-                e.setCancelled(
-                        gui.mainMenuButtonClicked(e.getSlot(), player, mseEntity));
+                MSEEntity mseEntity = (MSEEntity) inventory.getHolder();
 
-            } else if (inventory.getName().contains(" Inventory")) {
-                if (mseEntity.getEntityAttributes().isTamed()) {
+                if (inventory.getName().equals("Entity Options")) {
                     e.setCancelled(
-                            gui.inventoryMenuButtonClicked(e.getSlot(), player, mseEntity));
-                } else {
+                            gui.optionsMenuButtonClicked(e.getSlot(), player, mseEntity));
+
+                } else if (inventory.getName().equals(mseEntity.getEntityType())) {
                     e.setCancelled(
-                            gui.tamingMenuButtonClicked(e.getSlot(), player, mseEntity));
+                            gui.mainMenuButtonClicked(e.getSlot(), player, mseEntity));
+
+                } else if (inventory.getName().contains(" Inventory")) {
+                    if (mseEntity.getEntityAttributes().isTamed()) {
+                        e.setCancelled(
+                                gui.inventoryMenuButtonClicked(e.getSlot(), player, mseEntity));
+                    } else {
+                        e.setCancelled(
+                                gui.tamingMenuButtonClicked(e.getSlot(), player, mseEntity));
+                    }
                 }
+
+            } else {
+
+                if (inventory.getName().equals("Current ranks:")) {
+                    e.setCancelled(gui.rankViewButtonclicked(e.getSlot(), player));
+
+                } else if (inventory.getName().equals("Edit current ranks:")) {
+                    e.setCancelled(gui.rankEditButtonClicked(e.getSlot(), player));
+                }
+
             }
         }
 

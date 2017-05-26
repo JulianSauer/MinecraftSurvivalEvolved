@@ -1,10 +1,13 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class ButtonIcons {
 
@@ -23,6 +26,13 @@ public class ButtonIcons {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    private ItemStack changeColorOfLeatherArmor(ItemStack leather, Color color) {
+        LeatherArmorMeta meta = ((LeatherArmorMeta) leather.getItemMeta());
+        meta.setColor(color);
+        leather.setItemMeta(meta);
+        return leather;
     }
 
     public ItemStack getOpenInventoryButton() {
@@ -75,6 +85,32 @@ public class ButtonIcons {
 
     public ItemStack getFollowingPlayerButton(String player) {
         return createItemWith("Following: " + player, Material.LEASH);
+    }
+
+    public ItemStack getRankChangeButton(Rank rank) {
+        return createItemStackWithoutFlags("Rank for changing ranks: " + rank, Material.LEATHER_HELMET);
+    }
+
+    public ItemStack getRankRecruitmentButton(Rank rank) {
+        return createItemStackWithoutFlags("Rank for recruiting members: " + rank, Material.LEATHER_HELMET);
+    }
+
+    public ItemStack getRankDischargeButton(Rank rank) {
+        return createItemStackWithoutFlags("Rank for discharging members: " + rank, Material.LEATHER_HELMET);
+    }
+
+    public ItemStack getRankPromotingButton(Rank rank) {
+        return createItemStackWithoutFlags("Rank for promoting members: " + rank, Material.LEATHER_HELMET);
+    }
+
+    public ItemStack getIncreaseRankButton() {
+        ItemStack itemStack = createItemStackWithoutFlags("Increase", Material.LEATHER_HELMET);
+        return changeColorOfLeatherArmor(itemStack, Color.GREEN);
+    }
+
+    public ItemStack getDecreaseRankButton() {
+        ItemStack itemStack = createItemStackWithoutFlags("Decrease", Material.LEATHER_HELMET);
+        return changeColorOfLeatherArmor(itemStack, Color.RED);
     }
 
     /**

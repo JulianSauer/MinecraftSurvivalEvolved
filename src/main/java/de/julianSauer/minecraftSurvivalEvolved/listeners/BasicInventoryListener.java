@@ -1,6 +1,5 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
@@ -19,7 +18,6 @@ public interface BasicInventoryListener extends BasicEventListener {
         Inventory inventory = e.getInventory();
         InventoryHolder inventoryHolder = inventory.getHolder();
         return inventory != null
-                && inventoryHolder instanceof MSEEntity
                 && e.getWhoClicked() instanceof Player
                 && !inventory.getName().contains(" Inventory");
     }
@@ -32,7 +30,6 @@ public interface BasicInventoryListener extends BasicEventListener {
      */
     default boolean playerClickedOnButtonMenu(InventoryClickEvent e) {
         return e.getClickedInventory() != null
-                && e.getClickedInventory().getHolder() instanceof MSEEntity
                 && e.getWhoClicked() instanceof Player;
     }
 

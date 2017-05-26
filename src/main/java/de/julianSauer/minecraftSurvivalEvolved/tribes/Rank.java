@@ -19,7 +19,7 @@ public enum Rank {
      * @param neededRank   Rank that is at least needed for something
      * @return True if the providedRank is higher or equal to the neededRank
      */
-    static boolean rankIsEqualOrHigher(Rank providedRank, Rank neededRank) {
+    public static boolean rankIsEqualOrHigher(Rank providedRank, Rank neededRank) {
         if (providedRank == neededRank)
             return true;
         return rankIsHigher(providedRank, neededRank);
@@ -72,6 +72,32 @@ public enum Rank {
                 return ranks[i + 1];
         }
         return Rank.RECRUIT;
+    }
+
+    /**
+     * Compares two ranks.
+     *
+     * @param rank1 First rank
+     * @param rank2 Second rank
+     * @return The higher rank
+     */
+    public static Rank getHigher(Rank rank1, Rank rank2) {
+        if (rankIsHigher(rank1, rank2))
+            return rank1;
+        return rank2;
+    }
+
+    /**
+     * Compares two ranks and returns the lower rank.
+     *
+     * @param rank1 First rank
+     * @param rank2 Second rank
+     * @return The lower rank
+     */
+    public static Rank getLower(Rank rank1, Rank rank2) {
+        if (rankIsHigher(rank1, rank2))
+            return rank2;
+        return rank1;
     }
 
     @Override

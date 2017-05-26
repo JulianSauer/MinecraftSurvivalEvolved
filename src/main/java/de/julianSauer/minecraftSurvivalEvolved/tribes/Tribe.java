@@ -27,6 +27,7 @@ public class Tribe {
 
     private String name;
 
+    private Rank rankForChangingRanks;
     private Rank rankForRecruitment;
     private Rank rankForDischarge;
     private Rank rankForPromoting;
@@ -62,6 +63,7 @@ public class Tribe {
         tribeLogger = new TribeLogger();
         tribeLogger.setTribe(this);
 
+        rankForChangingRanks = Rank.FOUNDER;
         rankForRecruitment = Rank.LEADER;
         rankForDischarge = Rank.LEADER;
         rankForPromoting = Rank.LEADER;
@@ -115,6 +117,14 @@ public class Tribe {
 
     public Rank getRankOfMember(Player player) {
         return members.get(player.getUniqueId());
+    }
+
+    public Rank getRankForChangingRanks() {
+        return rankForChangingRanks;
+    }
+
+    public void setRankForChangingRanks(Rank newRank) {
+        rankForChangingRanks = newRank;
     }
 
     public Rank getRankForRecruitment() {

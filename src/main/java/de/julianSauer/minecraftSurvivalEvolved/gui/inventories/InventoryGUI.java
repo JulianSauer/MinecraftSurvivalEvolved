@@ -16,12 +16,24 @@ public class InventoryGUI {
     private ButtonFactory mainMenuButtonFactory;
     private ButtonFactory inventoryMenuButtonFactory;
     private ButtonFactory tamingMenuButtonFactory;
+    private ButtonFactory rankViewButtonFactory;
+    private ButtonFactory rankEditButtonFactory;
 
     public InventoryGUI() {
         optionsMenuButtonFactory = new OptionsMenuButtonFactory(this);
         mainMenuButtonFactory = new MainMenuButtonFactory(this);
         inventoryMenuButtonFactory = new InventoryMenuButtonFactory(this);
         tamingMenuButtonFactory = new TamingButtonFactory();
+        rankViewButtonFactory = new RankViewButtonFactory();
+        rankEditButtonFactory = new RankEditButtonFactory(this);
+    }
+
+    public void openRankViewGUI(Player player) {
+        openGenericPlayerGUI(player, rankViewButtonFactory, 9, "Current ranks:");
+    }
+
+    public void openRankEditGUI(Player player) {
+        openGenericPlayerGUI(player, rankEditButtonFactory, 27, "Edit current ranks:");
     }
 
     /**
@@ -31,7 +43,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      */
     public void openTamingGUI(Player player, MSEEntity mseEntity) {
-        openGenericGUI(player, mseEntity, tamingMenuButtonFactory, mseEntity.getInventory());
+        openGenericMSEEntityGUI(player, mseEntity, tamingMenuButtonFactory, mseEntity.getInventory());
     }
 
     /**
@@ -42,7 +54,7 @@ public class InventoryGUI {
      */
     public void openMainGUI(Player player, MSEEntity mseEntity) {
         Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getEntityType());
-        openGenericGUI(player, mseEntity, mainMenuButtonFactory, tamedGUI);
+        openGenericMSEEntityGUI(player, mseEntity, mainMenuButtonFactory, tamedGUI);
     }
 
     /**
@@ -52,7 +64,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      */
     public void openInventoryGUI(Player player, MSEEntity mseEntity) {
-        openGenericGUI(player, mseEntity, inventoryMenuButtonFactory, mseEntity.getInventory());
+        openGenericMSEEntityGUI(player, mseEntity, inventoryMenuButtonFactory, mseEntity.getInventory());
     }
 
     /**
@@ -65,7 +77,7 @@ public class InventoryGUI {
     public void openOptionsGUI(Player player, MSEEntity mseEntity, boolean levelUp) {
         Inventory statsGUI = Bukkit.createInventory(mseEntity, 9, "Entity Options");
         optionsMenuButtonFactory.setGlowing(levelUp);
-        openGenericGUI(player, mseEntity, optionsMenuButtonFactory, statsGUI);
+        openGenericMSEEntityGUI(player, mseEntity, optionsMenuButtonFactory, statsGUI);
     }
 
     /**
@@ -154,20 +166,69 @@ public class InventoryGUI {
     }
 
     /**
-     * Opens the inventory as a UI with buttons from the buttonFactory.
+     * Maps an inventory click to a button.
+     *
+     * @param slot   Slot of the clicked button
+     * @param player Player that clicked the button
+     * @return True if a button was pressed
+     */
+    public boolean rankViewButtonclicked(int slot, Player player) {
+        Button button = rankViewButtonFactory.getButtons(player).get(slot);
+        if (button != null) {
+            button.onClick(player);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Maps an inventory click to a button.
+     *
+     * @param slot   Slot of the clicked button
+     * @param player Player that clicked the button
+     * @return True if a button was pressed
+     */
+    public boolean rankEditButtonClicked(int slot, Player player) {
+        Button button = rankEditButtonFactory.getButtons(player).get(slot);
+        if (button != null) {
+            button.onClick(player);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Opens the inventory as a UI with buttons from the buttonFactory. Used for MSEEntity related UIs.
      *
      * @param player        Player that opened the inventory
      * @param mseEntity     Entity that is associated with the inventory
      * @param buttonFactory Provides the buttons
      * @param inventory     Inventory that will be used as a base for the UI
      */
-    private void openGenericGUI(Player player, MSEEntity mseEntity, ButtonFactory buttonFactory, Inventory inventory) {
+    private void openGenericMSEEntityGUI(Player player, MSEEntity mseEntity, ButtonFactory buttonFactory, Inventory inventory) {
         Map<Integer, Button> buttons = buttonFactory.getButtons(mseEntity);
         for (int i = 0; i < buttons.size(); i++)
             inventory.setItem(i, buttons.get(i).getButton());
 
         player.openInventory(inventory);
         ScoreboardHandler.addPlayer(mseEntity, player);
+    }
+
+    /**
+     * Opens the inventory as a UI with buttons from the buttonFactory. Used for player related UIs.
+     *
+     * @param player        Player that opened the inventory
+     * @param buttonFactory Provides the buttons
+     * @param inventorySize Size of the inventory
+     * @param inventoryName Name of the inventory
+     */
+    private void openGenericPlayerGUI(Player player, ButtonFactory buttonFactory, int inventorySize, String inventoryName) {
+        Map<Integer, Button> buttons = buttonFactory.getButtons(player);
+        Inventory inventory = Bukkit.createInventory(null, inventorySize, inventoryName);
+        for (int i = 0; i < buttons.size(); i++)
+            inventory.setItem(i, buttons.get(i).getButton());
+
+        player.openInventory(inventory);
     }
 
 }

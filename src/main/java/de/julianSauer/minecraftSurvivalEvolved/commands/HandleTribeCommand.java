@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.commands;
 
+import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.*;
@@ -23,6 +24,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     Set<String> tribeNameExceptions = new HashSet<>();
 
+    private InventoryGUI gui;
+
     HandleTribeCommand() {
         super();
         tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
@@ -40,7 +43,10 @@ public class HandleTribeCommand extends CommandHandler {
         tribeNameExceptions.add("demote");
         tribeNameExceptions.add("discharge");
         tribeNameExceptions.add("kick");
+        tribeNameExceptions.add("ranks");
         tribeNameExceptions.add("help");
+
+        gui = new InventoryGUI();
     }
 
     @Override
@@ -76,6 +82,11 @@ public class HandleTribeCommand extends CommandHandler {
                     else
                         sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
 
+                } else if (args[1].equalsIgnoreCase("ranks")) {
+                    if (sender instanceof Player)
+                        processCommandRanks((Player) sender);
+                    else
+                        sender.sendMessage(ChatMessages.ERROR_SENDER_NO_PLAYER.setParams());
                 } else if (args[1].equalsIgnoreCase("help"))
                     processCommandHelp(sender);
 
@@ -355,6 +366,28 @@ public class HandleTribeCommand extends CommandHandler {
         TribeLogger logger = member.getTribe().getLogger();
         String headline = ChatMessages.TRIBE_LOG.setParams("" + entries, "" + logger.getLog().size());
         printPage(player, member.getTribe().getLogger().getLatestEntries(entries), 1, entries, false, headline);
+
+    }
+
+    /**
+     * Command: /mse tribe ranks
+     *
+     * @param player
+     */
+    private void processCommandRanks(Player player) {
+
+        TribeMember member = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(player);
+        if (member == null || !member.hasTribe()) {
+            player.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
+            return;
+        }
+
+        Tribe tribe = member.getTribe();
+        if (Rank.rankIsEqualOrHigher(member.getRank(), tribe.getRankForChangingRanks())) {
+            gui.openRankEditGUI(player);
+        } else {
+            gui.openRankViewGUI(player);
+        }
 
     }
 

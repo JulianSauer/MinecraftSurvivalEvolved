@@ -11,5 +11,11 @@ import org.bukkit.inventory.ItemStack;
 public interface Button {
     ItemStack getButton();
 
-    void onClick(Player player, MSEEntity mseEntity);
+    default void onClick(Player player) {
+
+    }
+
+    default void onClick(Player player, MSEEntity mseEntity) {
+
+    }
 }
