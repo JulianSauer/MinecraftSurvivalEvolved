@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.RankPermission;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
 import org.bukkit.entity.Player;
@@ -25,10 +26,10 @@ public class RankViewButtonFactory implements ButtonFactory {
     public Map<Integer, Button> getButtons(Player player) {
         Tribe tribe = TribeMemberRegistry.getTribeMemberRegistry().getTribeMember(player).getTribe();
         Map<Integer, Button> buttonMap = new HashMap<>(4);
-        buttonMap.put(0, new RankViewChangeRank(tribe.getRankForChangingRanks()));
-        buttonMap.put(1, new RankViewRecruitment(tribe.getRankForRecruitment()));
-        buttonMap.put(2, new RankViewDischarge(tribe.getRankForDischarge()));
-        buttonMap.put(3, new RankViewPromoting(tribe.getRankForPromoting()));
+        buttonMap.put(0, new RankViewChangeRank(tribe.getRankFor(RankPermission.CHANGING_RANKS)));
+        buttonMap.put(1, new RankViewRecruitment(tribe.getRankFor(RankPermission.RECRUITING)));
+        buttonMap.put(2, new RankViewDischarge(tribe.getRankFor(RankPermission.DISCHARGING)));
+        buttonMap.put(3, new RankViewPromoting(tribe.getRankFor(RankPermission.PROMOTING)));
         return buttonMap;
     }
 

@@ -1,9 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.inventories;
 
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMember;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeMemberRegistry;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,10 +31,10 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
         playerRank = member.getRank();
 
         Map<Integer, Button> buttonMap = new HashMap<>(22);
-        buttonMap.put(0, new RankViewChangeRank(tribe.getRankForChangingRanks()));
-        buttonMap.put(1, new RankViewRecruitment(tribe.getRankForRecruitment()));
-        buttonMap.put(2, new RankViewDischarge(tribe.getRankForDischarge()));
-        buttonMap.put(3, new RankViewPromoting(tribe.getRankForPromoting()));
+        buttonMap.put(0, new RankViewChangeRank(tribe.getRankFor(RankPermission.CHANGING_RANKS)));
+        buttonMap.put(1, new RankViewRecruitment(tribe.getRankFor(RankPermission.RECRUITING)));
+        buttonMap.put(2, new RankViewDischarge(tribe.getRankFor(RankPermission.DISCHARGING)));
+        buttonMap.put(3, new RankViewPromoting(tribe.getRankFor(RankPermission.PROMOTING)));
         buttonMap.put(4, new EmptyButton());
         buttonMap.put(5, new EmptyButton());
         buttonMap.put(6, new EmptyButton());
@@ -60,6 +57,19 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
     }
 
+    private void increaseRankFor(RankPermission permission, Player player) {
+        Rank current = tribe.getRankFor(permission);
+        current = Rank.getNextHigher(current);
+        tribe.setRankFor(permission, Rank.getLower(current, playerRank));
+        gui.openRankEditGUI(player); // Updates the GUI
+    }
+
+    private void decreaseRankFor(RankPermission permission, Player player) {
+        Rank current = tribe.getRankFor(permission);
+        tribe.setRankFor(permission, Rank.getNextLower(current));
+        gui.openRankEditGUI(player); // Updates the GUI
+    }
+
     class RankIncreaseChangeRank implements Button {
 
         @Override
@@ -69,10 +79,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForChangingRanks();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForChangingRanks(Rank.getLower(current, playerRank));
-            gui.openRankEditGUI(player); // Updates the GUI
+            increaseRankFor(RankPermission.CHANGING_RANKS, player);
         }
     }
 
@@ -85,9 +92,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForChangingRanks();
-            tribe.setRankForChangingRanks(Rank.getNextLower(current));
-            gui.openRankEditGUI(player); // Updates the GUI
+            decreaseRankFor(RankPermission.CHANGING_RANKS, player);
         }
     }
 
@@ -100,10 +105,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForRecruitment();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForRecruitment(Rank.getLower(current, playerRank));
-            gui.openRankEditGUI(player); // Updates the GUI
+            increaseRankFor(RankPermission.RECRUITING, player);
         }
     }
 
@@ -116,9 +118,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForRecruitment();
-            tribe.setRankForRecruitment(Rank.getNextLower(current));
-            gui.openRankEditGUI(player); // Updates the GUI
+            decreaseRankFor(RankPermission.RECRUITING, player);
         }
     }
 
@@ -131,10 +131,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForDischarge();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForDischarge(Rank.getLower(current, playerRank));
-            gui.openRankEditGUI(player); // Updates the GUI
+            increaseRankFor(RankPermission.DISCHARGING, player);
         }
     }
 
@@ -147,10 +144,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForDischarge();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForDischarge(Rank.getNextLower(current));
-            gui.openRankEditGUI(player); // Updates the GUI
+            decreaseRankFor(RankPermission.DISCHARGING, player);
         }
     }
 
@@ -163,10 +157,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForPromoting();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForPromoting(Rank.getLower(current, playerRank));
-            gui.openRankEditGUI(player); // Updates the GUI
+            increaseRankFor(RankPermission.PROMOTING, player);
         }
     }
 
@@ -179,10 +170,7 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
         @Override
         public void onClick(Player player) {
-            Rank current = tribe.getRankForPromoting();
-            current = Rank.getNextHigher(current);
-            tribe.setRankForPromoting(Rank.getNextLower(current));
-            gui.openRankEditGUI(player); // Updates the GUI
+            decreaseRankFor(RankPermission.PROMOTING, player);
         }
     }
 

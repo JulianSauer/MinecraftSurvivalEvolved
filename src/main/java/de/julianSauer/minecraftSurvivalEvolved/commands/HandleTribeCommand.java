@@ -383,7 +383,7 @@ public class HandleTribeCommand extends CommandHandler {
         }
 
         Tribe tribe = member.getTribe();
-        if (Rank.rankIsEqualOrHigher(member.getRank(), tribe.getRankForChangingRanks())) {
+        if (Rank.rankIsEqualOrHigher(member.getRank(), tribe.getRankFor(RankPermission.CHANGING_RANKS))) {
             gui.openRankEditGUI(player);
         } else {
             gui.openRankViewGUI(player);
@@ -458,7 +458,7 @@ public class HandleTribeCommand extends CommandHandler {
         if (invitedTribeMember == null || invitedTribeMember.hasTribe()) {
             invitingPlayer.sendMessage(ChatMessages.ERROR_ALREADY_JOINED_A_TRIBE2.setParams(invitedPlayerName));
 
-        } else if (invitingTribeMember.canRecruit()) {
+        } else if (invitingTribeMember.isAllowedTo(RankPermission.RECRUITING)) {
             sendInvite(invitedPlayer, invitingTribeMember.getTribe());
             invitingPlayer.sendMessage(ChatMessages.TRIBE_INVITED_PLAYER.setParams(invitedPlayerName));
             invitedPlayer.sendMessage(ChatMessages.TRIBE_INVITE_RECEIVED
@@ -562,7 +562,7 @@ public class HandleTribeCommand extends CommandHandler {
         if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
             executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
 
-        } else if (executingMember.canPromote() && Rank.rankIsHigher(executingMember, targetMember)) {
+        } else if (executingMember.isAllowedTo(RankPermission.PROMOTING) && Rank.rankIsHigher(executingMember, targetMember)) {
             if (promote) {
                 Rank newRank = Rank.getNextHigher(targetMember.getRank());
                 if (newRank == Rank.FOUNDER)
@@ -634,7 +634,7 @@ public class HandleTribeCommand extends CommandHandler {
         if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
             executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
 
-        } else if (executingMember.canDischarge() && Rank.rankIsHigher(executingMember, targetMember)) {
+        } else if (executingMember.isAllowedTo(RankPermission.DISCHARGING) && Rank.rankIsHigher(executingMember, targetMember)) {
             Tribe tribe = targetMember.getTribe();
             tribe.remove(targetPlayer);
             String message = ChatMessages.TRIBE_DISCHARGED_MEMBER.setParams(targetPlayer.getName(), executingPlayer.getName());

@@ -27,10 +27,7 @@ public class Tribe {
 
     private String name;
 
-    private Rank rankForChangingRanks;
-    private Rank rankForRecruitment;
-    private Rank rankForDischarge;
-    private Rank rankForPromoting;
+    private Map<RankPermission, Rank> ranks;
 
     private TribeLogger tribeLogger;
 
@@ -63,10 +60,12 @@ public class Tribe {
         tribeLogger = new TribeLogger();
         tribeLogger.setTribe(this);
 
-        rankForChangingRanks = Rank.FOUNDER;
-        rankForRecruitment = Rank.LEADER;
-        rankForDischarge = Rank.LEADER;
-        rankForPromoting = Rank.LEADER;
+        ranks = new HashMap<>();
+        // Default values
+        ranks.put(RankPermission.CHANGING_RANKS, Rank.FOUNDER);
+        ranks.put(RankPermission.RECRUITING, Rank.LEADER);
+        ranks.put(RankPermission.DISCHARGING, Rank.LEADER);
+        ranks.put(RankPermission.PROMOTING, Rank.LEADER);
 
         tribeRegistry = TribeRegistry.getTribeRegistry();
         if (register)
@@ -119,36 +118,12 @@ public class Tribe {
         return members.get(player.getUniqueId());
     }
 
-    public Rank getRankForChangingRanks() {
-        return rankForChangingRanks;
+    public Rank getRankFor(RankPermission permission) {
+        return ranks.get(permission);
     }
 
-    public void setRankForChangingRanks(Rank newRank) {
-        rankForChangingRanks = newRank;
-    }
-
-    public Rank getRankForRecruitment() {
-        return rankForRecruitment;
-    }
-
-    public void setRankForRecruitment(Rank newRank) {
-        rankForRecruitment = newRank;
-    }
-
-    public Rank getRankForDischarge() {
-        return rankForDischarge;
-    }
-
-    public void setRankForDischarge(Rank newRank) {
-        rankForDischarge = newRank;
-    }
-
-    public Rank getRankForPromoting() {
-        return rankForPromoting;
-    }
-
-    public void setRankForPromoting(Rank newRank) {
-        rankForPromoting = newRank;
+    public void setRankFor(RankPermission permission, Rank newRank) {
+        ranks.put(permission, newRank);
     }
 
     public TribeLogger getLogger() {
