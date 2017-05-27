@@ -57,120 +57,98 @@ public class RankEditButtonFactory extends RankViewButtonFactory {
 
     }
 
-    private void increaseRankFor(RankPermission permission, Player player) {
-        Rank current = tribe.getRankFor(permission);
-        current = Rank.getNextHigher(current);
-        tribe.setRankFor(permission, Rank.getLower(current, playerRank));
-        gui.openRankEditGUI(player); // Updates the GUI
-    }
+    abstract class RankIncrease implements Button {
 
-    private void decreaseRankFor(RankPermission permission, Player player) {
-        Rank current = tribe.getRankFor(permission);
-        tribe.setRankFor(permission, Rank.getNextLower(current));
-        gui.openRankEditGUI(player); // Updates the GUI
-    }
+        RankPermission permission;
 
-    class RankIncreaseChangeRank implements Button {
+        RankIncrease(RankPermission permission) {
+            this.permission = permission;
+        }
 
         @Override
         public ItemStack getButton() {
-            return icons.getIncreaseRankButton();
+            Rank nextRank = Rank.getNextHigher(tribe.getRankFor(permission));
+            return icons.getIncreaseRankButton(nextRank);
         }
 
         @Override
         public void onClick(Player player) {
-            increaseRankFor(RankPermission.CHANGING_RANKS, player);
+            Rank current = tribe.getRankFor(permission);
+            current = Rank.getNextHigher(current);
+            tribe.setRankFor(permission, Rank.getLower(current, playerRank));
+            gui.openRankEditGUI(player); // Updates the GUI
         }
+
     }
 
-    class RankDecreaseChangeRank implements Button {
+    abstract class RankDecrease implements Button {
+
+        RankPermission permission;
+
+        RankDecrease(RankPermission permission) {
+            this.permission = permission;
+        }
 
         @Override
         public ItemStack getButton() {
-            return icons.getDecreaseRankButton();
+            Rank nextRank = Rank.getNextLower(tribe.getRankFor(permission));
+            return icons.getDecreaseRankButton(nextRank);
         }
 
         @Override
         public void onClick(Player player) {
-            decreaseRankFor(RankPermission.CHANGING_RANKS, player);
+            Rank current = tribe.getRankFor(permission);
+            tribe.setRankFor(permission, Rank.getNextLower(current));
+            gui.openRankEditGUI(player); // Updates the GUI
+        }
+
+    }
+
+    class RankIncreaseChangeRank extends RankIncrease {
+        RankIncreaseChangeRank() {
+            super(RankPermission.CHANGING_RANKS);
         }
     }
 
-    class RankIncreaseRecruitmentRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getIncreaseRankButton();
-        }
-
-        @Override
-        public void onClick(Player player) {
-            increaseRankFor(RankPermission.RECRUITING, player);
+    class RankDecreaseChangeRank extends RankDecrease {
+        RankDecreaseChangeRank() {
+            super(RankPermission.CHANGING_RANKS);
         }
     }
 
-    class RankDecreaseRecruitmentRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getDecreaseRankButton();
-        }
-
-        @Override
-        public void onClick(Player player) {
-            decreaseRankFor(RankPermission.RECRUITING, player);
+    class RankIncreaseRecruitmentRank extends RankIncrease {
+        RankIncreaseRecruitmentRank() {
+            super(RankPermission.RECRUITING);
         }
     }
 
-    class RankIncreaseDischargeRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getIncreaseRankButton();
-        }
-
-        @Override
-        public void onClick(Player player) {
-            increaseRankFor(RankPermission.DISCHARGING, player);
+    class RankDecreaseRecruitmentRank extends RankDecrease {
+        RankDecreaseRecruitmentRank() {
+            super(RankPermission.RECRUITING);
         }
     }
 
-    class RankDecreaseDischargeRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getDecreaseRankButton();
-        }
-
-        @Override
-        public void onClick(Player player) {
-            decreaseRankFor(RankPermission.DISCHARGING, player);
+    class RankIncreaseDischargeRank extends RankIncrease {
+        RankIncreaseDischargeRank() {
+            super(RankPermission.DISCHARGING);
         }
     }
 
-    class RankIncreasePromotingRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getIncreaseRankButton();
-        }
-
-        @Override
-        public void onClick(Player player) {
-            increaseRankFor(RankPermission.PROMOTING, player);
+    class RankDecreaseDischargeRank extends RankDecrease {
+        RankDecreaseDischargeRank() {
+            super(RankPermission.DISCHARGING);
         }
     }
 
-    class RankDecreasePromotingRank implements Button {
-
-        @Override
-        public ItemStack getButton() {
-            return icons.getDecreaseRankButton();
+    class RankIncreasePromotingRank extends RankIncrease {
+        RankIncreasePromotingRank() {
+            super(RankPermission.PROMOTING);
         }
+    }
 
-        @Override
-        public void onClick(Player player) {
-            decreaseRankFor(RankPermission.PROMOTING, player);
+    class RankDecreasePromotingRank extends RankDecrease {
+        RankDecreasePromotingRank() {
+            super(RankPermission.PROMOTING);
         }
     }
 

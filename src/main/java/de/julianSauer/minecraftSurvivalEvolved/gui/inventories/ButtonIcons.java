@@ -9,6 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ButtonIcons {
 
     private ItemStack createItemWith(String name, Material material) {
@@ -24,6 +27,14 @@ public class ButtonIcons {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    private ItemStack createItemStackWithoutFlags(String name, List<String> lore, Material material) {
+        ItemStack itemStack = createItemStackWithoutFlags(name, material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
@@ -88,28 +99,28 @@ public class ButtonIcons {
     }
 
     public ItemStack getRankChangeButton(Rank rank) {
-        return createItemStackWithoutFlags("Rank for changing ranks: " + rank, Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Change ranks:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankRecruitmentButton(Rank rank) {
-        return createItemStackWithoutFlags("Rank for recruiting members: " + rank, Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Recruit members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankDischargeButton(Rank rank) {
-        return createItemStackWithoutFlags("Rank for discharging members: " + rank, Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Discharge members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankPromotingButton(Rank rank) {
-        return createItemStackWithoutFlags("Rank for promoting members: " + rank, Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Promote members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
     }
 
-    public ItemStack getIncreaseRankButton() {
-        ItemStack itemStack = createItemStackWithoutFlags("Increase", Material.LEATHER_HELMET);
+    public ItemStack getIncreaseRankButton(Rank rank) {
+        ItemStack itemStack = createItemStackWithoutFlags("Increase to:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
         return changeColorOfLeatherArmor(itemStack, Color.GREEN);
     }
 
-    public ItemStack getDecreaseRankButton() {
-        ItemStack itemStack = createItemStackWithoutFlags("Decrease", Material.LEATHER_HELMET);
+    public ItemStack getDecreaseRankButton(Rank rank) {
+        ItemStack itemStack = createItemStackWithoutFlags("Decrease to:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
         return changeColorOfLeatherArmor(itemStack, Color.RED);
     }
 
