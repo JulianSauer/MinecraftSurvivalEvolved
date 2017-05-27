@@ -122,6 +122,10 @@ public class Tribe {
         return ranks.get(permission);
     }
 
+    public Map<RankPermission, Rank> getPermissionsForRanks() {
+        return ranks;
+    }
+
     public void setRankFor(RankPermission permission, Rank newRank) {
         ranks.put(permission, newRank);
     }

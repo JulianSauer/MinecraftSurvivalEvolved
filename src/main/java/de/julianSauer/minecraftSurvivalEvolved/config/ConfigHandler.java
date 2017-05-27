@@ -2,6 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.config;
 
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Rank;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.RankPermission;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -103,20 +104,32 @@ public class ConfigHandler extends ConfigHandlerBase {
             addConfigToCache("/Tribes/", configName);
 
             String tribeName = configName.substring(0, configName.length() - 4);
-            String tribeUUIDString = getStringFromConfig(configName, tribeName + ".ID");
+            String tribeUUIDString = getStringFromConfig(configName, "ID");
             UUID tribeUUID = UUID.fromString(tribeUUIDString);
             Tribe tribe = new Tribe(tribeName, false, tribeUUID);
-            List<String> log = getStringListFromConfig(configName, tribe.getName() + ".Log");
+
+            for (String path : getConfigurationSectionFromConfig(configName, "Ranks").getKeys(false)) {
+                String rankName = "";
+                try {
+                    RankPermission permission = RankPermission.valueOf(path.toUpperCase());
+                    rankName = getStringFromConfig(configName, "Ranks." + path);
+                    Rank rank = Rank.valueOf(rankName.toUpperCase());
+                    tribe.setRankFor(permission, rank);
+                } catch (IllegalArgumentException e) {
+                    MSEMain.getInstance().getLogger().warning("The line \"" + path + ": " + rankName + "\" in " + configName + " is corrupt and will be set to default");
+                }
+            }
+
+            List<String> log = getStringListFromConfig(configName, "Log");
             tribe.getLogger().setLog(log);
 
-            for (String path : getConfigurationSectionFromConfig(configName, "").getKeys(false)) {
+            for (String path : getConfigurationSectionFromConfig(configName, "Players").getKeys(false)) {
 
-                if (path.equals(tribeName))
-                    continue;
+                path = "Players." + path;
 
                 String playerUUIDString = getStringFromConfig(configName, path + ".ID");
                 if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-                    MSEMain.getInstance().getLogger().warning("Player " + path + " in " + configName + " has a corrupt ID and will be ignored");
+                    MSEMain.getInstance().getLogger().warning(path + " in " + configName + " has a corrupt ID and will be ignored");
                     continue;
                 }
                 UUID playerUUID = UUID.fromString(playerUUIDString);
@@ -147,12 +160,14 @@ public class ConfigHandler extends ConfigHandlerBase {
         for (Tribe tribe : tribes.values()) {
             String configName = tribe.getName() + ".yml";
             addConfigToCache("/Tribes/", configName);
-            setValueInConfig(configName, tribe.getName() + ".ID", tribe.getUniqueID().toString());
-            setValueInConfig(configName, tribe.getName() + ".Log", tribe.getLogger().getLog());
+            setValueInConfig(configName, "ID", tribe.getUniqueID().toString());
+            for (Map.Entry<RankPermission, Rank> entry : tribe.getPermissionsForRanks().entrySet())
+                setValueInConfig(configName, "Ranks" + "." + entry.getKey().toString(), entry.getValue().toString());
+            setValueInConfig(configName, "Log", tribe.getLogger().getLog());
             for (UUID playerUUID : tribe.getMemberUUIDs()) {
                 String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
-                setValueInConfig(tribe.getName() + ".yml", playerName + ".ID", playerUUID.toString());
-                setValueInConfig(tribe.getName() + ".yml", playerName + ".Rank", tribe.getRankOfMember(playerUUID).toString());
+                setValueInConfig(configName, "Players." + playerName + ".ID", playerUUID.toString());
+                setValueInConfig(configName, "Players." + playerName + ".Rank", tribe.getRankOfMember(playerUUID).toString());
             }
         }
 
