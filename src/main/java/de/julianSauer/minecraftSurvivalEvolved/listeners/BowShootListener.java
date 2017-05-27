@@ -67,10 +67,7 @@ public class BowShootListener implements BasicEventListener {
      * @return True if it's a normal arrow
      */
     private boolean isArrow(ItemStack arrow) {
-        return arrow != null
-                && (arrow.getType().equals(Material.ARROW)
-                || arrow.getType().equals(Material.SPECTRAL_ARROW)
-                || arrow.getType().equals(Material.TIPPED_ARROW));
+        return arrow != null && arrow.getType().equals(Material.TIPPED_ARROW);
     }
 
 }

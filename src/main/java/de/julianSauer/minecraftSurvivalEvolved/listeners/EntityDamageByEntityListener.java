@@ -1,21 +1,20 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.metadata.MetadataValue;
-
-import java.util.List;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 /**
  * Handles attacks with tranquilizer arrows. Receives metadata from BowShootListener.
  */
-public class EntityDamageByEntityListener implements BasicEventListener {
+public class EntityDamageByEntityListener implements ArrowListener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
@@ -26,7 +25,8 @@ public class EntityDamageByEntityListener implements BasicEventListener {
 
         if (isTranqEvent(target, damager)) {
 
-            Arrow arrow = (Arrow) e.getDamager();
+            TippedArrow arrow = (TippedArrow) e.getDamager();
+            arrow.setBasePotionData((new PotionData(PotionType.AWKWARD)));
             MSEEntity mseEntity = getMSEEntityFromEntity(target);
             Player player = (Player) arrow.getShooter();
 
@@ -62,29 +62,6 @@ public class EntityDamageByEntityListener implements BasicEventListener {
             return false;
         Player player = (Player) damager;
         return !(getMSEEntityFromVehicle(player) == null);
-
-    }
-
-    /**
-     * Checks if a player shoots tranq arrows at a tameable entity.
-     *
-     * @param target  Target of the attack
-     * @param damager Shot arrow
-     * @return True if a tranq arrow is used against a tameable entity
-     */
-    private boolean isTranqEvent(Entity target, Entity damager) {
-
-        if (!(damager instanceof Arrow))
-            return false;
-        Arrow arrow = (Arrow) damager;
-        if (getMSEEntityFromEntity(target) == null || !(arrow.getShooter() instanceof Player))
-            return false;
-
-        List<MetadataValue> titleData = arrow.getMetadata("Tranquilizer Arrow");
-
-        if (titleData.size() == 1)
-            return titleData.get(0).asBoolean();
-        return false;
 
     }
 

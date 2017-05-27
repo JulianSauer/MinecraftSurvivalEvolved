@@ -2,9 +2,13 @@ package de.julianSauer.minecraftSurvivalEvolved.items;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 public class CustomRecipes {
 
@@ -21,15 +25,20 @@ public class CustomRecipes {
     }
 
     public void setUpTranquilizerArrow() {
-        ItemStack tranquilizerArrow = new ItemStack(Material.ARROW);
-        ItemMeta tranquilizerArrowMeta = tranquilizerArrow.getItemMeta();
-        tranquilizerArrowMeta.setDisplayName("Tranquilizer Arrow");
-        tranquilizerArrow.setItemMeta(tranquilizerArrowMeta);
-
-        ShapelessRecipe recipe = new ShapelessRecipe(tranquilizerArrow);
+        ShapelessRecipe recipe = new ShapelessRecipe(getTranquilizerArrow());
         recipe.addIngredient(Material.ARROW);
         recipe.addIngredient(Material.POTION);
         Bukkit.addRecipe(recipe);
+    }
+
+    public static ItemStack getTranquilizerArrow() {
+        ItemStack tranquilizerArrow = new ItemStack(Material.TIPPED_ARROW);
+        PotionMeta tranquilizerArrowMeta = (PotionMeta) tranquilizerArrow.getItemMeta();
+        tranquilizerArrowMeta.setDisplayName("Tranquilizer Arrow");
+        tranquilizerArrowMeta.setBasePotionData(new PotionData(PotionType.JUMP));
+        tranquilizerArrowMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        tranquilizerArrow.setItemMeta(tranquilizerArrowMeta);
+        return tranquilizerArrow;
     }
 
 }
