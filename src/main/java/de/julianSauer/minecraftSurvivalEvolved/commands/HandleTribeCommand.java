@@ -186,6 +186,9 @@ public class HandleTribeCommand extends CommandHandler {
                 else if (args[1].equalsIgnoreCase("transfer"))
                     processCommandTransferHelp(sender);
 
+                else if (args[1].equalsIgnoreCase("ranks"))
+                    processCommandRanksHelp(sender);
+
                 else
                     processCommandHelp(sender);
 
@@ -241,6 +244,7 @@ public class HandleTribeCommand extends CommandHandler {
     private void processCommandHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE3.setParams());
     }
 
     /**
@@ -389,6 +393,16 @@ public class HandleTribeCommand extends CommandHandler {
             gui.openRankViewGUI(player);
         }
 
+    }
+
+    /**
+     * Command: /mse tribe ranks
+     *
+     * @param sender
+     */
+    private void processCommandRanksHelp(CommandSender sender) {
+        sender.sendMessage(ChatMessages.HELP_TRIBE_RANKS1.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE_RANKS2.setParams());
     }
 
     /**
@@ -745,6 +759,7 @@ public class HandleTribeCommand extends CommandHandler {
         sender.sendMessage(ChatMessages.ERROR_NO_TRIBE_MEMBERSHIP.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
+        sender.sendMessage(ChatMessages.HELP_TRIBE3.setParams());
     }
 
     /**
