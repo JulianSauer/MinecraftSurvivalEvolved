@@ -92,7 +92,7 @@ public class InventoryGUI {
             return;
         for (Player player : players) {
             if (player != null && player.getOpenInventory().getTopInventory().getHolder().equals(mseEntity))
-                Bukkit.getScheduler().runTask(MSEMain.getInstance(), () -> player.closeInventory());
+                Bukkit.getScheduler().runTask(MSEMain.getInstance(), player::closeInventory);
         }
 
     }
@@ -106,12 +106,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public boolean mainMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = mainMenuButtonFactory.getButtons(mseEntity).get(slot);
-        if (button != null) {
-            button.onClick(player, mseEntity);
-            return true;
-        }
-        return false;
+        return menuButtonClicked(slot, player, mseEntity, mainMenuButtonFactory);
     }
 
     /**
@@ -123,12 +118,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public boolean optionsMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = optionsMenuButtonFactory.getButtons(mseEntity).get(slot);
-        if (button != null) {
-            button.onClick(player, mseEntity);
-            return true;
-        }
-        return false;
+        return menuButtonClicked(slot, player, mseEntity, optionsMenuButtonFactory);
     }
 
     /**
@@ -140,12 +130,7 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public boolean inventoryMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = inventoryMenuButtonFactory.getButtons(mseEntity).get(slot);
-        if (button != null) {
-            button.onClick(player, mseEntity);
-            return true;
-        }
-        return false;
+        return menuButtonClicked(slot, player, mseEntity, inventoryMenuButtonFactory);
     }
 
     /**
@@ -157,7 +142,11 @@ public class InventoryGUI {
      * @return True if a button was pressed
      */
     public boolean tamingMenuButtonClicked(int slot, Player player, MSEEntity mseEntity) {
-        Button button = tamingMenuButtonFactory.getButtons(mseEntity).get(slot);
+        return menuButtonClicked(slot, player, mseEntity, tamingMenuButtonFactory);
+    }
+
+    private boolean menuButtonClicked(int slot, Player player, MSEEntity mseEntity, ButtonFactory buttonFactory) {
+        Button button = buttonFactory.getButtons(mseEntity).get(slot);
         if (button != null) {
             button.onClick(player, mseEntity);
             return true;

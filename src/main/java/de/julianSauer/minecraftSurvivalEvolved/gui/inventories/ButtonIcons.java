@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ButtonIcons {
@@ -99,28 +99,28 @@ public class ButtonIcons {
     }
 
     public ItemStack getRankChangeButton(Rank rank) {
-        return createItemStackWithoutFlags("Change ranks:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Change ranks:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankRecruitmentButton(Rank rank) {
-        return createItemStackWithoutFlags("Recruit members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Recruit members:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankDischargeButton(Rank rank) {
-        return createItemStackWithoutFlags("Discharge members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Discharge members:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getRankPromotingButton(Rank rank) {
-        return createItemStackWithoutFlags("Promote members:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        return createItemStackWithoutFlags("Promote members:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
     }
 
     public ItemStack getIncreaseRankButton(Rank rank) {
-        ItemStack itemStack = createItemStackWithoutFlags("Increase to:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        ItemStack itemStack = createItemStackWithoutFlags("Increase to:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
         return changeColorOfLeatherArmor(itemStack, Color.GREEN);
     }
 
     public ItemStack getDecreaseRankButton(Rank rank) {
-        ItemStack itemStack = createItemStackWithoutFlags("Decrease to:", Arrays.asList(rank.toString()), Material.LEATHER_HELMET);
+        ItemStack itemStack = createItemStackWithoutFlags("Decrease to:", Collections.singletonList(rank.toString()), Material.LEATHER_HELMET);
         return changeColorOfLeatherArmor(itemStack, Color.RED);
     }
 

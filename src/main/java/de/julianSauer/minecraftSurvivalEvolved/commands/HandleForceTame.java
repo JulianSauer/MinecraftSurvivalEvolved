@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Handles /mse forcetame.
  */
-public class HandleForceTame extends CommandHandler {
+class HandleForceTame extends CommandHandler {
 
     @Override
     public void process(CommandSender sender, String... args) {
@@ -55,9 +55,6 @@ public class HandleForceTame extends CommandHandler {
 
     /**
      * Command: /mse forcetame <player>
-     *
-     * @param player
-     * @param args
      */
     private void processCommand(Player player, String[] args) {
         MSEEntity mseEntity = getEntityInLineOfSightFor(player);
@@ -82,8 +79,6 @@ public class HandleForceTame extends CommandHandler {
 
     /**
      * Command: /mse forcetame help
-     *
-     * @param sender
      */
     private void processCommandHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_FORCETAME1.setParams());

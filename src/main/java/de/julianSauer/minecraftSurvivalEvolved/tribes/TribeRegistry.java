@@ -35,7 +35,7 @@ public class TribeRegistry {
         MSEMain plugin = MSEMain.getInstance();
         plugin.getLogger().info("Loading Tribes");
         tribes = plugin.getConfigHandler().getTribes();
-        tribes.values().stream().forEach(tribe -> tribeNames.put(tribe.getName(), tribe.getUniqueID()));
+        tribes.values().forEach(tribe -> tribeNames.put(tribe.getName(), tribe.getUniqueID()));
         plugin.getLogger().info("Tribes loaded");
     }
 

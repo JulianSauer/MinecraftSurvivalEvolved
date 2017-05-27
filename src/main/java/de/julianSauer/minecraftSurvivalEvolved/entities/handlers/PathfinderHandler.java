@@ -68,8 +68,6 @@ public interface PathfinderHandler extends Persistentable {
 
     /**
      * Enables wandering for this entity.
-     *
-     * @param wandering
      */
     void setWandering(boolean wandering);
 

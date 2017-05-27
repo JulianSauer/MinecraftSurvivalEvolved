@@ -5,6 +5,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.*;
@@ -126,9 +127,9 @@ public class HologramHandler {
         if (activeHolograms == null)
             return;
 
-        activeHolograms.values().stream()
-                .forEach(armorStands -> armorStands.stream()
-                        .forEach(armorStand -> armorStand.remove()));
+        activeHolograms.values()
+                .forEach(armorStands -> armorStands
+                        .forEach(Entity::remove));
         activeHolograms.clear();
     }
 

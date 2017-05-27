@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 /**
  * Handles all sub commands of /mse tribe.
  */
-public class HandleTribeCommand extends CommandHandler {
+class HandleTribeCommand extends CommandHandler {
 
     private TribeMemberRegistry tribeMemberRegistry;
     private Set<UUID> pendingTribeLeaves;
     private Map<UUID, Tribe> pendingTribeInvitations;
     private Map<UUID, AbstractMap.SimpleEntry<UUID, Tribe>> pendingTribeTransfers; // Current founder, <new founder, tribe>
 
-    Set<String> tribeNameExceptions = new HashSet<>();
+    private Set<String> tribeNameExceptions = new HashSet<>();
 
     private InventoryGUI gui;
 
@@ -199,12 +199,12 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe
-     *
-     * @param player
+     * <p>
+     * Shows info about tribe of player or help for creating a new tribe.
      */
     private void processCommand(Player player) {
 
-        TribeMember member = tribeMemberRegistry.getTribeMember((Player) player);
+        TribeMember member = tribeMemberRegistry.getTribeMember(player);
         if (member == null || !member.hasTribe()) {
             sendNoTribeMembershipErrorTo(player);
 
@@ -214,8 +214,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe <tribe>
-     *
-     * @param sender
+     * <p>
+     * Shows info about a specific tribe.
      */
     private void processCommand(CommandSender sender, String tribeName) {
 
@@ -238,8 +238,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe help
-     *
-     * @param sender
      */
     private void processCommandHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
@@ -250,10 +248,8 @@ public class HandleTribeCommand extends CommandHandler {
     /**
      * Command: /mse tribe leave
      * <p>
-     * Needs additional confirmation to fulfill this request.
+     * Allows a player to leave their tribe. Needs additional confirmation to fulfill this request.
      * See {@link #processCommandConfirm(Player)}
-     *
-     * @param player
      */
     private void processCommandLeave(Player player) {
 
@@ -286,8 +282,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe leave help
-     *
-     * @param sender
      */
     private void processCommandLeaveHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_LEAVE1.setParams());
@@ -296,9 +290,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe confirm
+     * <p>
      * Can be used to confirm a tribe action if called within 20 seconds after the initial request.
-     *
-     * @param player
      */
     private void processCommandConfirm(Player player) {
 
@@ -345,8 +338,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe confirm help
-     *
-     * @param sender
      */
     private void processCommandConfirmHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_CONFIRM1.setParams());
@@ -355,9 +346,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe log
-     *
-     * @param player
-     * @param entries
+     * <p>
+     * Displays the tribe's log.
      */
     private void processCommandLog(Player player, int entries) {
 
@@ -375,8 +365,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe ranks
-     *
-     * @param player
+     * <p>
+     * Opens a UI for viewing or editing the permissions of ranks. UI depends on {@link RankPermission#CHANGING_RANKS}
      */
     private void processCommandRanks(Player player) {
 
@@ -396,9 +386,7 @@ public class HandleTribeCommand extends CommandHandler {
     }
 
     /**
-     * Command: /mse tribe ranks
-     *
-     * @param sender
+     * Command: /mse tribe ranks help
      */
     private void processCommandRanksHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_RANKS1.setParams());
@@ -407,9 +395,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe log [help | <number of entries>]
-     *
-     * @param player
-     * @param entriesString
+     * <p>
+     * Displays certain number of log entries or help for the command.
      */
     private void processCommandLog(Player player, String entriesString) {
 
@@ -432,8 +419,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe log help
-     *
-     * @param sender
      */
     private void processCommandLogHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_LOG1.setParams());
@@ -442,9 +427,9 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe invite <player>
-     *
-     * @param invitingPlayer
-     * @param invitedPlayerName
+     * <p>
+     * Invites a new player to the tribe who needs to confirm the invitation.
+     * See {@link #processCommandConfirm(Player)}
      */
     private void processCommandInvite(Player invitingPlayer, String invitedPlayerName) {
 
@@ -484,8 +469,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe invite help
-     *
-     * @param sender
      */
     private void processCommandInviteHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_INVITE1.setParams());
@@ -494,8 +477,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Sends an invitation to a player to join a tribe.
-     *
-     * @param player
+     * See {@link #processCommandInvite(Player, String)}
+     * See {@link #processCommandConfirm(Player)}
      */
     private void sendInvite(Player player, Tribe tribe) {
 
@@ -514,9 +497,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe create [help | <tribe>]
-     *
-     * @param player
-     * @param args
+     * <p>
+     * Creates a new tribe or displays help.
      */
     private void processCommandCreate(Player player, String args[]) {
 
@@ -524,15 +506,30 @@ public class HandleTribeCommand extends CommandHandler {
             processCommandCreateHelp(player);
         } else if (isTribeNameException(args[2])) {
             player.sendMessage(ChatMessages.ERROR_INVALID_TRIBE_NAME.setParams(args[1]));
-        } else
-            createTribe(player, args[2]);
+        } else {
+
+            String tribeName = args[2];
+
+            TribeMember tribeMember = tribeMemberRegistry.getTribeMember(player);
+
+            if (tribeMember == null)
+                MSEMain.getInstance().getLogger().warning("Could not create tribe " + tribeName + ". Founder " + player.getName() + " is offline."); // Throws NPE afterwards
+
+            if (tribeMember.hasTribe())
+                player.sendMessage(ChatMessages.ERROR_ALREADY_JOINED_A_TRIBE1.setParams(tribeMember.getTribe().getName()));
+            else if (tribeRegistry.tribeExists(tribeName))
+                player.sendMessage(ChatMessages.ERROR_TRIBE_EXISTS_ALREADY.setParams(tribeName));
+            else {
+                new Tribe(player, tribeName);
+                player.sendMessage(ChatMessages.TRIBE_CREATED.setParams(tribeName));
+            }
+
+        }
 
     }
 
     /**
      * Command: /mse tribe create help
-     *
-     * @param sender
      */
     private void processCommandCreateHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_CREATE1.setParams());
@@ -540,11 +537,11 @@ public class HandleTribeCommand extends CommandHandler {
     }
 
     /**
-     * Command: /mse tribe promote <player>
+     * Command: /mse tribe [promote | demote] <player>
+     * <p>
+     * Promotes or demotes another member to the next higher/lower rank.
      *
-     * @param executingPlayer
-     * @param targetPlayerName
-     * @param promote          True if the target should be promoted, false if demoted
+     * @param promote True if the target should be promoted, false if demoted
      */
     private void processCommandPromoteOrDemote(Player executingPlayer, String targetPlayerName, boolean promote) {
 
@@ -598,8 +595,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe promote help
-     *
-     * @param sender
      */
     private void processCommandPromoteHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_PROMOTE1.setParams());
@@ -608,8 +603,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe demote help
-     *
-     * @param sender
      */
     private void processCommandDemoteHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_DEMOTE1.setParams());
@@ -618,9 +611,8 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse [discharge | kick] <player>
-     *
-     * @param executingPlayer
-     * @param targetPlayerName
+     * <p>
+     * Removes a player from the tribe.
      */
     private void processCommandDischarge(Player executingPlayer, String targetPlayerName) {
 
@@ -662,8 +654,6 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse [discharge | kick] help
-     *
-     * @param sender
      */
     private void processCommandDischargeHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_DISCHARGE1.setParams());
@@ -672,9 +662,9 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe transfer <player>
-     *
-     * @param executingPlayer
-     * @param targetPlayerName
+     * <p>
+     * Transfers the ownership of a tribe to another member. Needs additional confirmation to fulfill this request.
+     * See {@link #processCommandConfirm(Player)}
      */
     private void processCommandTransfer(Player executingPlayer, String targetPlayerName) {
 
@@ -726,33 +716,10 @@ public class HandleTribeCommand extends CommandHandler {
 
     /**
      * Command: /mse tribe transfer help
-     *
-     * @param sender
      */
     private void processCommandTransferHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBE_TRANSFER1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE_TRANSFER2.setParams());
-    }
-
-    /**
-     * Creates a new tribe if the name is available and gives the player a leader rank within it.
-     */
-    private void createTribe(Player player, String tribeName) {
-
-        TribeMember tribeMember = tribeMemberRegistry.getTribeMember(player);
-
-        if (tribeMember == null)
-            MSEMain.getInstance().getLogger().warning("Could not create tribe " + tribeName + ". Founder " + player.getName() + " is offline."); // Throws NPE afterwards
-
-        if (tribeMember.hasTribe())
-            player.sendMessage(ChatMessages.ERROR_ALREADY_JOINED_A_TRIBE1.setParams(tribeMember.getTribe().getName()));
-        else if (tribeRegistry.tribeExists(tribeName))
-            player.sendMessage(ChatMessages.ERROR_TRIBE_EXISTS_ALREADY.setParams(tribeName));
-        else {
-            new Tribe(player, tribeName);
-            player.sendMessage(ChatMessages.TRIBE_CREATED.setParams(tribeName));
-        }
-
     }
 
     private void sendNoTribeMembershipErrorTo(CommandSender sender) {

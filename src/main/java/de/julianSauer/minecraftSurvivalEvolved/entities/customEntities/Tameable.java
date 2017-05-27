@@ -35,19 +35,33 @@ public interface Tameable {
         return getPathfinderHandler().getEntityMode();
     }
 
-    void setPassiveGoals();
+    default void setPassiveGoals() {
+        getPathfinderHandler().setPassiveGoals();
+    }
 
-    void setNeutralGoals();
+    default void setNeutralGoals() {
+        getPathfinderHandler().setNeutralGoals();
+    }
 
-    void setAggressiveGoals();
+    default void setAggressiveGoals() {
+        getPathfinderHandler().setAggressiveGoals();
+    }
 
-    void setWandering(boolean wandering);
+    default void setWandering(boolean wandering) {
+        getPathfinderHandler().setWandering(wandering);
+    }
 
-    void toggleFollowing(EntityPlayer player);
+    default void toggleFollowing(EntityPlayer player) {
+        getPathfinderHandler().toggleFollowing(player);
+    }
 
-    EntityPlayer getFollowingPlayer();
+    default EntityPlayer getFollowingPlayer() {
+        return getPathfinderHandler().getFollowingPlayer();
+    }
 
-    boolean isFollowing();
+    default boolean isFollowing() {
+        return getPathfinderHandler().isFollowing();
+    }
 
     /**
      * Loads data for this entity.

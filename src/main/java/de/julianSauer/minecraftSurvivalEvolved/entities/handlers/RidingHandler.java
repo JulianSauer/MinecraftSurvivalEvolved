@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 public class RidingHandler<T extends EntityInsentient & MSEEntity> implements MovementHandlerInterface {
 
-    protected final T entity;
+    final T entity;
     private Field jump = null;
     private Method setYawPitch;
 
@@ -30,8 +30,6 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
 
     /**
      * Handles movement for walking entities.
-     *
-     * @param args
      */
     public void handleMovement(float[] args) {
 
@@ -86,7 +84,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      *
      * @return True if entity is mounted by a player
      */
-    protected boolean isMounted() {
+    boolean isMounted() {
         if (!entity.getEntityAttributes().isInitialized())
             return false;
 
@@ -118,7 +116,7 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      *
      * @return [0]: updated sideMot, [1]: updated forMot
      */
-    protected float[] calculateMovement() {
+    float[] calculateMovement() {
 
         float sideMot, forMot;
         Entity passenger = entity.passengers.get(0);

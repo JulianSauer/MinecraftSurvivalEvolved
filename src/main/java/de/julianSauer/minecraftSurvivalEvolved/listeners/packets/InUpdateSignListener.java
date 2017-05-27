@@ -13,11 +13,11 @@ public class InUpdateSignListener implements PacketListener<PacketPlayInUpdateSi
 
     @Override
     public void onPacketEvent(ChannelHandlerContext context, PacketPlayInUpdateSign packet) {
-        String newName = "";
+        StringBuilder newName = new StringBuilder();
         for (String s : packet.b())
-            newName += s;
+            newName.append(s);
         UUID player = getUUIDFrom(context);
-        NameChanger.changeNameOfEntity(player, newName);
+        NameChanger.changeNameOfEntity(player, newName.toString());
     }
 
 }

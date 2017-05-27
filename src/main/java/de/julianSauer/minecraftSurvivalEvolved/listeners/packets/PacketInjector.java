@@ -9,8 +9,6 @@ public class PacketInjector {
 
     /**
      * Adds a player to the packet listener.
-     *
-     * @param player
      */
     public void addPlayer(Player player) {
         if (!(player instanceof CraftPlayer))
@@ -27,8 +25,6 @@ public class PacketInjector {
 
     /**
      * Removes a player from the packet listener.
-     *
-     * @param player
      */
     public void removePlayer(Player player) {
         if (!(player instanceof CraftPlayer))

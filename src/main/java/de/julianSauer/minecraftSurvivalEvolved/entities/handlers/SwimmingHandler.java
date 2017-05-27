@@ -12,8 +12,6 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
 
     /**
      * Handles movement for swimming entities.
-     *
-     * @param args
      */
     @Override
     public void handleMovement(float[] args) {

@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
  */
 public class InventoryClickListener implements BasicInventoryListener {
 
-    InventoryGUI gui;
+    private InventoryGUI gui;
 
     public InventoryClickListener() {
         gui = new InventoryGUI();

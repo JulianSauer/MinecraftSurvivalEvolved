@@ -132,48 +132,14 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
         return miningHandler;
     }
 
+    @Override
     public PathfinderHandler getPathfinderHandler() {
         return pathfinderHandler;
     }
 
     @Override
-    public void setPassiveGoals() {
-        pathfinderHandler.setPassiveGoals();
-    }
-
-    @Override
-    public void setNeutralGoals() {
-        pathfinderHandler.setNeutralGoals();
-    }
-
-    @Override
-    public void setAggressiveGoals() {
-        pathfinderHandler.setAggressiveGoals();
-    }
-
-    @Override
-    public void setWandering(boolean wandering) {
-        pathfinderHandler.setWandering(wandering);
-    }
-
-    @Override
-    public void toggleFollowing(EntityPlayer player) {
-        pathfinderHandler.toggleFollowing(player);
-    }
-
-    @Override
-    public EntityPlayer getFollowingPlayer() {
-        return pathfinderHandler.getFollowingPlayer();
-    }
-
-    @Override
-    public boolean isFollowing() {
-        return pathfinderHandler.isFollowing();
-    }
-
-    @Override
     public void playAttackSound() {
-        getCraftEntity().getWorld().playSound(getLocation(), Sound.ENTITY_SPIDER_AMBIENT, 1, 1);
+        playAttackSound(Sound.ENTITY_SPIDER_AMBIENT);
     }
 
 }

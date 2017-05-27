@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Represents an object that can process a command.
  */
-public abstract class CommandHandler {
+abstract class CommandHandler {
 
     TribeRegistry tribeRegistry;
 

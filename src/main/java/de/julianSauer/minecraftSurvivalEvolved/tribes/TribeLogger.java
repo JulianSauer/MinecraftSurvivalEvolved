@@ -29,8 +29,6 @@ public class TribeLogger {
 
     /**
      * Should only be called when loading the tribe from disk.
-     *
-     * @param log
      */
     public void setLog(List<String> log) {
         this.log = log;

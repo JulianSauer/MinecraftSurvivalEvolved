@@ -16,7 +16,7 @@ public class PrepareItemCraftListener implements BasicEventListener {
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {
 
         ItemMeta itemMeta = e.getRecipe().getResult().getItemMeta();
-        if (!(e.getInventory() != null)
+        if (e.getInventory() == null
                 || !itemMeta.hasDisplayName()
                 || !(itemMeta.getDisplayName().equals("Tranquilizer Arrow"))) {
             return;
@@ -25,10 +25,8 @@ public class PrepareItemCraftListener implements BasicEventListener {
 
         ItemStack[] inventorySlots = craftingInventory.getMatrix();
 
-        if (getNarcotics(inventorySlots) == null || getArrow(inventorySlots) == null) {
+        if (getNarcotics(inventorySlots) == null || getArrow(inventorySlots) == null)
             e.getInventory().setResult(new ItemStack(Material.AIR));
-            return;
-        }
 
     }
 

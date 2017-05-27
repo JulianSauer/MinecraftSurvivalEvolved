@@ -76,6 +76,10 @@ public interface MSEEntity extends Tameable, InventoryHolder {
 
     void playAttackSound();
 
+    default void playAttackSound(Sound sound) {
+        getCraftEntity().getWorld().playSound(getLocation(), sound, 1, 1);
+    }
+
     /**
      * Converts the inventory of this entity into a String.
      * Method by graywolf336: https://gist.github.com/graywolf336/8153678

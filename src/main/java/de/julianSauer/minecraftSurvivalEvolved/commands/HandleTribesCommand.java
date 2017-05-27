@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Handles all sub commands of /mse tribes.
  */
-public class HandleTribesCommand extends CommandHandler {
+class HandleTribesCommand extends CommandHandler {
 
     @Override
     public void process(CommandSender sender, String... args) {
@@ -41,8 +41,6 @@ public class HandleTribesCommand extends CommandHandler {
     /**
      * Command: /mse tribes
      * Prints the first 9 tribes of this server.
-     *
-     * @param sender
      */
     private void processCommand(CommandSender sender) {
         printTribes(sender, 1);
@@ -50,8 +48,6 @@ public class HandleTribesCommand extends CommandHandler {
 
     /**
      * Command: /mse tribes help
-     *
-     * @param sender
      */
     private void processCommandHelp(CommandSender sender) {
         sender.sendMessage(ChatMessages.HELP_TRIBES1.setParams());
@@ -60,10 +56,7 @@ public class HandleTribesCommand extends CommandHandler {
 
     /**
      * Command: /mse tribes <page>
-     * Parses the user input to print a specific page of tribes
-     *
-     * @param sender
-     * @param args
+     * Parses the user input to print a specific page of tribes.
      */
     private void processCommand(CommandSender sender, String args[]) {
 
@@ -80,9 +73,6 @@ public class HandleTribesCommand extends CommandHandler {
 
     /**
      * Prints 9 tribes of the server.
-     *
-     * @param sender
-     * @param page
      */
     private void printTribes(CommandSender sender, int page) {
 

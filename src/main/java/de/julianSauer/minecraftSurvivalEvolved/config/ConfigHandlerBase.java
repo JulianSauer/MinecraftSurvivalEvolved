@@ -20,7 +20,7 @@ abstract class ConfigHandlerBase {
     private Map<String, CustomConfig> configFiles;
     private Map<String, FileConfiguration> configs;
 
-    protected ConfigHandlerBase(String[] configNames) {
+    ConfigHandlerBase(String[] configNames) {
         configFiles = new HashMap<>();
         configs = new HashMap<>();
         for (String configName : configNames) {
@@ -57,7 +57,7 @@ abstract class ConfigHandlerBase {
      * @param path         Path to the variable
      * @return Found value
      */
-    protected boolean getBooleanFromConfig(String configName, String parentConfig, String path) {
+    boolean getBooleanFromConfig(String configName, String parentConfig, String path) {
         Boolean ret = getBoolean(configName, path);
         if (ret != null)
             return ret;
@@ -92,7 +92,7 @@ abstract class ConfigHandlerBase {
      * @param path         Path to the variable
      * @return Found value
      */
-    protected int getIntFromConfig(String configName, String parentConfig, String path) {
+    int getIntFromConfig(String configName, String parentConfig, String path) {
         Integer ret = getInt(configName, path);
         if (ret != null)
             return ret;
@@ -127,7 +127,7 @@ abstract class ConfigHandlerBase {
      * @param path         Path to the variable
      * @return Found value
      */
-    protected double getDoubleFromConfig(String configName, String parentConfig, String path) {
+    double getDoubleFromConfig(String configName, String parentConfig, String path) {
         Double ret = getDouble(configName, path);
         if (ret != null)
             return ret;
@@ -145,7 +145,7 @@ abstract class ConfigHandlerBase {
      * @param path       Path to the variable
      * @return Found value
      */
-    protected String getStringFromConfig(String configName, String path) {
+    String getStringFromConfig(String configName, String path) {
         String ret = getString(configName, path);
         if (ret != null)
             return ret;
@@ -180,7 +180,7 @@ abstract class ConfigHandlerBase {
      * @param path       Path to the variable
      * @return Found value
      */
-    protected List<String> getStringListFromConfig(String configName, String path) {
+    List<String> getStringListFromConfig(String configName, String path) {
         List<String> ret = getStringList(configName, path);
         if (ret != null && !ret.isEmpty())
             return ret;
@@ -215,7 +215,7 @@ abstract class ConfigHandlerBase {
      * @param path       Path to the variable
      * @return Found value
      */
-    protected ConfigurationSection getConfigurationSectionFromConfig(String configName, String path) {
+    ConfigurationSection getConfigurationSectionFromConfig(String configName, String path) {
         ConfigurationSection ret = getConfigurationSection(configName, path);
         if (ret != null)
             return ret;
@@ -232,7 +232,7 @@ abstract class ConfigHandlerBase {
      * @param path         Path to the variable
      * @return Found value
      */
-    protected ConfigurationSection getConfigurationSectionFromConfig(String configName, String parentConfig, String path) {
+    ConfigurationSection getConfigurationSectionFromConfig(String configName, String parentConfig, String path) {
         ConfigurationSection ret = getConfigurationSection(configName, path);
         if (ret != null)
             return ret;
@@ -249,7 +249,7 @@ abstract class ConfigHandlerBase {
      * @param configName Name of the .yml file
      * @return Map of all values found in the configuration
      */
-    protected Map getAllValuesFromConfig(String configName) {
+    Map getAllValuesFromConfig(String configName) {
         FileConfiguration customConfig = configs.get(configName);
         if (customConfig != null)
             return customConfig.getValues(true);
@@ -263,7 +263,7 @@ abstract class ConfigHandlerBase {
      * @param path       Path to the variable
      * @param value      Value that will be set
      */
-    protected void setValueInConfig(String configName, String path, Object value) {
+    void setValueInConfig(String configName, String path, Object value) {
         FileConfiguration customConfig = configs.get(configName);
         customConfig.set(path, value);
         configFiles.get(configName).saveConfig();
@@ -275,7 +275,7 @@ abstract class ConfigHandlerBase {
      * @param folderName Name of the subdirectory; can be empty
      * @param configName Name of the .yml file
      */
-    protected void addConfigToCache(String folderName, String configName) {
+    void addConfigToCache(String folderName, String configName) {
         if (configFiles.containsKey(configName) && configs.containsKey(configName))
             return;
         CustomConfig configFile = new CustomConfig(folderName, configName);
@@ -290,7 +290,7 @@ abstract class ConfigHandlerBase {
      *
      * @param configName Name of the .yml file
      */
-    protected void removeConfigFromCache(String configName) {
+    void removeConfigFromCache(String configName) {
         if (configFiles.containsKey(configName))
             configFiles.remove(configName);
         if (configs.containsKey(configName))
@@ -303,7 +303,7 @@ abstract class ConfigHandlerBase {
      * @param folderName Path to the file within the plugin folder
      * @param fileName   Name of the file
      */
-    protected void deleteFile(String folderName, String fileName) {
+    void deleteFile(String folderName, String fileName) {
         addConfigToCache(folderName, fileName);
         if (configFiles.containsKey(fileName)) {
             configFiles.get(fileName).deleteFile();
@@ -316,7 +316,7 @@ abstract class ConfigHandlerBase {
      *
      * @param configName Name of the config
      */
-    protected void noValueFoundFor(String configName) {
+    void noValueFoundFor(String configName) {
         logger.warning("Value is missing or of wrong type in " + configName);
         logger.warning("Using default value");
         logger.warning("Delete " + configName + " to get a default one");
@@ -340,7 +340,7 @@ abstract class ConfigHandlerBase {
      * @param parentConfig Name of the parent config
      * @param path         Path to the missing value
      */
-    protected void noValueFoundFor(String configName, String parentConfig, String path) {
+    void noValueFoundFor(String configName, String parentConfig, String path) {
         logger.warning("Value is missing or of wrong type: " + path + " in " + configName + " or " + parentConfig);
         logger.warning("Using default value");
         logger.warning("Delete " + configName + " and " + parentConfig + " to get default ones");

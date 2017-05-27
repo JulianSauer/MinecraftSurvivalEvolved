@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public interface PacketListener<T extends Packet> extends BasicListener {
+interface PacketListener<T extends Packet> extends BasicListener {
 
     void onPacketEvent(ChannelHandlerContext context, T packet);
 

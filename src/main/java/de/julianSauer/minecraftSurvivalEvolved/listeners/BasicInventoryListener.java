@@ -4,9 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
-public interface BasicInventoryListener extends BasicEventListener {
+interface BasicInventoryListener extends BasicEventListener {
 
     /**
      * Checks if a player interacts with an inventory while a menu from InventoryGUI is open.
@@ -16,7 +15,6 @@ public interface BasicInventoryListener extends BasicEventListener {
      */
     default boolean playerInteractsWithCustomGUI(InventoryInteractEvent e) {
         Inventory inventory = e.getInventory();
-        InventoryHolder inventoryHolder = inventory.getHolder();
         return inventory != null
                 && e.getWhoClicked() instanceof Player
                 && !inventory.getName().contains(" Inventory");

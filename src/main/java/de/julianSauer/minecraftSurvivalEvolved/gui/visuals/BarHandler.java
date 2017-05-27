@@ -98,7 +98,7 @@ public class BarHandler {
     private static void sendMessageTo(Set<OfflinePlayer> receivers, BarMessages barMessage) {
         BossBar bossBar = Bukkit.createBossBar(barMessage.toString(), barMessage.getColor(), barMessage.getStyle());
         receivers.stream()
-                .filter(player -> player.isOnline())
+                .filter(OfflinePlayer::isOnline)
                 .forEach(player -> bossBar.addPlayer((Player) player));
 
         (new BukkitRunnable() {
@@ -135,14 +135,15 @@ public class BarHandler {
         else if (currentValue < 0)
             currentValue = 0;
 
-        String bar = "|";
         int progressInPercent = Math.round((currentValue / maxValue) * barSize);
         int i = 0;
+        StringBuilder bar = new StringBuilder("|");
         for (; i < progressInPercent; i++)
-            bar += "=";
+            bar.append("=");
         for (; i <= barSize; i++)
-            bar += "-";
-        return bar + "|";
+            bar.append("-");
+        bar.append("|");
+        return bar.toString();
 
     }
 

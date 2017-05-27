@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
  * Represents a button in an inventory. Consists of an icon displayed by an ItemStack and an action when the button is
  * pressed.
  */
-public interface Button {
+interface Button {
     ItemStack getButton();
 
     default void onClick(Player player) {

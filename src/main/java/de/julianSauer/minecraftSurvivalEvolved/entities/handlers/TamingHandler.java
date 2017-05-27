@@ -23,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -92,7 +91,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     /**
      * Increases the torpidity and updates the consciousness of an entity. May start a taming progress.
      *
-     * @param torpidityIncrease
+     * @param torpidityIncrease Amount of torpidity dealt
      * @param lastDamager       Player is saved in case the entity becomes unconscious and is successfully tamed
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
@@ -103,8 +102,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     /**
      * Increases the torpidity and updates the consciousness of an entity.
-     *
-     * @param torpidityIncrease
      */
     private void increaseTorpidityBy(int torpidityIncrease) {
         entityAttributes.setTorpidity(entityAttributes.getTorpidity() + torpidityIncrease);
@@ -113,7 +110,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         updateConsciousness();
     }
 
-    public void decreaseTorpidityBy(int torpidityDecrease) {
+    private void decreaseTorpidityBy(int torpidityDecrease) {
         entityAttributes.setTorpidity(entityAttributes.getTorpidity() - torpidityDecrease);
         if (entityAttributes.getTorpidity() < 0)
             entityAttributes.setTorpidity(0);
@@ -156,10 +153,9 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     /**
      * Sets the owner of an entity and wakes it up.
-     *
-     * @return False if the entity could not be tamed
      */
     private void setSuccessfullyTamed() {
+
         if (entityAttributes.isTameable() && tamer != null && !entityAttributes.isAlpha()) {
             entityAttributes.setTamed(true);
 
@@ -183,7 +179,6 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
             mseEntity.setPassiveGoals();
             if (mseEntity.getCraftEntity() instanceof LivingEntity)
                 ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
-            return;
         }
 
     }
@@ -191,7 +186,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
     /**
      * Updates the consciousness of the entity.
      */
-    public void updateConsciousness() {
+    private void updateConsciousness() {
 
         if (entityAttributes.isUnconscious() && entityAttributes.getTorpidity() <= 0) {
             // Wake up

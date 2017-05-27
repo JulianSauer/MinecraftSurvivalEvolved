@@ -56,7 +56,7 @@ public class TribeMemberRegistry {
     }
 
     public TribeMember getTribeMember(Player player) {
-        if(player == null || !player.isOnline())
+        if (player == null || !player.isOnline())
             return null;
         return getTribeMember(player.getUniqueId());
     }

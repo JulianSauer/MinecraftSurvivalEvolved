@@ -65,8 +65,9 @@ class CustomConfig {
             MSEMain.getInstance().saveResource(fileName, false);
     }
 
-    protected void deleteFile() {
-        file.delete();
+    void deleteFile() {
+        if (!file.delete())
+            MSEMain.getInstance().getLogger().warning("Could not delete config: " + fileName);
     }
 
 }

@@ -13,21 +13,21 @@ import java.util.Set;
  */
 public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
 
-    protected final MSEEntity mseEntity;
+    final MSEEntity mseEntity;
 
     private Set goalB;
     private Set goalC;
     private Set targetB;
     private Set targetC;
 
-    protected EntityMode entityMode;
-    protected boolean wandering;
-    protected boolean following;
-    protected EntityPlayer followingPlayer;
+    EntityMode entityMode;
+    boolean wandering;
+    boolean following;
+    EntityPlayer followingPlayer;
 
     private boolean initialized;
 
-    public PathfinderHandlerAbstract(MSEEntity mseEntity) {
+    PathfinderHandlerAbstract(MSEEntity mseEntity) {
         this.mseEntity = mseEntity;
 
         goalB = (Set) ReflectionHelper.getPrivateVariableValue(PathfinderGoalSelector.class, mseEntity.getGoalSelector(), "b");

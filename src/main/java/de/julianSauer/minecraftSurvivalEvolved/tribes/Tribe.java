@@ -35,7 +35,7 @@ public class Tribe {
      * Creates a new tribe.
      *
      * @param founder Player who will own the tribe
-     * @param name
+     * @param name    Name of the tribe
      */
     public Tribe(Player founder, String name) {
         this(name, true, MathHelper.a(new Random()));
@@ -136,9 +136,6 @@ public class Tribe {
 
     /**
      * Loads a player of this tribe.
-     *
-     * @param playerUUID
-     * @param rank
      */
     public void loadMember(UUID playerUUID, Rank rank) {
         if (members.containsKey(playerUUID))
@@ -157,8 +154,6 @@ public class Tribe {
 
     /**
      * Adds a new player to the tribe.
-     *
-     * @param recruitUUID
      */
     public void addNewMember(UUID recruitUUID) {
         loadMember(recruitUUID, Rank.RECRUIT);
@@ -198,10 +193,8 @@ public class Tribe {
 
     /**
      * Transfer ownership of this tribe to the highest ranked member.
-     *
-     * @return UUID of the new founder
      */
-    public void transferOwnership() {
+    private void transferOwnership() {
         Map.Entry<UUID, Rank> founderCandidate = null;
         for (UUID member : members.keySet()) {
 
@@ -214,10 +207,7 @@ public class Tribe {
                 founderCandidate = new AbstractMap.SimpleEntry<>(member, currentRank);
 
         }
-        transferOwnership(founderCandidate.getKey());
-    }
-
-    public void transferOwnership(UUID newFounder) {
+        UUID newFounder = founderCandidate.getKey();
         if (members.containsKey(newFounder)) {
             members.remove(newFounder);
             members.put(newFounder, Rank.FOUNDER);
@@ -249,12 +239,10 @@ public class Tribe {
 
     /**
      * Sends a message to every tribe member that is online and saves it to the tribe log.
-     *
-     * @param message
      */
     public void sendMessageToMembers(String message) {
         getMembers().stream()
-                .filter(member -> member.isOnline())
+                .filter(OfflinePlayer::isOnline)
                 .forEach(member -> ((Player) member)
                         .sendMessage(message));
         tribeLogger.log(message);
