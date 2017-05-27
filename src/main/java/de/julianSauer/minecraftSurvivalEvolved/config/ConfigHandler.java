@@ -105,43 +105,74 @@ public class ConfigHandler extends ConfigHandlerBase {
 
             String tribeName = configName.substring(0, configName.length() - 4);
             String tribeUUIDString = getStringFromConfig(configName, "ID");
+            if (tribeUUIDString == null) {
+                MSEMain.getInstance().getLogger().warning(tribeName + " has a corrupt ID and will be ignored");
+                continue;
+            }
+
             UUID tribeUUID = UUID.fromString(tribeUUIDString);
             Tribe tribe = new Tribe(tribeName, false, tribeUUID);
 
-            for (String path : getConfigurationSectionFromConfig(configName, "Ranks").getKeys(false)) {
-                String rankName = "";
-                try {
-                    RankPermission permission = RankPermission.valueOf(path.toUpperCase());
-                    rankName = getStringFromConfig(configName, "Ranks." + path);
-                    Rank rank = Rank.valueOf(rankName.toUpperCase());
-                    tribe.setRankFor(permission, rank);
-                } catch (IllegalArgumentException e) {
-                    MSEMain.getInstance().getLogger().warning("The line \"" + path + ": " + rankName + "\" in " + configName + " is corrupt and will be set to default");
-                }
-            }
+            ConfigurationSection ranks = getConfigurationSectionFromConfig(configName, "Ranks");
+            if (ranks == null)
+                MSEMain.getInstance().getLogger().warning("Ranks in " + tribeName + " are corrupt and will be set to default");
+            else
+                loadRanksFor(tribe, configName, ranks);
 
             List<String> log = getStringListFromConfig(configName, "Log");
             tribe.getLogger().setLog(log);
 
-            for (String path : getConfigurationSectionFromConfig(configName, "Players").getKeys(false)) {
-
-                path = "Players." + path;
-
-                String playerUUIDString = getStringFromConfig(configName, path + ".ID");
-                if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-                    MSEMain.getInstance().getLogger().warning(path + " in " + configName + " has a corrupt ID and will be ignored");
-                    continue;
-                }
-                UUID playerUUID = UUID.fromString(playerUUIDString);
-                Rank rank = Rank.valueOf(getStringFromConfig(configName, path + ".Rank").toUpperCase());
-
-                tribe.loadMember(playerUUID, rank);
-            }
+            ConfigurationSection players = getConfigurationSectionFromConfig(configName, "Players");
+            if (players == null)
+                MSEMain.getInstance().getLogger().severe("Players in " + tribeName + " are corrupt and will be removed");
+            else
+                loadPlayersFor(tribe, configName, players);
 
             tribes.put(tribe.getUniqueID(), tribe);
             removeConfigFromCache(configName);
         }
         return tribes;
+
+    }
+
+    private void loadRanksFor(Tribe tribe, String configName, ConfigurationSection ranks) {
+        for (String path : ranks.getKeys(false)) {
+            String rankName = "";
+            try {
+                RankPermission permission = RankPermission.valueOf(path.toUpperCase());
+                rankName = getStringFromConfig(configName, "Ranks." + path);
+                Rank rank = Rank.valueOf(rankName.toUpperCase());
+                tribe.setRankFor(permission, rank);
+            } catch (IllegalArgumentException e) {
+                MSEMain.getInstance().getLogger().warning("The line \"" + path + ": " + rankName + "\" in " + configName + " is corrupt and will be set to default");
+            }
+        }
+    }
+
+    private void loadPlayersFor(Tribe tribe, String configName, ConfigurationSection players) {
+
+        for (String path : players.getKeys(false)) {
+
+            path = "Players." + path;
+
+            String playerUUIDString = getStringFromConfig(configName, path + ".ID");
+            if (!playerUUIDString.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+                MSEMain.getInstance().getLogger().warning(path + " in " + configName + " has a corrupt ID and will be ignored");
+                continue;
+            }
+            UUID playerUUID = UUID.fromString(playerUUIDString);
+
+            String rankName;
+            try {
+                rankName = getStringFromConfig(configName, path + ".Rank");
+                Rank rank = Rank.valueOf(rankName.toUpperCase());
+                tribe.loadMember(playerUUID, rank);
+            } catch (IllegalArgumentException | NullPointerException e) {
+                MSEMain.getInstance().getLogger().warning("Rank for " + path + " in " + configName + " is corrupt and will be set to recruit");
+                tribe.loadMember(playerUUID, Rank.RECRUIT);
+            }
+
+        }
 
     }
 

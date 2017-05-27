@@ -330,8 +330,7 @@ abstract class ConfigHandlerBase {
      */
     private void noValueFoundFor(String configName, String path) {
         logger.warning("Value is missing or of wrong type " + path + " in " + configName);
-        logger.warning("Using default value");
-        logger.warning("Delete " + configName + " to get a default one");
+        logger.warning("Attempting to use a default value...");
     }
 
     /**
