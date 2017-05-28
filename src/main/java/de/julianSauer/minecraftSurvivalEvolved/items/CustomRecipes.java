@@ -2,6 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.items;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -17,6 +18,7 @@ public class CustomRecipes {
         ItemMeta narcoticsMeta = narcotics.getItemMeta();
         narcoticsMeta.setDisplayName("Narcotics");
         narcotics.setItemMeta(narcoticsMeta);
+        narcotics = changeStackSizeOf(narcotics, 64);
 
         ShapelessRecipe recipe = new ShapelessRecipe(narcotics);
         recipe.addIngredient(Material.ROTTEN_FLESH);
@@ -39,6 +41,12 @@ public class CustomRecipes {
         tranquilizerArrowMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         tranquilizerArrow.setItemMeta(tranquilizerArrowMeta);
         return tranquilizerArrow;
+    }
+
+    private ItemStack changeStackSizeOf(ItemStack itemStack, int size) {
+        net.minecraft.server.v1_9_R1.ItemStack mcTranquilizierArrow = CraftItemStack.asNMSCopy(itemStack);
+        mcTranquilizierArrow.getItem().d(size);
+        return CraftItemStack.asBukkitCopy(mcTranquilizierArrow);
     }
 
 }
