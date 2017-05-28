@@ -1,15 +1,21 @@
 name: MinecraftSurvivalEvolved
-version: 0.3
+version: 0.4
 author: EndermansEnd
 main: de.julianSauer.minecraftSurvivalEvolved.main.MSEMain
 load: STARTUP
 commands:
   mse:
     description: Access to all Minecraft Survival Evolved commands
-    usage: /mse [command]
+    usage: /mse [forcetame |tribe | tribes]
 permissions:
   MinecraftSurvivalEvolved.*:
     Children:
       MinecraftSurvivalEvolved.ForceTame: op
+      MinecraftSurvivalEvolved.Tribe: true
+      MinecraftSurvivalEvolved.Tribes: true
   MinecraftSurvivalEvolved.ForceTame:
     description: Allows to force tame entities
+  MinecraftSurvivalEvolved.Tribe:
+    description: Allows to be part of a tribe
+  MinecraftSurvivalEvolved.Tribes:
+    description: Allows to view a list of tribes
