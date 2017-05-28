@@ -5,6 +5,7 @@ import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.messages.ChatMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.*;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,6 +44,7 @@ class HandleTribeCommand extends CommandHandler {
         tribeNameExceptions.add("demote");
         tribeNameExceptions.add("discharge");
         tribeNameExceptions.add("kick");
+        tribeNameExceptions.add("transfer");
         tribeNameExceptions.add("ranks");
         tribeNameExceptions.add("help");
 
@@ -52,7 +54,7 @@ class HandleTribeCommand extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if(!sender.hasPermission("MinecraftSurvivalEvolved.tribe")) {
+        if (!sender.hasPermission("MinecraftSurvivalEvolved.tribe")) {
             sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.setParams());
             return;
         }
@@ -333,7 +335,7 @@ class HandleTribeCommand extends CommandHandler {
             tribe.setRankOf(player, Rank.LEADER);
             UUID newFounder = pendingTribeTransfers.get(playerUUID).getKey();
             tribe.setFounder(newFounder);
-            tribe.sendMessageToMembers(ChatMessages.TRIBE_NEW_FOUNDER.setParams(Bukkit.getPlayer(newFounder).getName()));
+            tribe.sendMessageToMembers(ChatMessages.TRIBE_NEW_FOUNDER.setParams(Bukkit.getOfflinePlayer(newFounder).getName()));
 
         } else {
             player.sendMessage(ChatMessages.ERROR_NOTHING_TO_CONFIRM.setParams());
@@ -567,31 +569,39 @@ class HandleTribeCommand extends CommandHandler {
             return;
         }
 
-        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        TribeMember targetMember = registry.getTribeMember(targetPlayer);
-
-        if (targetPlayer == null || targetMember == null) {
-            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(targetPlayerName));
+        Tribe tribe = executingMember.getTribe();
+        UUID targetPlayer = getPlayerFromTribe(executingPlayer, tribe, targetPlayerName);
+        if (targetPlayer == null)
             return;
-        }
 
-        if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+        if (!tribe.isMember(targetPlayer)) {
             executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
 
-        } else if (executingMember.isAllowedTo(RankPermission.PROMOTING) && Rank.rankIsHigher(executingMember, targetMember)) {
+        } else if (executingMember.isAllowedTo(RankPermission.PROMOTING) && Rank.rankIsHigher(executingMember.getRank(), tribe.getRankOfMember(targetPlayer))) {
             if (promote) {
-                Rank newRank = Rank.getNextHigher(targetMember.getRank());
+                Rank currentRank = tribe.getRankOfMember(targetPlayer);
+                Rank newRank = Rank.getNextHigher(currentRank);
                 if (newRank == Rank.FOUNDER)
                     executingPlayer.sendMessage(ChatMessages.ERROR_ONLY_ONE_FOUNDER.setParams());
                 else if (newRank == executingMember.getRank())
                     executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
                 else {
-                    targetMember.setRank(newRank);
-                    executingPlayer.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(targetPlayerName, targetMember.getRank().toString()));
-                    targetPlayer.sendMessage(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(targetPlayerName, targetMember.getRank().toString()));
+                    tribe.setRankOf(targetPlayer, newRank);
+                    String message = ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(targetPlayerName, newRank.toString());
+                    executingPlayer.sendMessage(message);
+                    OfflinePlayer targetPlayerOffline = Bukkit.getOfflinePlayer(targetPlayer);
+                    if (targetPlayerOffline.isOnline())
+                        ((Player) targetPlayerOffline).sendMessage(message);
                 }
-            } else
-                targetMember.setRank(Rank.getNextLower(targetMember.getRank()));
+            } else {
+                Rank newRank = Rank.getNextLower(tribe.getRankOfMember(targetPlayer));
+                tribe.setRankOf(targetPlayer, newRank);
+                String message = ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(targetPlayerName, newRank.toString());
+                executingPlayer.sendMessage(message);
+                OfflinePlayer targetPlayerOffline = Bukkit.getOfflinePlayer(targetPlayer);
+                if (targetPlayerOffline.isOnline())
+                    ((Player) targetPlayerOffline).sendMessage(message);
+            }
 
         } else
             executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
@@ -634,23 +644,21 @@ class HandleTribeCommand extends CommandHandler {
             return;
         }
 
-        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        TribeMember targetMember = registry.getTribeMember(targetPlayer);
-
-        if (targetPlayer == null || targetMember == null) {
-            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(targetPlayerName));
+        Tribe tribe = executingMember.getTribe();
+        UUID targetPlayer = getPlayerFromTribe(executingPlayer, tribe, targetPlayerName);
+        if (targetPlayer == null)
             return;
-        }
 
-        if (!targetMember.hasTribe() || !executingMember.getTribe().getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+        if (!tribe.isMember(targetPlayer)) {
             executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
 
-        } else if (executingMember.isAllowedTo(RankPermission.DISCHARGING) && Rank.rankIsHigher(executingMember, targetMember)) {
-            Tribe tribe = targetMember.getTribe();
+        } else if (executingMember.isAllowedTo(RankPermission.DISCHARGING) && Rank.rankIsHigher(executingMember.getRank(), tribe.getRankOfMember(targetPlayer))) {
             tribe.remove(targetPlayer);
-            String message = ChatMessages.TRIBE_DISCHARGED_MEMBER.setParams(targetPlayer.getName(), executingPlayer.getName());
+            String message = ChatMessages.TRIBE_DISCHARGED_MEMBER.setParams(targetPlayerName, executingPlayer.getName());
             tribe.sendMessageToMembers(message);
-            targetPlayer.sendMessage(message);
+            OfflinePlayer targetPlayerOffline = Bukkit.getOfflinePlayer(targetPlayer);
+            if (targetPlayerOffline.isOnline())
+                ((Player) targetPlayerOffline).sendMessage(message);
 
         } else
             executingPlayer.sendMessage(ChatMessages.ERROR_TRIBE_RANK_TOO_LOW.setParams());
@@ -692,20 +700,17 @@ class HandleTribeCommand extends CommandHandler {
             return;
         }
 
-        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        TribeMember targetMember = registry.getTribeMember(targetPlayer);
+        UUID targetPlayer = getPlayerFromTribe(executingPlayer, tribe, targetPlayerName);
 
-        if (targetPlayer == null || targetMember == null) {
-            executingPlayer.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(targetPlayerName));
+        if (targetPlayer == null)
             return;
-        }
 
-        if (!targetMember.hasTribe() || !tribe.getUniqueID().equals(targetMember.getTribe().getUniqueID())) {
+        if (!tribe.isMember(targetPlayer)) {
             executingPlayer.sendMessage(ChatMessages.ERROR_DIFFERENT_TRIBE.setParams(targetPlayerName));
 
         } else {
-            executingPlayer.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams(tribe.getName(), targetPlayer.getName()));
-            pendingTribeTransfers.put(executingMember.getUniqueId(), new AbstractMap.SimpleEntry<>(targetMember.getUniqueId(), tribe));
+            executingPlayer.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams(tribe.getName(), targetPlayerName));
+            pendingTribeTransfers.put(executingMember.getUniqueId(), new AbstractMap.SimpleEntry<>(targetPlayer, tribe));
             // Player has 20 seconds to confirm the action.
             new BukkitRunnable() {
                 @Override
@@ -732,6 +737,28 @@ class HandleTribeCommand extends CommandHandler {
         sender.sendMessage(ChatMessages.HELP_TRIBE1.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE2.setParams());
         sender.sendMessage(ChatMessages.HELP_TRIBE3.setParams());
+    }
+
+
+    /**
+     * Searches for a tribe member regardless if he is online or not.
+     *
+     * @param executor   Player executing the command
+     * @param tribe      Tribe in which will be searched
+     * @param targetName Name of the target member
+     * @return UUID of member matching the name or null
+     */
+    private UUID getPlayerFromTribe(Player executor, Tribe tribe, String targetName) {
+        Player targetPlayer = Bukkit.getPlayer(targetName);
+        if (targetPlayer == null) {
+            OfflinePlayer targetPlayerOffline = tribe.getMember(targetName);
+            if (targetPlayerOffline == null) {
+                executor.sendMessage(ChatMessages.ERROR_NO_PLAYER_FOUND.setParams(targetName));
+                return null;
+            } else
+                return targetPlayerOffline.getUniqueId();
+        } else
+            return targetPlayer.getUniqueId();
     }
 
     /**

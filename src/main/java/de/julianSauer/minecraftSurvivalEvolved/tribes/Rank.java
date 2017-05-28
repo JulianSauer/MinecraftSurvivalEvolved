@@ -43,7 +43,7 @@ public enum Rank {
      * @param lower  Rank that should be lower
      * @return False if the first rank is not higher
      */
-    static boolean rankIsHigher(Rank higher, Rank lower) {
+    public static boolean rankIsHigher(Rank higher, Rank lower) {
         if (higher == lower)
             return false;
         for (Rank rank : Rank.values()) {

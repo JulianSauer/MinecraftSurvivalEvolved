@@ -88,6 +88,13 @@ public class Tribe {
         return getMemberUUIDs().stream().map(Bukkit::getOfflinePlayer).collect(Collectors.toSet());
     }
 
+    public OfflinePlayer getMember(String name) {
+        for (OfflinePlayer member : getMembers())
+            if (member.getName().equalsIgnoreCase(name))
+                return member;
+        return null;
+    }
+
     public boolean isMember(Player player) {
         return members.containsKey(player.getUniqueId());
     }
@@ -167,12 +174,22 @@ public class Tribe {
      * @return The UUID of the new founder if one was determined or null
      */
     public UUID remove(Player dischargedMember) {
+        return remove(dischargedMember.getUniqueId());
+    }
 
-        UUID dischargedMemberUUID = dischargedMember.getUniqueId();
+    /**
+     * Removes/kicks a player from the tribe. Transfers ownership if the leaving member is the owner.
+     *
+     * @param dischargedMemberUUID Removed tribe member
+     * @return The UUID of the new founder if one was determined or null
+     */
+    public UUID remove(UUID dischargedMemberUUID) {
 
         if (members.containsKey(dischargedMemberUUID)) {
             TribeMemberRegistry tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
-            tribeMemberRegistry.getTribeMember(dischargedMemberUUID).setTribe(null);
+            TribeMember dischargedMember = tribeMemberRegistry.getTribeMember(dischargedMemberUUID);
+            if (dischargedMember != null)
+                dischargedMember.setTribe(null);
             members.remove(dischargedMemberUUID);
         }
 
@@ -222,12 +239,31 @@ public class Tribe {
      * @param newRank New rank of the member
      */
     public void setRankOf(Player member, Rank newRank) {
+        setRankOf(member.getUniqueId(), newRank, member.getName());
+    }
 
-        UUID memberUUID = member.getUniqueId();
-        members.remove(memberUUID);
-        members.put(memberUUID, newRank);
-        tribeLogger.log(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(member.getName(), newRank.toString()));
+    /**
+     * Changes the rank of a tribe member.
+     *
+     * @param member  Member who's rank is being changed
+     * @param newRank New rank of the member
+     */
+    public void setRankOf(UUID member, Rank newRank) {
+        setRankOf(member, newRank, Bukkit.getOfflinePlayer(member).getName());
+    }
 
+
+    /**
+     * Changes the rank of a tribe member.
+     *
+     * @param member  Member who's rank is being changed
+     * @param newRank New rank of the member
+     * @param name    Name of the member
+     */
+    private void setRankOf(UUID member, Rank newRank, String name) {
+        members.remove(member);
+        members.put(member, newRank);
+        tribeLogger.log(ChatMessages.TRIBE_MEMBER_RANK_CHANGED.setParams(name, newRank.toString()));
     }
 
     /**
