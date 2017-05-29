@@ -69,7 +69,7 @@ class HandleForceTame extends CommandHandler {
                     player = target;
 
             }
-            if (mseEntity.getEntityAttributes().isTameable())
+            if (mseEntity.getTameableEntityAttributes().isTameable())
                 mseEntity.forceTame(player);
             else
                 player.sendMessage(ChatMessages.ERROR_NOT_TAMEABLE.setParams());

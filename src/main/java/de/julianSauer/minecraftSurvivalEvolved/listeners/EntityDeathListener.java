@@ -64,7 +64,7 @@ public class EntityDeathListener implements BasicEventListener {
      */
     private void sendDeathMessage(MSEEntity mseEntity) {
 
-        UUID tribeUUID = mseEntity.getEntityAttributes().getTribe();
+        UUID tribeUUID = mseEntity.getTameableEntityAttributes().getTribe();
         if (tribeUUID == null)
             return;
         Tribe tribe = TribeRegistry.getTribeRegistry().getTribe(tribeUUID);
@@ -73,7 +73,7 @@ public class EntityDeathListener implements BasicEventListener {
             BarHandler.sendEntityDeathMessageTo(tribe, mseEntity.getName());
 
         else {
-            Player owner = Bukkit.getPlayer(mseEntity.getEntityAttributes().getOwner());
+            Player owner = Bukkit.getPlayer(mseEntity.getTameableEntityAttributes().getOwner());
             if (owner != null)
                 BarHandler.sendEntityDeathMessageTo(owner, mseEntity.getName());
         }

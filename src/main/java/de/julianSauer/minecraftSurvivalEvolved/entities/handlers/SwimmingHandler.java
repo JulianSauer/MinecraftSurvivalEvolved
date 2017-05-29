@@ -16,12 +16,12 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
     @Override
     public void handleMovement(float[] args) {
 
-        if (!((MSEEntity) entity).getEntityAttributes().isInitialized()) {
+        if (!((MSEEntity) entity).getTameableEntityAttributes().isInitialized()) {
             ((MSEEntity) entity).callSuperMovement(args);
             return;
         }
 
-        if (((MSEEntity) entity).getEntityAttributes().isUnconscious())
+        if (((MSEEntity) entity).getTameableEntityAttributes().isUnconscious())
             return;
 
         if (!isMounted()) {
@@ -66,7 +66,7 @@ public class SwimmingHandler<T extends EntityInsentient & MSEEntity> extends Rid
         x = mot[0];
         z = mot[1];
 
-        float speed = ((MSEEntity) entity).getEntityAttributes().getSpeed();
+        float speed = ((MSEEntity) entity).getTameableEntityAttributes().getSpeed();
         return new float[]{
                 x * speed,
                 y * speed,

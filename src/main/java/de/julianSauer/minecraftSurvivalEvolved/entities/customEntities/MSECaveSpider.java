@@ -1,20 +1,17 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableEntityAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalSpiderMeleeAttack;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;
 
 public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
 
-    private EntityAttributes entityAttributes;
+    private TameableEntityAttributes tameableEntityAttributes;
 
     private TamingHandler tamingHandler;
 
@@ -34,7 +31,7 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
         super(world);
         entityType = getName();
 
-        entityAttributes = new EntityAttributes(this);
+        tameableEntityAttributes = new TameableEntityAttributes(this);
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
         movementHandler = new RidingHandler(this);
@@ -83,8 +80,8 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     }
 
     @Override
-    public EntityAttributes getEntityAttributes() {
-        return entityAttributes;
+    public TameableEntityAttributes getTameableEntityAttributes() {
+        return tameableEntityAttributes;
     }
 
     @Override
@@ -113,8 +110,8 @@ public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
     }
 
     @Override
-    public Entity getCraftEntity() {
-        return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), this);
+    public EntityInsentient getEntity() {
+        return this;
     }
 
     @Override

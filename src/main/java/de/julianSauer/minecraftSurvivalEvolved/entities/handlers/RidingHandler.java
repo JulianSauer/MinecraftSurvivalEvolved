@@ -33,12 +33,12 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      */
     public void handleMovement(float[] args) {
 
-        if (!entity.getEntityAttributes().isInitialized()) {
+        if (!entity.getTameableEntityAttributes().isInitialized()) {
             entity.callSuperMovement(args);
             return;
         }
 
-        if (entity.getEntityAttributes().isUnconscious()) {
+        if (entity.getTameableEntityAttributes().isUnconscious()) {
 
             // Prevent movement when unconscious
             entity.lastYaw = entity.yaw = 0;
@@ -53,12 +53,12 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
         lastViewingDirection = entity.aO;
 
         if (!isMounted()) {
-            entity.l(entity.getEntityAttributes().getSpeed() * 2);
+            entity.l(entity.getTameableEntityAttributes().getSpeed() * 2);
             entity.callSuperMovement(args);
             return;
         }
 
-        entity.l(entity.getEntityAttributes().getSpeed());
+        entity.l(entity.getTameableEntityAttributes().getSpeed());
         entity.callSuperMovement(calculateMovement());
         jump();
     }
@@ -85,10 +85,10 @@ public class RidingHandler<T extends EntityInsentient & MSEEntity> implements Mo
      * @return True if entity is mounted by a player
      */
     boolean isMounted() {
-        if (!entity.getEntityAttributes().isInitialized())
+        if (!entity.getTameableEntityAttributes().isInitialized())
             return false;
 
-        return !(entity.getEntityAttributes().isAlpha()
+        return !(entity.getTameableEntityAttributes().isAlpha()
                 || entity.passengers == null
                 || entity.passengers.size() < 1
                 || !(entity.passengers.get(0) instanceof EntityPlayer)

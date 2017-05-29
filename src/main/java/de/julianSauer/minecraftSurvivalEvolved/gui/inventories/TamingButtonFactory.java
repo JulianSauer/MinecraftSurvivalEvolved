@@ -34,7 +34,7 @@ public class TamingButtonFactory implements ButtonFactory {
 
         @Override
         public void onClick(Player player, MSEEntity mseEntity) {
-            mseEntity.getTamingHandler().feedNarcotics();
+            mseEntity.feedNarcotics();
         }
     }
 }

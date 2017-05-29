@@ -15,13 +15,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRunnable {
 
     private T mseEntity;
-    private EntityAttributes entityAttributes;
+    private TameableEntityAttributes tameableEntityAttributes;
     private BaseAttributes baseAttributes;
 
     public FoodTimer(T mseEntity) {
         this.mseEntity = mseEntity;
-        entityAttributes = mseEntity.getEntityAttributes();
-        baseAttributes = entityAttributes.getBaseAttributes();
+        tameableEntityAttributes = mseEntity.getTameableEntityAttributes();
+        baseAttributes = tameableEntityAttributes.getBaseAttributes();
     }
 
     @Override
@@ -30,12 +30,12 @@ public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRun
         if (!mseEntity.isAlive())
             this.cancel();
 
-        entityAttributes.setCurrentFoodValue(entityAttributes.getCurrentFoodValue() - entityAttributes.getFoodDepletion());
-        if (entityAttributes.isTamed()) // Hunger is updated by taming handler during a taming process
+        tameableEntityAttributes.setCurrentFoodValue(tameableEntityAttributes.getCurrentFoodValue() - tameableEntityAttributes.getFoodDepletion());
+        if (tameableEntityAttributes.isTamed()) // Hunger is updated by taming handler during a taming process
             updateHunger();
-        if (entityAttributes.getCurrentFoodValue() <= 0) {
+        if (tameableEntityAttributes.getCurrentFoodValue() <= 0) {
             mseEntity.damageEntity(DamageSource.GENERIC, 0.5F);
-            entityAttributes.setCurrentFoodValue(0);
+            tameableEntityAttributes.setCurrentFoodValue(0);
         } else if (Calculator.applyProbability(30))
             mseEntity.setHealth(mseEntity.getHealth() + 0.5F);
 
@@ -61,10 +61,10 @@ public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRun
                 int saturation = baseAttributes.getFoodsaturationFor(item.getType().toString());
                 if (saturation <= 0)
                     continue;
-                if (entityAttributes.getCurrentFoodValue() + saturation + entityAttributes.getFoodDepletion() > baseAttributes.getMaxFoodValue())
+                if (tameableEntityAttributes.getCurrentFoodValue() + saturation + tameableEntityAttributes.getFoodDepletion() > baseAttributes.getMaxFoodValue())
                     return 0;
 
-                entityAttributes.setCurrentFoodValue(entityAttributes.getCurrentFoodValue() + saturation + entityAttributes.getFoodDepletion());
+                tameableEntityAttributes.setCurrentFoodValue(tameableEntityAttributes.getCurrentFoodValue() + saturation + tameableEntityAttributes.getFoodDepletion());
                 item.setAmount(item.getAmount() - 1);
                 if (item.getAmount() <= 0)
                     inventory.setItem(i, new ItemStack(Material.AIR, 0));
@@ -74,9 +74,9 @@ public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRun
                 return baseAttributes.getPreferredFood().get(itemMaterial);
             }
         }
-        if (!entityAttributes.isTamed())
+        if (!tameableEntityAttributes.isTamed())
             // Taming bar decreases if entity is not fed continuously
-            return baseAttributes.getHighestFoodSaturation() < baseAttributes.getMaxFoodValue() - entityAttributes.getCurrentFoodValue() ? -10 : 0;
+            return baseAttributes.getHighestFoodSaturation() < baseAttributes.getMaxFoodValue() - tameableEntityAttributes.getCurrentFoodValue() ? -10 : 0;
         return 0;
 
     }

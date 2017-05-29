@@ -1,15 +1,17 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableEntityAttributes;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -20,9 +22,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-public interface MSEEntity extends Tameable, InventoryHolder {
+public interface MSEEntity extends Tameable {
 
-    EntityAttributes getEntityAttributes();
+    TameableEntityAttributes getTameableEntityAttributes();
+
+    @Override
+    default EntityAttributes getEntityAttributes() {
+        return getTameableEntityAttributes();
+    }
 
     String getEntityType();
 
@@ -44,15 +51,18 @@ public interface MSEEntity extends Tameable, InventoryHolder {
      *
      * @return NMS entity as CraftEntity
      */
-    Entity getCraftEntity();
+    default Entity getCraftEntity() {
+        return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), getEntity());
+    }
 
     @Override
     default void load(NBTTagCompound data) {
         Tameable.super.load(data);
-        getEntityAttributes().initWith(data);
+        getTameableEntityAttributes().initWith(data);
         setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
     }
 
+    @Override
     default void save(NBTTagCompound data) {
         Tameable.super.save(data);
         data.setBoolean("MSEInitialized", false);
