@@ -1,4 +1,4 @@
-![Minecraft Survival Evolved Logo](http://i.imgur.com/25lm47I.png)
+![Minecraft Survival Evolved Logo](http://i.imgur.com/xcZXwov.png)
 ## General
 This plugin tries to bring gameplay mechanics from ARK Survival Evolved to Minecraft. Players can join a tribe and together tame NPCs of the Minecraft universe.
 ## Installation
