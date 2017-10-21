@@ -15,7 +15,7 @@ class HandleTribesCommand extends CommandHandler {
     @Override
     public void process(CommandSender sender, String... args) {
 
-        if(!sender.hasPermission("MinecraftSurvivalEvolved.tribes")) {
+        if (!sender.hasPermission("MinecraftSurvivalEvolved.tribes")) {
             sender.sendMessage(ChatMessages.ERROR_NO_PERMISSION.setParams());
             return;
         }

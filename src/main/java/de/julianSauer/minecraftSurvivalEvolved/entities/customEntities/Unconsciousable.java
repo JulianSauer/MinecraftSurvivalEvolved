@@ -4,7 +4,6 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerHuman;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import net.minecraft.server.v1_9_R1.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
