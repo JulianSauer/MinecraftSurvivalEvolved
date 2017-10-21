@@ -72,7 +72,6 @@ public interface Unconsciousable extends InventoryHolder {
 
         if (getEntityAttributes().isUnconscious() && getEntityAttributes().getTorpidity() <= 0) {
             // Wake up
-
             getEntityAttributes().setUnconscious(false);
             if (getUnconsciousnessTimer() != null && getUnconsciousnessTimer().isThreadCurrentlyRunning())
                 getUnconsciousnessTimer().cancel();

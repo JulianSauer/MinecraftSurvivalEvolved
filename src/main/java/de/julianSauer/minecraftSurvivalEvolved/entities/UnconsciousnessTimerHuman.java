@@ -24,6 +24,7 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
             throw new IllegalArgumentException("Instance was not an entityPlayer as expected");
         this.msePlayer = MSEPlayerMap.getPlayerRegistry().getMSEPlayer(this.player);
         entityAttributes = msePlayer.getEntityAttributes();
+        this.player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
     }
 
     @Override
@@ -34,13 +35,15 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
             return;
         }
 
+        if (!player.hasPotionEffect(PotionEffectType.BLINDNESS))
+            this.player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
         msePlayer.decreaseTorpidityBy(entityAttributes.getTorporDepletion());
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) getUnconsciousnessUpdateInterval(), 1));
     }
 
     @Override
     public void cancel() {
         threadCurrentlyRunning = false;
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
         super.cancel();
     }
 

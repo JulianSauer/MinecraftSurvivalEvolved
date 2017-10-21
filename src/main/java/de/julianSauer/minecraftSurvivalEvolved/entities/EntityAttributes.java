@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 /**
  * Represents all current and maximum attribute values of an entity.
  */
-public class EntityAttributes<T extends EntityInsentient> {
+public class EntityAttributes {
 
-    private T entity;
+    private Object entity;
 
     BaseAttributes baseAttributes;
 
@@ -19,12 +19,12 @@ public class EntityAttributes<T extends EntityInsentient> {
     int torporDepletion;
     int torpidity;
 
-    public EntityAttributes(T entity) {
+    public EntityAttributes(Object entity) {
 
         this.entity = entity;
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            baseAttributes = BaseAttributes.getBaseAttributesFor("Player"); // TODO: Add to base attributes
+            baseAttributes = BaseAttributes.getBaseAttributesFor("Player");
             level = player.getLevel();
             currentXp = player.getExp();
             unconscious = false;
@@ -87,7 +87,11 @@ public class EntityAttributes<T extends EntityInsentient> {
     }
 
     public String getDefaultName() {
-        return entity.getName();
+        if (entity instanceof EntityInsentient)
+            return ((EntityInsentient) entity).getName();
+        else if (entity instanceof Player)
+            return ((Player) entity).getName();
+        return null;
     }
 
     public float getMultiplier() {

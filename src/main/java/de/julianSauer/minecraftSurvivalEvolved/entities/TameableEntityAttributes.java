@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Represents all current and maximum attribute values of a tameable entity.
  */
-public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> extends EntityAttributes<T> implements Persistentable {
+public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> extends EntityAttributes implements Persistentable {
 
     private T mseEntity;
 

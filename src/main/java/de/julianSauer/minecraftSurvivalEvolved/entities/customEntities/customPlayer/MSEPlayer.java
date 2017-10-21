@@ -14,8 +14,13 @@ public class MSEPlayer implements Unconsciousable {
 
     Player player;
 
+    EntityAttributes entityAttributes;
+
+    UnconsciousnessTimer unconsciousnessTimer;
+
     MSEPlayer(Player player) {
         this.player = player;
+        entityAttributes = new EntityAttributes(player);
     }
 
     @Override
@@ -25,7 +30,7 @@ public class MSEPlayer implements Unconsciousable {
 
     @Override
     public EntityAttributes getEntityAttributes() {
-        return null;
+        return entityAttributes;
     }
 
     @Override
@@ -35,12 +40,12 @@ public class MSEPlayer implements Unconsciousable {
 
     @Override
     public UnconsciousnessTimer getUnconsciousnessTimer() {
-        return null;
+        return unconsciousnessTimer;
     }
 
     @Override
     public void setUnconsciousnessTimer(UnconsciousnessTimer unconsciousnessTimer) {
-
+        this.unconsciousnessTimer = unconsciousnessTimer;
     }
 
     @Override

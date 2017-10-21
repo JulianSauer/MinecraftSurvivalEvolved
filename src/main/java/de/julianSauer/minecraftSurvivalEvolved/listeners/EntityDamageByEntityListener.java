@@ -2,7 +2,6 @@ package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
-import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -42,7 +41,7 @@ public class EntityDamageByEntityListener implements ArrowListener {
             if (mseEntity != null && mseEntity.getTameableEntityAttributes().getBaseAttributes().isTameable())
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
             else if (msePlayerMap.isMSEPlayer(target))
-                MSEMain.getInstance().getLogger().info("Increase player torpor");
+                msePlayerMap.getMSEPlayer(target.getUniqueId()).increaseTorpidityBy((int) torpidity);
 
         } else if (isMountedAttack(damager)) {
             MSEEntity mseEntity = getMSEEntityFromVehicle(damager);
