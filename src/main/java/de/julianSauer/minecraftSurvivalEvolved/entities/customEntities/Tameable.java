@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * Basic functionality of a tameable entity.
  */
-public interface Tameable extends Unconsciousable, InventoryHolder {
+public interface Tameable extends Unconsciousable {
 
     TameableEntityAttributes getTameableEntityAttributes();
 
@@ -103,29 +103,6 @@ public interface Tameable extends Unconsciousable, InventoryHolder {
     }
 
     @Override
-    default void feedNarcotics() {
-        Inventory inventory = getInventory();
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
-            if (item != null && item.getType() == Material.POTION) {
-                ItemMeta itemMeta = item.getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equalsIgnoreCase("Narcotics")) {
-                    if (item.getAmount() <= 1)
-                        item = new ItemStack(Material.AIR);
-                    else
-                        item.setAmount(item.getAmount() - 1);
-                    inventory.setItem(i, item);
-                    eatAnimation();
-                    increaseTorpidityBy(20);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Shows an eat animation by moving the head upwards and playing a sound.
-     */
     default void eatAnimation() {
         setPitchWhileTaming(-30F);
         getWorld().getWorld().playSound(getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
@@ -136,7 +113,6 @@ public interface Tameable extends Unconsciousable, InventoryHolder {
                 this.cancel();
             }
         }).runTaskTimerAsynchronously(MSEMain.getInstance(), 4L, 0L);
-
     }
 
     @Override

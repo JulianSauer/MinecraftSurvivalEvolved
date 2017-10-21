@@ -4,12 +4,17 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerHuman;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_9_R1.Entity;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Basic functionality of an entity that can be knocked out.
  */
-public interface Unconsciousable<T extends Unconsciousable> {
+public interface Unconsciousable extends InventoryHolder {
 
     /**
      * Increases the torpidity and updates the consciousness of an entity.
@@ -28,11 +33,34 @@ public interface Unconsciousable<T extends Unconsciousable> {
         updateConsciousness();
     }
 
-    void feedNarcotics();
+    default void feedNarcotics() {
+        Inventory inventory = getInventory();
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item != null && item.getType() == Material.POTION) {
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equalsIgnoreCase("Narcotics")) {
+                    if (item.getAmount() <= 1)
+                        item = new ItemStack(Material.AIR);
+                    else
+                        item.setAmount(item.getAmount() - 1);
+                    inventory.setItem(i, item);
+                    eatAnimation();
+                    increaseTorpidityBy(20);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Shows an eat animation by moving the head upwards and playing a sound.
+     */
+    void eatAnimation();
 
     EntityAttributes getEntityAttributes();
 
-    EntityInsentient getEntity();
+    Object getEntity();
 
     UnconsciousnessTimer getUnconsciousnessTimer();
 

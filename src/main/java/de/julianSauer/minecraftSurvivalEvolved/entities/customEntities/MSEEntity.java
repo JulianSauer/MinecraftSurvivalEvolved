@@ -52,7 +52,7 @@ public interface MSEEntity extends Tameable {
      * @return NMS entity as CraftEntity
      */
     default Entity getCraftEntity() {
-        return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), getEntity());
+        return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), (net.minecraft.server.v1_9_R1.Entity) getEntity());
     }
 
     @Override
