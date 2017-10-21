@@ -24,6 +24,7 @@ public class ConfigHandler extends ConfigHandlerBase {
                 "DefaultEntity.yml",
                 "Food.yml",
                 "Giant.yml",
+                "Player.yml",
                 "Spider.yml",
                 "Squid.yml",
                 "Wolf.yml"
@@ -215,6 +216,8 @@ public class ConfigHandler extends ConfigHandlerBase {
     private Map<Material, Integer> getMapFromSection(String entity, String sectionName) {
         Map<Material, Integer> returnMap = new HashMap<>();
         ConfigurationSection configurationSection = getConfigurationSectionFromConfig(entity.replaceAll(" ", "") + ".yml", defaultEntity, sectionName);
+        if (configurationSection == null)
+            return returnMap;
         for (String materialName : configurationSection.getValues(false).keySet()) {
             Material material = Material.getMaterial(materialName);
             if (material != null) {
