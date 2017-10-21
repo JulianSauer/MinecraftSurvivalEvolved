@@ -1,6 +1,8 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
+import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -16,6 +18,8 @@ import org.bukkit.potion.PotionType;
  */
 public class EntityDamageByEntityListener implements ArrowListener {
 
+    private MSEPlayerMap msePlayerMap = MSEPlayerMap.getPlayerRegistry();
+
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 
@@ -27,7 +31,6 @@ public class EntityDamageByEntityListener implements ArrowListener {
 
             TippedArrow arrow = (TippedArrow) e.getDamager();
             arrow.setBasePotionData((new PotionData(PotionType.AWKWARD)));
-            MSEEntity mseEntity = getMSEEntityFromEntity(target);
             Player player = (Player) arrow.getShooter();
 
             // Reduce damage
@@ -35,8 +38,11 @@ public class EntityDamageByEntityListener implements ArrowListener {
             e.setDamage(EntityDamageEvent.DamageModifier.BASE, torpidity / 10);
 
             // Increase torpor
-            if (mseEntity.getTameableEntityAttributes().getBaseAttributes().isTameable())
+            MSEEntity mseEntity = getMSEEntityFromEntity(target);
+            if (mseEntity != null && mseEntity.getTameableEntityAttributes().getBaseAttributes().isTameable())
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
+            else if (msePlayerMap.isMSEPlayer(target))
+                MSEMain.getInstance().getLogger().info("Increase player torpor");
 
         } else if (isMountedAttack(damager)) {
             MSEEntity mseEntity = getMSEEntityFromVehicle(damager);

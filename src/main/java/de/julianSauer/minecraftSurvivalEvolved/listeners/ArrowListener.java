@@ -1,5 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.Unconsciousable;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TippedArrow;
@@ -30,7 +32,8 @@ public interface ArrowListener extends BasicEventListener {
         if (!isTranqArrow(damager))
             return false;
         TippedArrow arrow = (TippedArrow) damager;
-        if (getMSEEntityFromEntity(target) == null || !(arrow.getShooter() instanceof Player))
+        if (!(target instanceof Unconsciousable || MSEPlayerMap.getPlayerRegistry().isMSEPlayer(target))
+                || !(arrow.getShooter() instanceof Player))
             return false;
         return true;
     }
