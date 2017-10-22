@@ -50,6 +50,7 @@ public class MSEMain extends JavaPlugin {
         pluginManager.registerEvents(new PlayerDeathListener(), this);
         pluginManager.registerEvents(new PlayerInteractListener(), this);
         pluginManager.registerEvents(new PlayerJoinListener(), this);
+        pluginManager.registerEvents(new PlayerMoveListener(), this);
         pluginManager.registerEvents(new PlayerPickupArrowListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);

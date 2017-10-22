@@ -2,10 +2,15 @@ package de.julianSauer.minecraftSurvivalEvolved.entities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
+import de.julianSauer.minecraftSurvivalEvolved.listeners.PlayerMoveListener;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
 
 /**
  * Handles unconscious state for players
@@ -16,6 +21,7 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
     private Player player;
     private EntityAttributes entityAttributes;
     private boolean threadCurrentlyRunning = false;
+    private UUID hologram;
 
     public UnconsciousnessTimerHuman(Object player) {
         if (player instanceof Player)
@@ -25,6 +31,10 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         this.msePlayer = MSEPlayerMap.getPlayerRegistry().getMSEPlayer(this.player);
         entityAttributes = msePlayer.getEntityAttributes();
         this.player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
+        this.player.getWorld().playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
+        hologram = HologramHandler.spawnHologramAt(this.player.getLocation().add(0, 0.93, 0),
+                "Torpor: " + msePlayer.getEntityAttributes().getTorpidity() + "/" + msePlayer.getEntityAttributes().getMaxTorpidity());
+        PlayerMoveListener.addUnconsciousPlayer(this.player.getUniqueId());
     }
 
     @Override
@@ -38,12 +48,16 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         if (!player.hasPotionEffect(PotionEffectType.BLINDNESS))
             this.player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
         msePlayer.decreaseTorpidityBy(entityAttributes.getTorporDepletion());
+        HologramHandler.updateHologram(hologram, "Torpor: " + msePlayer.getEntityAttributes().getTorpidity() + "/" + msePlayer.getEntityAttributes().getMaxTorpidity());
     }
 
     @Override
     public void cancel() {
         threadCurrentlyRunning = false;
         player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
+        PlayerMoveListener.removeUnconsciousPlayer(player.getUniqueId());
+        HologramHandler.despawnHologram(hologram);
         super.cancel();
     }
 
