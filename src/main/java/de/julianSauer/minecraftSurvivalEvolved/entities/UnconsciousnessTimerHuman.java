@@ -57,7 +57,7 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         threadCurrentlyRunning = false;
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
-        UnconsciousPlayers.removeUnconsciousPlayer(player.getUniqueId());
+        UnconsciousPlayers.removeUnconsciousPlayer(player);
         HologramHandler.despawnHologram(hologram);
         super.cancel();
     }

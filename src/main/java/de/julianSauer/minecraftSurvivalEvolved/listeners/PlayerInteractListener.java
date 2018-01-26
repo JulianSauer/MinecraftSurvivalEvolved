@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.UnconsciousPlayers;
 import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -37,6 +38,22 @@ public class PlayerInteractListener implements BasicEventListener {
             else if (entity.isEmpty())
                 entity.setPassenger(player);
         }
+
+    }
+
+    @EventHandler
+    public void onPlayerAccessUnconsciousInventory(PlayerInteractEntityEvent e) {
+
+        Entity entity = e.getRightClicked();
+        if (!(entity instanceof Player))
+            return;
+
+        Player unconsciousPlayer = (Player) entity;
+        if (!UnconsciousPlayers.contains(unconsciousPlayer.getUniqueId()))
+            return;
+
+        Player player = e.getPlayer();
+        player.openInventory(unconsciousPlayer.getInventory());
 
     }
 
