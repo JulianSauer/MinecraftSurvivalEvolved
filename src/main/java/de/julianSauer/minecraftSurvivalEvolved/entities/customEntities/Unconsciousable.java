@@ -14,20 +14,34 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public interface Unconsciousable extends InventoryHolder {
 
+    int getTorpidity();
+
+    void setTorpidity(int torpidity);
+
+    int getMaxTorpidity();
+
+    int getTorporDepletion();
+
+    boolean isUnconscious();
+
+    void setUnconscious(boolean unconscious);
+
+    int getFortitude();
+
     /**
      * Increases the torpidity and updates the consciousness of an entity.
      */
     default void increaseTorpidityBy(int torpidityIncrease) {
-        getAttributedEntity().setTorpidity(getAttributedEntity().getTorpidity() + torpidityIncrease);
-        if (getAttributedEntity().getTorpidity() > getAttributedEntity().getMaxTorpidity())
-            getAttributedEntity().setTorpidity(getAttributedEntity().getMaxTorpidity());
+        setTorpidity(getTorpidity() + torpidityIncrease);
+        if (getTorpidity() > getMaxTorpidity())
+            setTorpidity(getMaxTorpidity());
         updateConsciousness();
     }
 
     default void decreaseTorpidityBy(int torpidityDecrease) {
-        getAttributedEntity().setTorpidity(getAttributedEntity().getTorpidity() - torpidityDecrease);
-        if (getAttributedEntity().getTorpidity() < 0)
-            getAttributedEntity().setTorpidity(0);
+        setTorpidity(getTorpidity() - torpidityDecrease);
+        if (getTorpidity() < 0)
+            setTorpidity(0);
         updateConsciousness();
     }
 
@@ -69,15 +83,15 @@ public interface Unconsciousable extends InventoryHolder {
      */
     default void updateConsciousness() {
 
-        if (getAttributedEntity().isUnconscious() && getAttributedEntity().getTorpidity() <= 0) {
+        if (isUnconscious() && getTorpidity() <= 0) {
             // Wake up
-            getAttributedEntity().setUnconscious(false);
+            setUnconscious(false);
             if (getUnconsciousnessTimer() != null && getUnconsciousnessTimer().isThreadCurrentlyRunning())
                 getUnconsciousnessTimer().cancel();
 
-        } else if ((!getAttributedEntity().isUnconscious() && getAttributedEntity().getTorpidity() >= getAttributedEntity().getFortitude())) {
+        } else if ((!isUnconscious() && getTorpidity() >= getFortitude())) {
             // Fall asleep
-            getAttributedEntity().setUnconscious(true);
+            setUnconscious(true);
             setUnconsciousnessTimer(new UnconsciousnessTimerHuman(getEntity()));
             getUnconsciousnessTimer().runTaskTimer(MSEMain.getInstance(), 0, getUnconsciousnessTimer().getUnconsciousnessUpdateInterval());
         }

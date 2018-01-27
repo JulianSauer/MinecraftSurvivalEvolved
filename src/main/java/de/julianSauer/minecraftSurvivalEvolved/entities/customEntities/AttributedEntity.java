@@ -14,20 +14,6 @@ public interface AttributedEntity {
 
     float getSpeed();
 
-    int getTorpidity();
-
-    void setTorpidity(int torpidity);
-
-    int getMaxTorpidity();
-
-    int getTorporDepletion();
-
-    boolean isUnconscious();
-
-    void setUnconscious(boolean unconscious);
-
-    int getFortitude();
-
     int getFood();
 
     void setFood(int food);

@@ -2,6 +2,7 @@ package de.julianSauer.minecraftSurvivalEvolved.gui.visuals;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.AttributedEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.Unconsciousable;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.Entity;
 import net.minecraft.server.v1_9_R1.EntityLiving;
@@ -29,11 +30,11 @@ public class ScoreboardHandler {
      * Adds a player to the scoreboard of this entity. If the scoreboard doesn't exist yet, a new one will be created
      * and added to activeScoreboards as a cache.
      *
-     * @param mseEntity Reference to the entity which's values should be displayed in the scoreboard
+     * @param entity Reference to the entity which's values should be displayed in the scoreboard
      * @param player    Player that will see the scoreboard
      */
-    public static void addPlayer(MSEEntity mseEntity, Player player) {
-        ScoreboardUpdater scoreboardUpdater = getScoreboardFor(mseEntity);
+    public static<T extends AttributedEntity & Unconsciousable> void addPlayer(T entity, Player player) {
+        ScoreboardUpdater scoreboardUpdater = getScoreboardFor(entity);
         player.setScoreboard(scoreboardUpdater.scoreboard);
     }
 
@@ -49,18 +50,18 @@ public class ScoreboardHandler {
     /**
      * Returns the scoreboard of this entity from cache or creates a new one, if it doesn't exist yet.
      *
-     * @param mseEntity Reference to the entity which's values should be displayed in the scoreboard
+     * @param entity Reference to the entity which's values should be displayed in the scoreboard
      * @return A thread that is updating the scoreboard
      */
-    private static ScoreboardUpdater getScoreboardFor(MSEEntity mseEntity) {
+    private static <T extends AttributedEntity & Unconsciousable> ScoreboardUpdater getScoreboardFor(T entity) {
 
-        UUID key = mseEntity.getUniqueID();
+        UUID key = entity.getUniqueID();
         if (activeScoreboards == null)
             activeScoreboards = new HashMap<>();
         else if (activeScoreboards.containsKey(key))
             return activeScoreboards.get(key);
 
-        ScoreboardUpdater scoreboardUpdater = new ScoreboardUpdater(mseEntity);
+        ScoreboardUpdater scoreboardUpdater = new ScoreboardUpdater(entity);
         activeScoreboards.put(key, scoreboardUpdater);
         scoreboardUpdater.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
         return scoreboardUpdater;
@@ -70,13 +71,13 @@ public class ScoreboardHandler {
     /**
      * Continuously updates the scoreboard of an entity.
      */
-    private static class ScoreboardUpdater extends BukkitRunnable {
+    private static class ScoreboardUpdater<T extends AttributedEntity & Unconsciousable> extends BukkitRunnable {
 
         public final Scoreboard scoreboard;
-        final AttributedEntity entity;
+        final T entity;
         final Objective objective;
 
-        public ScoreboardUpdater(AttributedEntity entity) {
+        public ScoreboardUpdater(T entity) {
             this.entity = entity;
 
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
