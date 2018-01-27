@@ -113,7 +113,7 @@ public class MSESquid extends EntitySquid implements MSEEntity {
     }
 
     @Override
-    public net.minecraft.server.v1_9_R1.EntityInsentient getHandle() {
+    public EntityLiving getHandle() {
         return this;
     }
 

@@ -1,5 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
+import net.minecraft.server.v1_9_R1.EntityLiving;
+
 import java.util.UUID;
 
 public interface AttributedEntity {
@@ -35,5 +37,7 @@ public interface AttributedEntity {
     String getDefaultName();
 
     String getEntityType();
+
+    EntityLiving getHandle();
 
 }

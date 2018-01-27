@@ -91,11 +91,11 @@ public class ScoreboardHandler {
 
         @Override
         public void run() {
-            if (!((Entity) entity).isAlive()) {
+            if (!entity.getHandle().isAlive()) {
                 this.cancel();
                 return;
             }
-            objective.getScore("Health").setScore((int) ((EntityLiving) entity).getHealth());
+            objective.getScore("Health").setScore((int) entity.getHealth());
             objective.getScore("Torpor").setScore(entity.getTorpidity());
             objective.getScore("Food").setScore(entity.getFood());
         }

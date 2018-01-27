@@ -4,7 +4,9 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributesContaine
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.AttributedEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.Unconsciousable;
+import net.minecraft.server.v1_9_R1.EntityLiving;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -168,6 +170,13 @@ public class MSEPlayer implements Unconsciousable, AttributedEntity {
 
     @Override
     public Inventory getInventory() {
+        return null;
+    }
+
+    @Override
+    public EntityLiving getHandle() {
+        if (player instanceof CraftPlayer)
+            return ((CraftPlayer) player).getHandle();
         return null;
     }
 

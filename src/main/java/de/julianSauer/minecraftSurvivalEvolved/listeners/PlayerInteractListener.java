@@ -1,8 +1,11 @@
 package de.julianSauer.minecraftSurvivalEvolved.listeners;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.UnconsciousPlayers;
 import de.julianSauer.minecraftSurvivalEvolved.gui.inventories.InventoryGUI;
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.ScoreboardHandler;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,6 +57,9 @@ public class PlayerInteractListener implements BasicEventListener {
 
         Player player = e.getPlayer();
         player.openInventory(unconsciousPlayer.getInventory());
+        MSEPlayer unconsciousMSEPlayer = MSEPlayerMap.getPlayerRegistry().getMSEPlayer(unconsciousPlayer);
+        if (unconsciousMSEPlayer != null)
+            ScoreboardHandler.addPlayer(unconsciousMSEPlayer, player);
 
     }
 

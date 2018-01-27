@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import net.minecraft.server.v1_9_R1.PathfinderGoal;
 
@@ -30,13 +31,13 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
 
     @Override
     public void d() {
-        mseEntity.getHandle().getNavigation().n();
+        ((EntityInsentient) mseEntity.getHandle()).getNavigation().n();
     }
 
     @Override
     public void e() {
-        mseEntity.getHandle().getControllerLook().a(player, 10.0F, 0F);
-        mseEntity.getHandle().getNavigation().a(player, speed);
+        ((EntityInsentient) mseEntity.getHandle()).getControllerLook().a(player, 10.0F, 0F);
+        ((EntityInsentient) mseEntity.getHandle()).getNavigation().a(player, speed);
     }
 
 }
