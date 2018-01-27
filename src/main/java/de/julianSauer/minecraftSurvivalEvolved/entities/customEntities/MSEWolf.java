@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainerContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 
 public class MSEWolf extends EntityWolf implements MSEEntity {
 
-    private TameableAttributesContainerContainer tameableAttributesContainer;
+    private TameableAttributesContainer tameableAttributesContainer;
 
     private TamingHandler tamingHandler;
 
@@ -30,7 +30,7 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
         super(world);
         entityType = getName();
 
-        tameableAttributesContainer = new TameableAttributesContainerContainer(this);
+        tameableAttributesContainer = new TameableAttributesContainer(this);
         tamingHandler = new TamingHandler(this);
         miningHandler = new MiningHandler(this);
         movementHandler = new RidingHandler(this);
@@ -79,7 +79,7 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
     }
 
     @Override
-    public TameableAttributesContainerContainer getTameableAttributesContainer() {
+    public TameableAttributesContainer getTameableAttributesContainer() {
         return tameableAttributesContainer;
     }
 

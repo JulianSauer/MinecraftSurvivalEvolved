@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Represents all current and maximum attribute values of a tameable entity.
  */
-public class TameableAttributesContainerContainer<T extends EntityInsentient & MSEEntity> extends EntityAttributesContainer implements Persistentable {
+public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity> extends EntityAttributesContainer implements Persistentable {
 
     private T mseEntity;
 
@@ -29,7 +29,7 @@ public class TameableAttributesContainerContainer<T extends EntityInsentient & M
 
     private FoodTimer foodTimer;
 
-    public TameableAttributesContainerContainer(T mseEntity) {
+    public TameableAttributesContainer(T mseEntity) {
 
         super(mseEntity);
 

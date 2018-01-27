@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainerContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerTameable;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public interface Tameable extends Unconsciousable {
 
-    TameableAttributesContainerContainer getTameableAttributesContainer();
+    TameableAttributesContainer getTameableAttributesContainer();
 
     TamingHandler getTamingHandler();
 

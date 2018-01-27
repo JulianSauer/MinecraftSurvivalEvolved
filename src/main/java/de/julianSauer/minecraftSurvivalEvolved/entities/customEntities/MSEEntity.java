@@ -1,7 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainerContainer;
-import net.minecraft.server.v1_9_R1.EntityPlayer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
@@ -24,7 +23,7 @@ import java.util.UUID;
 
 public interface MSEEntity extends Tameable, AttributedEntity {
 
-    TameableAttributesContainerContainer getTameableAttributesContainer();
+    TameableAttributesContainer getTameableAttributesContainer();
 
     // AttributedEntity implementation
 
