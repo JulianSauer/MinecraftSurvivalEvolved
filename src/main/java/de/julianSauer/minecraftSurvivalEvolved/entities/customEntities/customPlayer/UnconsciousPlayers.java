@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer;
 
+import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.BarHandler;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
@@ -14,9 +15,11 @@ public class UnconsciousPlayers {
     private UnconsciousPlayers() {
     }
 
-    public static void addUnconsciousPlayer(UUID player) {
-        if (!unconsciousPlayersList.contains(player))
-            unconsciousPlayersList.add(player);
+    public static void addUnconsciousPlayer(Player player) {
+        if (!unconsciousPlayersList.contains(player.getUniqueId())) {
+            unconsciousPlayersList.add(player.getUniqueId());
+            BarHandler.sendPlayerUnconsciousMessageTo(player);
+        }
     }
 
     public static void removeUnconsciousPlayer(Player player) {

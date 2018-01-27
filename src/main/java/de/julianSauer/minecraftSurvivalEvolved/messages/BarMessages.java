@@ -9,6 +9,7 @@ public enum BarMessages implements Messages {
     TAME_DIED("Your %ARGS0% died!", BarColor.RED, BarStyle.SOLID),
     TAMED_SUCCESSFULLY("You have tamed a %ARGS0%!", BarColor.GREEN, BarStyle.SOLID),
     TRIBE_MEMBER_TAMED_SUCCESSFULLY("%ARGS0% has tamed a %ARGS1%!", BarColor.GREEN, BarStyle.SOLID),
+    UNCONSCIOUS("You are unconscious!", BarColor.RED, BarStyle.SOLID),
     CUSTOM_MESSAGE("", BarColor.WHITE, BarStyle.SOLID);
 
     private String message;
@@ -76,6 +77,16 @@ public enum BarMessages implements Messages {
     public void setCustomValues(String message, BarColor color) {
         this.message = message;
         this.color = color;
+    }
+
+    public BarColor setPercentage(float percentage) {
+        if (percentage > 0.66)
+            color = BarColor.RED;
+        else if (percentage > 0.33)
+            color = BarColor.YELLOW;
+        else
+            color = BarColor.GREEN;
+        return color;
     }
 
 }

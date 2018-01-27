@@ -3,7 +3,6 @@ package de.julianSauer.minecraftSurvivalEvolved.main;
 import de.julianSauer.minecraftSurvivalEvolved.commands.MSECommandExecutor;
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.EntityRegistry;
-import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.UnconsciousPlayers;
 import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.HologramHandler;
 import de.julianSauer.minecraftSurvivalEvolved.items.CustomRecipes;
 import de.julianSauer.minecraftSurvivalEvolved.listeners.*;
@@ -69,7 +68,6 @@ public class MSEMain extends JavaPlugin {
     public void onDisable() {
         TribeRegistry.getTribeRegistry().saveTribes();
         HologramHandler.despawnAllHolograms();
-        UnconsciousPlayers.wakeAllPlayersUp();
         getLogger().info("Disabled");
     }
 

@@ -1,5 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.visuals;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer.MSEPlayerMap;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.messages.BarMessages;
 import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
@@ -75,6 +77,40 @@ public class BarHandler {
         message.setCustomValues(deathMessage, BarColor.RED);
         sendMessageTo(tribe.getMembers(), message);
         tribe.getLogger().log(message.getChatColor() + message.toString());
+    }
+
+    public static void sendPlayerUnconsciousMessageTo(Player player) {
+
+        MSEPlayer msePlayer = MSEPlayerMap.getPlayerRegistry().getMSEPlayer(player);
+        if (msePlayer == null)
+            return;
+
+        BarMessages message = BarMessages.UNCONSCIOUS;
+        float progress = ((float) msePlayer.getTorpidity()) / ((float) msePlayer.getMaxTorpidity());
+        message.setPercentage(progress);
+        BossBar bossBar = Bukkit.createBossBar(message.toString(), message.getColor(), message.getStyle());
+        bossBar.setProgress(progress);
+        bossBar.addPlayer(player);
+
+        (new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if (player.isDead() || !msePlayer.isUnconscious())
+                    cancel();
+                float percentage = ((float) msePlayer.getTorpidity()) / ((float) msePlayer.getMaxTorpidity());
+                BarColor updatedColor = message.setPercentage(percentage);
+                bossBar.setColor(updatedColor);
+                bossBar.setProgress(percentage);
+            }
+
+            @Override
+            public void cancel() {
+                bossBar.removeAll();
+                super.cancel();
+            }
+
+        }).runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
     }
 
     /**

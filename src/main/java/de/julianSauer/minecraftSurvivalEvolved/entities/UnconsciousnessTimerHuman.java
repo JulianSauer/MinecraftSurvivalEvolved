@@ -32,7 +32,7 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         this.player.getWorld().playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
         hologram = HologramHandler.spawnHologramAt(this.player.getLocation().add(0, 0.93, 0),
                 "Torpor: " + msePlayer.getTorpidity() + "/" + msePlayer.getMaxTorpidity());
-        UnconsciousPlayers.addUnconsciousPlayer(this.player.getUniqueId());
+        UnconsciousPlayers.addUnconsciousPlayer(this.player);
     }
 
     @Override
