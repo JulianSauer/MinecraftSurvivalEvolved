@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.TameableAttributesContainer;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;

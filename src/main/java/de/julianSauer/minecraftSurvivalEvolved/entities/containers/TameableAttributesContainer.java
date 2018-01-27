@@ -1,5 +1,6 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities;
+package de.julianSauer.minecraftSurvivalEvolved.entities.containers;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.FoodTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.AlphaParticleSpawner;

@@ -1,6 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.AttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.DamageSource;
 import net.minecraft.server.v1_9_R1.EntityInsentient;

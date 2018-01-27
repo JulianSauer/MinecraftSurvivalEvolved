@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities;
+package de.julianSauer.minecraftSurvivalEvolved.entities.containers;
 
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;

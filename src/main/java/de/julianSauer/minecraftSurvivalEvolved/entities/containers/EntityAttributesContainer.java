@@ -1,4 +1,4 @@
-package de.julianSauer.minecraftSurvivalEvolved.entities;
+package de.julianSauer.minecraftSurvivalEvolved.entities.containers;
 
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.EntityInsentient;

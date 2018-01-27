@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.TameableAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerTameable;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;

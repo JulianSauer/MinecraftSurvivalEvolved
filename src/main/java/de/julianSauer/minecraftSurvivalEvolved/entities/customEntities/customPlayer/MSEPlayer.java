@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributesContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.EntityAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.AttributedEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.Unconsciousable;

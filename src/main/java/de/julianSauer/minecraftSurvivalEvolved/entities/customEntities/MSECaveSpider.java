@@ -1,6 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.TameableAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.*;
 import de.julianSauer.minecraftSurvivalEvolved.entities.pathfinders.PathfinderGoalSpiderMeleeAttack;
 import net.minecraft.server.v1_9_R1.*;
