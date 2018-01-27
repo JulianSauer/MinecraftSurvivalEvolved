@@ -4,8 +4,6 @@ import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.gui.visuals.AlphaParticleSpawner;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
-import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
@@ -16,13 +14,13 @@ import java.util.UUID;
 /**
  * Represents all current and maximum attribute values of a tameable entity.
  */
-public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> extends EntityAttributes implements Persistentable {
+public class TameableAttributesContainerContainer<T extends EntityInsentient & MSEEntity> extends EntityAttributesContainer implements Persistentable {
 
     private T mseEntity;
 
     private boolean initialized;
 
-    private int alphaPredatorMultiplier; // baseAttributes are multiplied by this value; set to 1 if not an alpha
+    private int alphaPredatorMultiplier; // attributesContainer are multiplied by this value; set to 1 if not an alpha
     private int currentFoodValue;
     private int foodDepletion;
     private boolean tamed;
@@ -31,12 +29,12 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
 
     private FoodTimer foodTimer;
 
-    public TameableEntityAttributes(T mseEntity) {
+    public TameableAttributesContainerContainer(T mseEntity) {
 
         super(mseEntity);
 
         this.mseEntity = mseEntity;
-        baseAttributes = BaseAttributes.getBaseAttributesFor(mseEntity.getEntityType());
+        attributesContainer = AttributesContainer.getBaseAttributesFor(mseEntity.getEntityType());
         foodDepletion = 5;
         initialized = false;
 
@@ -45,13 +43,13 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
     @Override
     public void initWithDefaults() {
 
-        if (Calculator.applyProbability(baseAttributes.getAlphaProbability()))
+        if (Calculator.applyProbability(attributesContainer.getAlphaProbability()))
             alphaPredatorMultiplier = 4;
         else
             alphaPredatorMultiplier = 1;
 
         updateLevel(0);
-        currentFoodValue = baseAttributes.getMaxFoodValue();
+        currentFoodValue = attributesContainer.getMaxFoodValue();
         currentXp = 0;
         tamed = false;
         if (isTamed())
@@ -156,7 +154,7 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
     }
 
     public boolean isTameable() {
-        return baseAttributes.isTameable() && !tamed && !isAlpha();
+        return attributesContainer.isTameable() && !tamed && !isAlpha();
     }
 
     public FoodTimer getFoodTimer() {
@@ -168,7 +166,7 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
             MSEMain.getInstance().getLogger().info("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
-        return (int) Calculator.calculateLevelDependentStatFor(baseAttributes.getMaxTamingProgress(), getLevel(), getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(attributesContainer.getMaxTamingProgress(), getLevel(), getMultiplier());
     }
 
     public UUID getOwner() {
@@ -182,17 +180,17 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
     }
 
     public double getDamage() {
-        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), level, getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), level, getMultiplier());
     }
 
     public double getMaxDamage() {
-        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), baseAttributes.getLevelCap(), getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), attributesContainer.getLevelCap(), getMultiplier());
     }
 
     public float getSpeed() {
         float speedMultiplier = getMultiplier();
         speedMultiplier /= 2;
-        return (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getSpeed(), level, speedMultiplier);
+        return (float) Calculator.calculateLevelDependentStatFor(attributesContainer.getSpeed(), level, speedMultiplier);
     }
 
     @Override
@@ -217,7 +215,7 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
 
     @Override
     public float getMultiplier() {
-        return baseAttributes.getLevelMultiplier() * alphaPredatorMultiplier;
+        return attributesContainer.getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
     /**
@@ -228,7 +226,7 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
     @Override
     public void updateLevel(int levelIncrease) {
         if (level == null)
-            level = Calculator.getRandomInt(baseAttributes.getLevelCap()) + 1;
+            level = Calculator.getRandomInt(attributesContainer.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
         if (!isTamed())
@@ -245,37 +243,5 @@ public class TameableEntityAttributes<T extends EntityInsentient & MSEEntity> ex
         foodTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
     }
 
-    /**
-     * Checks if a player is the owner or a member of the owning tribe of this entity.
-     *
-     * @param player The possible owner
-     * @return True if the player is an owner
-     */
-    public boolean isOwner(UUID player) {
-        if (owner != null)
-            return owner.equals(player);
-        else if (tribe != null) {
-            Tribe owningTribe = TribeRegistry.getTribeRegistry().getTribe(tribe);
-            if (owningTribe == null)
-                return false;
-            return owningTribe.isMember(player);
-        }
-        return false;
-    }
-
-    /**
-     * Checks if this one and another entity have the same owners.
-     *
-     * @param mseEntity The other entity
-     * @return True if they have the same owners
-     */
-    public boolean sameOwner(MSEEntity mseEntity) {
-        if (owner != null && mseEntity.getTameableEntityAttributes().getOwner() != null)
-            return owner.equals(mseEntity.getTameableEntityAttributes().getOwner());
-        else if (tribe != null && mseEntity.getTameableEntityAttributes().getTribe() != null)
-            return tribe.equals(mseEntity.getTameableEntityAttributes().getTribe());
-
-        return false;
-    }
 
 }

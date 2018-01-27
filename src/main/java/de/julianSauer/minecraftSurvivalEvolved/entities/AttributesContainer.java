@@ -11,9 +11,9 @@ import java.util.Map;
 /**
  * Loads a basic set of attributes for entities from config.
  */
-public class BaseAttributes {
+public class AttributesContainer {
 
-    private static HashMap<String, BaseAttributes> cache;
+    private static HashMap<String, AttributesContainer> cache;
 
     private final boolean tameable;
 
@@ -34,7 +34,7 @@ public class BaseAttributes {
     private final Map<Material, Integer> preferredFood;
     private final Map<String, Integer> foodSaturations;
 
-    private BaseAttributes(String entity) {
+    private AttributesContainer(String entity) {
 
         ConfigHandler config = MSEMain.getInstance().getConfigHandler();
 
@@ -52,7 +52,10 @@ public class BaseAttributes {
         alphaProbability = config.getAlphaProbabilityFor(entity);
         damage = config.getDamageFor(entity);
         speed = config.getSpeedFor(entity);
-        preferredFood = config.getPreferredFoodFor(entity);
+        if (!entity.equals("Player"))
+            preferredFood = config.getPreferredFoodFor(entity);
+        else
+            preferredFood = new HashMap<>();
         foodSaturations = config.getFoodSaturations();
         highestFoodSaturation = Collections.max(foodSaturations.values());
 
@@ -64,13 +67,13 @@ public class BaseAttributes {
      * @param entity Name of the entity
      * @return Basic Attributes for this entity
      */
-    public static BaseAttributes getBaseAttributesFor(String entity) {
+    public static AttributesContainer getBaseAttributesFor(String entity) {
         if (cache == null)
             cache = new HashMap();
 
-        BaseAttributes ret = cache.get(entity);
+        AttributesContainer ret = cache.get(entity);
         if (ret == null) {
-            ret = new BaseAttributes(entity);
+            ret = new AttributesContainer(entity);
             cache.put(entity, ret);
         }
         return ret;

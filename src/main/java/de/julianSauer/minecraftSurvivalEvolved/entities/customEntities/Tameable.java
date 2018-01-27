@@ -1,12 +1,14 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableEntityAttributes;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainerContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerTameable;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.MiningHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.PathfinderHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.TamingHandler;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.Tribe;
+import de.julianSauer.minecraftSurvivalEvolved.tribes.TribeRegistry;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.World;
@@ -15,18 +17,71 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
+
 /**
  * Basic functionality of a tameable entity.
  */
 public interface Tameable extends Unconsciousable {
 
-    TameableEntityAttributes getTameableEntityAttributes();
+    TameableAttributesContainerContainer getTameableAttributesContainer();
 
     TamingHandler getTamingHandler();
 
     MiningHandler getMiningHandler();
 
     PathfinderHandler getPathfinderHandler();
+
+    boolean isTameable();
+
+    boolean isTamed();
+
+    void setTamed(boolean tamed);
+
+    int getMaxTamingProgress();
+
+    UUID getMSEOwner();
+
+    void setMSEOwner(UUID owner);
+
+    /**
+     * Checks if a player is the owner or a member of the owning tribe of this entity.
+     *
+     * @param player The possible owner
+     * @return True if the player is an owner
+     */
+    default boolean isOwner(UUID player) {
+        if (getMSEOwner() != null)
+            return getMSEOwner().equals(player);
+        else if (getTribe() != null) {
+            Tribe owningTribe = TribeRegistry.getTribeRegistry().getTribe(getTribe());
+            if (owningTribe == null)
+                return false;
+            return owningTribe.isMember(player);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if this one and another entity have the same owners.
+     *
+     * @param mseEntity The other entity
+     * @return True if they have the same owners
+     */
+    default boolean sameOwner(MSEEntity mseEntity) {
+        if (getMSEOwner() != null && mseEntity.getMSEOwner() != null)
+            return getMSEOwner().equals(mseEntity.getMSEOwner());
+        else if (getTribe() != null && mseEntity.getTribe() != null)
+            return getTribe().equals(mseEntity.getTribe());
+
+        return false;
+    }
+
+    UUID getTribe();
+
+    void setTribe(UUID tribe);
+
+    void startFoodTimer();
 
     default void forceTame(Player newOwner) {
         getTamingHandler().forceTame(newOwner);
@@ -80,7 +135,7 @@ public interface Tameable extends Unconsciousable {
      * @param data NBTTags used for loading
      */
     default void load(NBTTagCompound data) {
-        getTameableEntityAttributes().initWith(data);
+        getTameableAttributesContainer().initWith(data);
         getTamingHandler().initWith(data);
         getPathfinderHandler().initWith(data);
     }
@@ -91,7 +146,7 @@ public interface Tameable extends Unconsciousable {
      * @param data NBTTags used for saving
      */
     default void save(NBTTagCompound data) {
-        getTameableEntityAttributes().saveData(data);
+        getTameableAttributesContainer().saveData(data);
         getTamingHandler().saveData(data);
         getPathfinderHandler().saveData(data);
         data.setBoolean("MSEInitialized", true);

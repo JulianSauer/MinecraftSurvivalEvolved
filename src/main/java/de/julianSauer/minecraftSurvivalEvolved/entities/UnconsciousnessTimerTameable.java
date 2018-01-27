@@ -20,7 +20,6 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
     private boolean initialized;
     private T mseEntity;
     private TamingHandler tamingHandler;
-    private TameableEntityAttributes tameableEntityAttributes;
     private boolean threadCurrentlyRunning = false;
 
     public UnconsciousnessTimerTameable(TamingHandler tamingHandler, T mseEntity) {
@@ -28,7 +27,6 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
         this.mseEntity = mseEntity;
         this.tamingHandler = tamingHandler;
         threadCurrentlyRunning = true; // TODO: Remove initialization
-        tameableEntityAttributes = mseEntity.getTameableEntityAttributes();
         this.initialized = false;
 
         if (mseEntity.getWorld().isLoaded(mseEntity.getChunkCoordinates()))
@@ -38,10 +36,10 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
 
     private void init() {
         this.initialized = true;
-        if (tameableEntityAttributes.isTamed() || tameableEntityAttributes.isAlpha())
+        if (mseEntity.isTamed() || mseEntity.isAlpha())
             hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), ChatColor.RED + "Unconscious");
         else {
-            tameableEntityAttributes.startFoodTimer();
+            mseEntity.startFoodTimer();
             mseEntity.setCustomName("");
             hologram = HologramHandler.spawnHologramAt(mseEntity.getLocation(), getHologramText());
         }
@@ -58,8 +56,8 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
         if (!initialized)
             init();
 
-        mseEntity.decreaseTorpidityBy(tameableEntityAttributes.getTorporDepletion());
-        if (tameableEntityAttributes.isTamed() || tameableEntityAttributes.isAlpha())
+        mseEntity.decreaseTorpidityBy(mseEntity.getTorporDepletion());
+        if (mseEntity.isTamed() || mseEntity.isAlpha())
             return;
 
         updateTamingProcess();
@@ -78,14 +76,14 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
     @Override
     public void cancel() {
         HologramHandler.despawnHologram(hologram);
-        mseEntity.setCustomName(tameableEntityAttributes.getDefaultName());
+        mseEntity.setCustomName(mseEntity.getDefaultName());
         threadCurrentlyRunning = false;
         super.cancel();
     }
 
     @Override
     public long getTimeUntilWakeUp() {
-        return (tameableEntityAttributes.getTorpidity() / tameableEntityAttributes.getTorporDepletion()) * unconsciousnessUpdateInterval;
+        return (mseEntity.getTorpidity() / mseEntity.getTorporDepletion()) * unconsciousnessUpdateInterval;
     }
 
     /**
@@ -93,10 +91,10 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
      */
     private void updateTamingProcess() {
 
-        if (!tameableEntityAttributes.isTameable())
+        if (!mseEntity.isTameable())
             return;
 
-        int tamingIncrease = tameableEntityAttributes.getFoodTimer().updateHunger();
+        int tamingIncrease = mseEntity.updateHunger();
         if (tamingIncrease > 0) {
             mseEntity.eatAnimation();
         }
@@ -106,17 +104,17 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
         tamingHandler.setTamingProgress(tamingProgress);
         if (tamingProgress < 0)
             tamingProgress = 0;
-        if (tamingProgress >= tameableEntityAttributes.getMaxTamingProgress())
+        if (tamingProgress >= mseEntity.getMaxTamingProgress())
             tamingHandler.setSuccessfullyTamed();
 
     }
 
     private String[] getHologramText() {
         return new String[]{
-                ChatColor.DARK_AQUA + tameableEntityAttributes.getDefaultName(),
+                ChatColor.DARK_AQUA + mseEntity.getDefaultName(),
                 ChatColor.DARK_AQUA + "Health: " + (int) mseEntity.getHealth() + "/" + (int) mseEntity.getMaxHealth(),
-                ChatColor.DARK_PURPLE + BarHandler.getProgressBar(tameableEntityAttributes.getTorpidity(), tameableEntityAttributes.getMaxTorpidity()),
-                ChatColor.GOLD + BarHandler.getProgressBar(tamingHandler.getTamingProgress(), tameableEntityAttributes.getMaxTamingProgress())
+                ChatColor.DARK_PURPLE + BarHandler.getProgressBar(mseEntity.getTorpidity(), mseEntity.getMaxTorpidity()),
+                ChatColor.GOLD + BarHandler.getProgressBar(tamingHandler.getTamingProgress(), mseEntity.getMaxTamingProgress())
         };
     }
 

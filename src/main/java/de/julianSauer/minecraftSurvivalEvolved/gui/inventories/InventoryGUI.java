@@ -53,7 +53,7 @@ public class InventoryGUI {
      * @param mseEntity InventoryHolder
      */
     public void openMainGUI(Player player, MSEEntity mseEntity) {
-        Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getEntityType());
+        Inventory tamedGUI = Bukkit.createInventory(mseEntity, InventoryType.HOPPER, mseEntity.getName());
         openGenericMSEEntityGUI(player, mseEntity, mainMenuButtonFactory, tamedGUI);
     }
 

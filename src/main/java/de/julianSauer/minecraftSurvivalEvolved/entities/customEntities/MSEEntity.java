@@ -1,7 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
-import de.julianSauer.minecraftSurvivalEvolved.entities.TameableEntityAttributes;
+import de.julianSauer.minecraftSurvivalEvolved.entities.TameableAttributesContainerContainer;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
@@ -22,16 +21,166 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-public interface MSEEntity extends Tameable {
+public interface MSEEntity extends Tameable, AttributedEntity {
 
-    TameableEntityAttributes getTameableEntityAttributes();
+    TameableAttributesContainerContainer getTameableAttributesContainer();
+
+    // AttributedEntity implementation
 
     @Override
-    default EntityAttributes getEntityAttributes() {
-        return getTameableEntityAttributes();
+    default AttributedEntity getAttributedEntity() {
+        return this;
     }
 
-    String getEntityType();
+    @Override
+    default double getDamage() {
+        return getTameableAttributesContainer().getDamage();
+    }
+
+    @Override
+    default double getMaxDamage() {
+        return getTameableAttributesContainer().getMaxDamage();
+    }
+
+    @Override
+    default float getSpeed() {
+        return getTameableAttributesContainer().getSpeed();
+    }
+
+    @Override
+    default int getTorpidity() {
+        return getTameableAttributesContainer().getTorpidity();
+    }
+
+    @Override
+    default void setTorpidity(int torpidity) {
+        getTameableAttributesContainer().setTorpidity(torpidity);
+    }
+
+    @Override
+    default boolean isUnconscious() {
+        return getTameableAttributesContainer().isUnconscious();
+    }
+
+    @Override
+    default void setUnconscious(boolean unconscious) {
+        getTameableAttributesContainer().setUnconscious(unconscious);
+    }
+
+    @Override
+    default int getMaxTorpidity() {
+        return getTameableAttributesContainer().getMaxTorpidity();
+    }
+
+    @Override
+    default int getTorporDepletion() {
+        return getTameableAttributesContainer().getTorporDepletion();
+    }
+
+    @Override
+    default int getFortitude() {
+        return getTameableAttributesContainer().getFortitude();
+    }
+
+    @Override
+    default int getFood() {
+        return getTameableAttributesContainer().getCurrentFoodValue();
+    }
+
+    @Override
+    default void setFood(int food) {
+        getTameableAttributesContainer().setCurrentFoodValue(food);
+    }
+
+    @Override
+    default int getMaxFood() {
+        return getTameableAttributesContainer().getAttributesContainer().getMaxFoodValue();
+    }
+
+    @Override
+    default int getFoodDepletion() {
+        return getTameableAttributesContainer().getFoodDepletion();
+    }
+
+    @Override
+    default int getLevel() {
+        return getTameableAttributesContainer().getLevel();
+    }
+
+    @Override
+    default float getLevelMultiplier() {
+        return getTameableAttributesContainer().getMultiplier();
+    }
+
+    @Override
+    default float getXpUntilLevelUp() {
+        return getTameableAttributesContainer().getXpUntilLevelUp();
+    }
+
+    @Override
+    default int getLevelCap() {
+        return getTameableAttributesContainer().getAttributesContainer().getLevelCap();
+    }
+
+    @Override
+    default String getDefaultName() {
+        return getTameableAttributesContainer().getDefaultName();
+    }
+
+    // Tameable implementation
+
+    @Override
+    default boolean isTameable() {
+        return getTameableAttributesContainer().isTameable();
+    }
+
+    @Override
+    default boolean isTamed() {
+        return getTameableAttributesContainer().isTamed();
+    }
+
+    @Override
+    default void setTamed(boolean tamed) {
+        getTameableAttributesContainer().setTamed(tamed);
+    }
+
+    @Override
+    default int getMaxTamingProgress() {
+        return getTameableAttributesContainer().getMaxTamingProgress();
+    }
+
+    @Override
+    default UUID getMSEOwner() {
+        return getTameableAttributesContainer().getOwner();
+    }
+
+    @Override
+    default void setMSEOwner(UUID owner) {
+        getTameableAttributesContainer().setOwner(owner);
+    }
+
+    @Override
+    default UUID getTribe() {
+        return getTameableAttributesContainer().getTribe();
+    }
+
+    @Override
+    default void setTribe(UUID tribe) {
+        getTameableAttributesContainer().setTribe(tribe);
+    }
+
+    @Override
+    default void startFoodTimer() {
+        getTameableAttributesContainer().startFoodTimer();
+    }
+
+    default boolean isAlpha() {
+        return getTameableAttributesContainer().isAlpha();
+    }
+
+    default int updateHunger() {
+        return getTameableAttributesContainer().getFoodTimer().updateHunger();
+    }
 
     PathfinderGoalSelector getGoalSelector();
 
@@ -58,7 +207,7 @@ public interface MSEEntity extends Tameable {
     @Override
     default void load(NBTTagCompound data) {
         Tameable.super.load(data);
-        getTameableEntityAttributes().initWith(data);
+        getTameableAttributesContainer().initWith(data);
         setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
     }
 

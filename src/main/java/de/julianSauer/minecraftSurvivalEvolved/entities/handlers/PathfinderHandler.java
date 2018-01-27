@@ -86,10 +86,10 @@ public interface PathfinderHandler extends Persistentable {
 
             if (input instanceof MSEEntity) {
                 MSEEntity entity = (MSEEntity) input;
-                return !mseEntity.getTameableEntityAttributes().sameOwner(entity);
+                return !mseEntity.sameOwner(entity);
             } else if (input instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) input;
-                return !mseEntity.getTameableEntityAttributes().isOwner(player.getUniqueID());
+                return !mseEntity.isOwner(player.getUniqueID());
             }
             return true;
         };

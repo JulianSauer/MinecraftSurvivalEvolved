@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 /**
  * Represents all current and maximum attribute values of an entity.
  */
-public class EntityAttributes {
+public class EntityAttributesContainer {
 
     private Object entity;
 
-    BaseAttributes baseAttributes;
+    AttributesContainer attributesContainer;
 
     Integer level;
     float currentXp;
@@ -19,12 +19,12 @@ public class EntityAttributes {
     int torporDepletion;
     int torpidity;
 
-    public EntityAttributes(Object entity) {
+    public EntityAttributesContainer(Object entity) {
 
         this.entity = entity;
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            baseAttributes = BaseAttributes.getBaseAttributesFor("Player");
+            attributesContainer = AttributesContainer.getBaseAttributesFor("Player");
             level = player.getLevel();
             currentXp = player.getExp();
             unconscious = false;
@@ -46,8 +46,8 @@ public class EntityAttributes {
         return torporDepletion;
     }
 
-    public BaseAttributes getBaseAttributes() {
-        return baseAttributes;
+    public AttributesContainer getAttributesContainer() {
+        return attributesContainer;
     }
 
     public int getTorpidity() {
@@ -59,11 +59,11 @@ public class EntityAttributes {
     }
 
     public int getMaxTorpidity() {
-        return (int) Calculator.calculateLevelDependentStatFor(baseAttributes.getMaxTorpidity(), getLevel(), getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(attributesContainer.getMaxTorpidity(), getLevel(), getMultiplier());
     }
 
     public Integer getFortitude() {
-        return (int) Calculator.calculateLevelDependentStatFor(baseAttributes.getFortitude(), level, getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(attributesContainer.getFortitude(), level, getMultiplier());
     }
 
     public int getLevel() {
@@ -75,15 +75,15 @@ public class EntityAttributes {
     }
 
     public float getXpUntilLevelUp() {
-        return baseAttributes.getXpUntilLevelUp();
+        return attributesContainer.getXpUntilLevelUp();
     }
 
     public double getDamage() {
-        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), level, getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), level, getMultiplier());
     }
 
     public double getMaxDamage() {
-        return Calculator.calculateLevelDependentStatFor(baseAttributes.getDamage(), baseAttributes.getLevelCap(), getMultiplier());
+        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), attributesContainer.getLevelCap(), getMultiplier());
     }
 
     public String getDefaultName() {
@@ -95,7 +95,7 @@ public class EntityAttributes {
     }
 
     public float getMultiplier() {
-        return baseAttributes.getLevelMultiplier();
+        return attributesContainer.getLevelMultiplier();
     }
 
     /**
@@ -105,7 +105,7 @@ public class EntityAttributes {
      */
     public void updateLevel(int levelIncrease) {
         if (level == null)
-            level = Calculator.getRandomInt(baseAttributes.getLevelCap()) + 1;
+            level = Calculator.getRandomInt(attributesContainer.getLevelCap()) + 1;
         if (levelIncrease > 0)
             level += levelIncrease;
     }
@@ -117,11 +117,11 @@ public class EntityAttributes {
      */
     public void increaseXp(float xpIncrease) {
         currentXp += xpIncrease;
-        float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getXpUntilLevelUp(), level, getMultiplier());
+        float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(attributesContainer.getXpUntilLevelUp(), level, getMultiplier());
         while (currentXp >= currentXpForLevelUp) {
             currentXp -= currentXpForLevelUp;
             updateLevel(1);
-            currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(baseAttributes.getXpUntilLevelUp(), level, getMultiplier());
+            currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(attributesContainer.getXpUntilLevelUp(), level, getMultiplier());
         }
     }
 

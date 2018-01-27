@@ -38,18 +38,18 @@ public class EntityDamageByEntityListener implements ArrowListener {
 
             // Increase torpor
             MSEEntity mseEntity = getMSEEntityFromEntity(target);
-            if (mseEntity != null && mseEntity.getTameableEntityAttributes().getBaseAttributes().isTameable())
+            if (mseEntity != null && mseEntity.isTameable())
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
             else if (msePlayerMap.isMSEPlayer(target))
                 msePlayerMap.getMSEPlayer(target.getUniqueId()).increaseTorpidityBy((int) torpidity);
 
         } else if (isMountedAttack(damager)) {
             MSEEntity mseEntity = getMSEEntityFromVehicle(damager);
-            e.setDamage(mseEntity.getTameableEntityAttributes().getDamage());
+            e.setDamage(mseEntity.getDamage());
             mseEntity.playAttackSound();
 
         } else if (isNPCAttackEvent(damager)) {
-            e.setDamage(getMSEEntityFromEntity(damager).getTameableEntityAttributes().getDamage());
+            e.setDamage(getMSEEntityFromEntity(damager).getDamage());
 
         }
 

@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.gui.visuals;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.AttributedEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import net.minecraft.server.v1_9_R1.Entity;
@@ -72,36 +73,36 @@ public class ScoreboardHandler {
     private static class ScoreboardUpdater extends BukkitRunnable {
 
         public final Scoreboard scoreboard;
-        final MSEEntity mseEntity;
+        final AttributedEntity entity;
         final Objective objective;
 
-        public ScoreboardUpdater(MSEEntity mseEntity) {
-            this.mseEntity = mseEntity;
+        public ScoreboardUpdater(AttributedEntity entity) {
+            this.entity = entity;
 
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-            objective = scoreboard.registerNewObjective(mseEntity.getEntityType(), "Dummy");
-            objective.setDisplayName(mseEntity.getTameableEntityAttributes().getDefaultName());
+            objective = scoreboard.registerNewObjective(entity.getName(), "Dummy");
+            objective.setDisplayName(entity.getDefaultName());
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            objective.getScore("Health").setScore((int) ((EntityLiving) mseEntity).getHealth()); // TODO: Replace with MSEEntity#getHealth()
-            objective.getScore("Torpor").setScore(mseEntity.getTameableEntityAttributes().getTorpidity());
-            objective.getScore("Food").setScore(mseEntity.getTameableEntityAttributes().getCurrentFoodValue());
+            objective.getScore("Health").setScore((int) entity.getHealth()); // TODO: Replace with MSEEntity#getHealth()
+            objective.getScore("Torpor").setScore(entity.getTorpidity());
+            objective.getScore("Food").setScore(entity.getFood());
         }
 
         @Override
         public void run() {
-            if (!((Entity) mseEntity).isAlive()) {
+            if (!((Entity) entity).isAlive()) {
                 this.cancel();
                 return;
             }
-            objective.getScore("Health").setScore((int) ((EntityLiving) mseEntity).getHealth());
-            objective.getScore("Torpor").setScore(mseEntity.getTameableEntityAttributes().getTorpidity());
-            objective.getScore("Food").setScore(mseEntity.getTameableEntityAttributes().getCurrentFoodValue());
+            objective.getScore("Health").setScore((int) ((EntityLiving) entity).getHealth());
+            objective.getScore("Torpor").setScore(entity.getTorpidity());
+            objective.getScore("Food").setScore(entity.getFood());
         }
 
         @Override
         public void cancel() {
             objective.unregister();
-            activeScoreboards.remove(mseEntity.getUniqueID());
+            activeScoreboards.remove(entity.getUniqueID());
             super.cancel();
         }
 

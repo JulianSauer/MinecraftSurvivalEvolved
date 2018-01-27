@@ -1,6 +1,5 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.EntityAttributes;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimerHuman;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
@@ -19,16 +18,16 @@ public interface Unconsciousable extends InventoryHolder {
      * Increases the torpidity and updates the consciousness of an entity.
      */
     default void increaseTorpidityBy(int torpidityIncrease) {
-        getEntityAttributes().setTorpidity(getEntityAttributes().getTorpidity() + torpidityIncrease);
-        if (getEntityAttributes().getTorpidity() > getEntityAttributes().getMaxTorpidity())
-            getEntityAttributes().setTorpidity(getEntityAttributes().getMaxTorpidity());
+        getAttributedEntity().setTorpidity(getAttributedEntity().getTorpidity() + torpidityIncrease);
+        if (getAttributedEntity().getTorpidity() > getAttributedEntity().getMaxTorpidity())
+            getAttributedEntity().setTorpidity(getAttributedEntity().getMaxTorpidity());
         updateConsciousness();
     }
 
     default void decreaseTorpidityBy(int torpidityDecrease) {
-        getEntityAttributes().setTorpidity(getEntityAttributes().getTorpidity() - torpidityDecrease);
-        if (getEntityAttributes().getTorpidity() < 0)
-            getEntityAttributes().setTorpidity(0);
+        getAttributedEntity().setTorpidity(getAttributedEntity().getTorpidity() - torpidityDecrease);
+        if (getAttributedEntity().getTorpidity() < 0)
+            getAttributedEntity().setTorpidity(0);
         updateConsciousness();
     }
 
@@ -57,7 +56,7 @@ public interface Unconsciousable extends InventoryHolder {
      */
     void eatAnimation();
 
-    EntityAttributes getEntityAttributes();
+    AttributedEntity getAttributedEntity();
 
     Object getEntity();
 
@@ -70,15 +69,15 @@ public interface Unconsciousable extends InventoryHolder {
      */
     default void updateConsciousness() {
 
-        if (getEntityAttributes().isUnconscious() && getEntityAttributes().getTorpidity() <= 0) {
+        if (getAttributedEntity().isUnconscious() && getAttributedEntity().getTorpidity() <= 0) {
             // Wake up
-            getEntityAttributes().setUnconscious(false);
+            getAttributedEntity().setUnconscious(false);
             if (getUnconsciousnessTimer() != null && getUnconsciousnessTimer().isThreadCurrentlyRunning())
                 getUnconsciousnessTimer().cancel();
 
-        } else if ((!getEntityAttributes().isUnconscious() && getEntityAttributes().getFortitude() != null && getEntityAttributes().getTorpidity() >= getEntityAttributes().getFortitude())) {
+        } else if ((!getAttributedEntity().isUnconscious() && getAttributedEntity().getTorpidity() >= getAttributedEntity().getFortitude())) {
             // Fall asleep
-            getEntityAttributes().setUnconscious(true);
+            getAttributedEntity().setUnconscious(true);
             setUnconsciousnessTimer(new UnconsciousnessTimerHuman(getEntity()));
             getUnconsciousnessTimer().runTaskTimer(MSEMain.getInstance(), 0, getUnconsciousnessTimer().getUnconsciousnessUpdateInterval());
         }
