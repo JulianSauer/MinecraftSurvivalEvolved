@@ -1,119 +1,138 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.containers;
 
 import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
+import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
 import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
-import org.bukkit.Material;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
 
 /**
  * Loads a basic set of attributes for entities from config.
  */
-public class AttributesContainer {
+public class AttributesContainer implements Persistentable {
 
-    private static HashMap<String, AttributesContainer> cache;
+    private boolean initialized;
 
     private final boolean tameable;
+    protected boolean unconscious;
 
-    private final int fortitude;
-    private final int levelCap;
-    private final int maxTamingProgress;
+    private final int maxLevel;
     private final int maxTorpidity;
-    private final int maxFoodValue;
+    private int torporDepletion;
+    protected int torpidity;
+    private int fortitude;
+    private double damage;
+    protected int level;
+    protected float currentXp;
     private final int xpUntilLevelUp;
-    private final int highestFoodSaturation;
 
     private final float levelMultiplier;
-    private final int alphaProbability;
     private final float speed;
 
-    private final double damage;
+    public AttributesContainer(String entity) {
 
-    private final Map<Material, Integer> preferredFood;
-    private final Map<String, Integer> foodSaturations;
-
-    private AttributesContainer(String entity) {
+        torporDepletion = 1;
 
         ConfigHandler config = MSEMain.getInstance().getConfigHandler();
 
         // Prevent spaces in .yml files
         entity = entity.replace(" ", "");
-
         tameable = config.getTameableFor(entity);
         fortitude = config.getFortitudeFor(entity);
-        levelCap = config.getLevelCapFor(entity);
-        maxTamingProgress = config.getMaxTamingProgressFor(entity);
+        maxLevel = config.getLevelCapFor(entity);
         maxTorpidity = config.getMaxToripidityFor(entity);
-        maxFoodValue = config.getMaxFoodFor(entity);
         xpUntilLevelUp = config.getXpUntilLevelUpFor(entity);
         levelMultiplier = config.getLevelMultiplierFor(entity);
-        alphaProbability = config.getAlphaProbabilityFor(entity);
         damage = config.getDamageFor(entity);
         speed = config.getSpeedFor(entity);
-        if (!entity.equals("Player"))
-            preferredFood = config.getPreferredFoodFor(entity);
-        else
-            preferredFood = new HashMap<>();
-        foodSaturations = config.getFoodSaturations();
-        highestFoodSaturation = Collections.max(foodSaturations.values());
+
+        initialized = false;
 
     }
 
-    /**
-     * Returns an object containing basic attributes of an entity from disk/cache.
-     *
-     * @param entity Name of the entity
-     * @return Basic Attributes for this entity
-     */
-    public static AttributesContainer getBaseAttributesFor(String entity) {
-        if (cache == null)
-            cache = new HashMap();
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
 
-        AttributesContainer ret = cache.get(entity);
-        if (ret == null) {
-            ret = new AttributesContainer(entity);
-            cache.put(entity, ret);
+    @Override
+    public void initWithDefaults() {
+        unconscious = false;
+        torpidity = 0;
+        level = 1;
+        currentXp = 0;
+
+        initialized = true;
+    }
+
+    @Override
+    public void initWith(NBTTagCompound data) {
+
+        if (!data.getBoolean("MSEInitialized")) {
+            initWithDefaults();
+            return;
         }
-        return ret;
+
+        unconscious = data.getBoolean("MSEUnconscious");
+        torpidity = data.getInt("MSETorpidity");
+        level = data.getInt("MSELevel");
+        currentXp = data.getFloat("MSECurrentXp");
+
+        initialized = true;
+    }
+
+    @Override
+    public void saveData(NBTTagCompound data) {
+        if (!isInitialized())
+            initWithDefaults();
+
+        data.setBoolean("MSEUnconscious", unconscious);
+        data.setInt("MSETorpidity", torpidity);
+        data.setInt("MSELevel", level);
+        data.setFloat("MSECurrentXp", currentXp);
+    }
+
+    public boolean isUnconscious() {
+        return unconscious;
+    }
+
+    public void setUnconscious(boolean unconscious) {
+        this.unconscious = unconscious;
+    }
+
+    public int getTorporDepletion() {
+        return torporDepletion;
+    }
+
+    public int getTorpidity() {
+        return torpidity;
+    }
+
+    public void setTorpidity(int torpidity) {
+        this.torpidity = torpidity;
     }
 
     public boolean isTameable() {
         return tameable;
     }
 
-    public int getFortitude() {
-        return fortitude;
-    }
-
-    public int getLevelCap() {
-        return levelCap;
+    public int getMaxLevel() {
+        return maxLevel;
     }
 
     public int getMaxTorpidity() {
-        return maxTorpidity;
+        return (int) Calculator.calculateLevelDependentStatFor(maxTorpidity, level, levelMultiplier);
     }
 
-    public int getMaxFoodValue() {
-        return maxFoodValue;
+    public float getCurrentXp() {
+        return currentXp;
     }
 
-    public int getFoodsaturationFor(String food) {
-        if (foodSaturations.containsKey(food))
-            return foodSaturations.get(food);
-        return 0;
+    public int getFortitude() {
+        return (int) Calculator.calculateLevelDependentStatFor(fortitude, level, levelMultiplier);
     }
 
-    public int getHighestFoodSaturation() {
-        return highestFoodSaturation;
-    }
-
-    public int getMaxTamingProgress() {
-        return maxTamingProgress;
-    }
-
-    public int getXpUntilLevelUp() {
+    public float getXpUntilLevelUp() {
         return xpUntilLevelUp;
     }
 
@@ -121,20 +140,26 @@ public class AttributesContainer {
         return levelMultiplier;
     }
 
-    public int getAlphaProbability() {
-        return alphaProbability;
+    public float getSpeed() {
+        float speedMultiplier = getMultiplier();
+        speedMultiplier /= 2;
+        return (float) Calculator.calculateLevelDependentStatFor(speed, level, speedMultiplier);
     }
 
-    public float getSpeed() {
-        return speed;
+    public int getLevel() {
+        return level;
     }
 
     public double getDamage() {
-        return damage;
+        return Calculator.calculateLevelDependentStatFor(damage, level, levelMultiplier);
     }
 
-    public Map<Material, Integer> getPreferredFood() {
-        return preferredFood;
+    public double getMaxDamage() {
+        return Calculator.calculateLevelDependentStatFor(damage, maxLevel, levelMultiplier);
+    }
+
+    public float getMultiplier() {
+        return levelMultiplier;
     }
 
 }

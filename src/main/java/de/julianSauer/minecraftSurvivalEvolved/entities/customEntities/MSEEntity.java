@@ -94,7 +94,7 @@ public interface MSEEntity extends Tameable, AttributedEntity {
 
     @Override
     default int getMaxFood() {
-        return getTameableAttributesContainer().getAttributesContainer().getMaxFoodValue();
+        return getTameableAttributesContainer().getMaxFoodValue();
     }
 
     @Override
@@ -118,8 +118,8 @@ public interface MSEEntity extends Tameable, AttributedEntity {
     }
 
     @Override
-    default int getLevelCap() {
-        return getTameableAttributesContainer().getAttributesContainer().getLevelCap();
+    default int getMaxLevel() {
+        return getTameableAttributesContainer().getMaxLevel();
     }
 
     @Override
@@ -207,7 +207,6 @@ public interface MSEEntity extends Tameable, AttributedEntity {
     @Override
     default void load(NBTTagCompound data) {
         Tameable.super.load(data);
-        getTameableAttributesContainer().initWith(data);
         setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
     }
 

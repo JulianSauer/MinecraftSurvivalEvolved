@@ -87,6 +87,8 @@ public class BarHandler {
 
         BarMessages message = BarMessages.UNCONSCIOUS;
         float progress = ((float) msePlayer.getTorpidity()) / ((float) msePlayer.getMaxTorpidity());
+        if (progress > 1)
+            progress = 1;
         message.setPercentage(progress);
         BossBar bossBar = Bukkit.createBossBar(message.toString(), message.getColor(), message.getStyle());
         bossBar.setProgress(progress);
@@ -99,6 +101,8 @@ public class BarHandler {
                 if (player.isDead() || !msePlayer.isUnconscious())
                     cancel();
                 float percentage = ((float) msePlayer.getTorpidity()) / ((float) msePlayer.getMaxTorpidity());
+                if (percentage > 1)
+                    percentage = 1;
                 BarColor updatedColor = message.setPercentage(percentage);
                 bossBar.setColor(updatedColor);
                 bossBar.setProgress(percentage);

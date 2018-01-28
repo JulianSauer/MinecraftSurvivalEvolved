@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities;
 
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.TameableAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.containers.AttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
@@ -16,18 +17,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRunnable {
 
     private T mseEntity;
-    private AttributesContainer attributesContainer;
+    private TameableAttributesContainer attributesContainer;
 
     public FoodTimer(T mseEntity) {
         this.mseEntity = mseEntity;
-        attributesContainer = mseEntity.getTameableAttributesContainer().getAttributesContainer();
+        attributesContainer = mseEntity.getTameableAttributesContainer();
     }
 
     @Override
     public void run() {
 
-        if (!mseEntity.isAlive())
+        if (!mseEntity.isAlive()){
             this.cancel();
+            return;
+        }
 
         mseEntity.setFood(mseEntity.getFood() - mseEntity.getFoodDepletion());
         if (mseEntity.isTamed()) // Hunger is updated by taming handler during a taming process
@@ -70,7 +73,7 @@ public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRun
                 else
                     inventory.setItem(i, item);
 
-                return attributesContainer.getPreferredFood().get(itemMaterial);
+                return (int) attributesContainer.getPreferredFood().get(itemMaterial);
             }
         }
         if (!mseEntity.isTamed())

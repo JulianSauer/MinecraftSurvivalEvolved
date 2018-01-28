@@ -1,5 +1,6 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.containers;
 
+import de.julianSauer.minecraftSurvivalEvolved.config.ConfigHandler;
 import de.julianSauer.minecraftSurvivalEvolved.entities.FoodTimer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.MSEEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.handlers.Persistentable;
@@ -8,35 +9,52 @@ import de.julianSauer.minecraftSurvivalEvolved.main.MSEMain;
 import de.julianSauer.minecraftSurvivalEvolved.utils.Calculator;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Represents all current and maximum attribute values of a tameable entity.
  */
-public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity> extends EntityAttributesContainer implements Persistentable {
+public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity> extends AttributesContainer implements Persistentable {
 
     private T mseEntity;
 
     private boolean initialized;
 
+    private final int alphaProbability;
     private int alphaPredatorMultiplier; // attributesContainer are multiplied by this value; set to 1 if not an alpha
+    private final int maxFoodValue;
+    private final int highestFoodSaturation;
+    private final int maxTamingProgress;
     private int currentFoodValue;
     private int foodDepletion;
     private boolean tamed;
     private UUID owner;
     private UUID tribe;
 
+    private final Map<Material, Integer> preferredFood;
+    private final Map<String, Integer> foodSaturations;
+
     private FoodTimer foodTimer;
 
     public TameableAttributesContainer(T mseEntity) {
 
-        super(mseEntity);
+        super(mseEntity.getEntityType());
+
+        ConfigHandler config = MSEMain.getInstance().getConfigHandler();
+        alphaProbability = config.getAlphaProbabilityFor(mseEntity.getEntityType());
+        foodSaturations = config.getFoodSaturations();
+        preferredFood = config.getPreferredFoodFor(mseEntity.getEntityType());
+        maxFoodValue = config.getMaxFoodFor(mseEntity.getEntityType());
+        maxTamingProgress = config.getMaxTamingProgressFor(mseEntity.getEntityType());
+        highestFoodSaturation = Collections.max(foodSaturations.values());
+        foodDepletion = 5;
 
         this.mseEntity = mseEntity;
-        attributesContainer = AttributesContainer.getBaseAttributesFor(mseEntity.getEntityType());
-        foodDepletion = 5;
         initialized = false;
 
     }
@@ -44,13 +62,15 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     @Override
     public void initWithDefaults() {
 
-        if (Calculator.applyProbability(attributesContainer.getAlphaProbability()))
+        super.initWithDefaults();
+
+        if (Calculator.applyProbability(alphaProbability))
             alphaPredatorMultiplier = 4;
         else
             alphaPredatorMultiplier = 1;
 
         updateLevel(0);
-        currentFoodValue = attributesContainer.getMaxFoodValue();
+        currentFoodValue = getMaxFoodValue();
         currentXp = 0;
         tamed = false;
         if (isTamed())
@@ -69,6 +89,8 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     @Override
     public void initWith(NBTTagCompound data) {
 
+        super.initWith(data);
+
         if (!data.getBoolean("MSEInitialized")) {
             initWithDefaults();
             return;
@@ -86,22 +108,18 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         currentFoodValue = data.getInt("MSECurrentFoodValue");
         currentXp = data.getFloat("MSECurrentXp");
         tamed = data.getBoolean("MSETamed");
-        torpidity = data.getInt("MSETorpidity");
         unconscious = data.getBoolean("MSEUnconscious");
 
-        updateLevel(0);
         if (isTamed())
             startFoodTimer();
 
         if (tamed) {
-
             String ownerUUID = data.getString("MSEOwner");
             String tribeUUID = data.getString("MSETribe");
             if (ownerUUID != null && !ownerUUID.isEmpty())
                 owner = UUID.fromString(ownerUUID);
             if (tribeUUID != null && !tribeUUID.isEmpty())
                 tribe = UUID.fromString(tribeUUID);
-
         }
 
         initialized = true;
@@ -110,6 +128,9 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
 
     @Override
     public void saveData(NBTTagCompound data) {
+
+        super.saveData(data);
+
         if (!isInitialized())
             initWithDefaults();
 
@@ -154,8 +175,9 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         this.owner = owner;
     }
 
+    @Override
     public boolean isTameable() {
-        return attributesContainer.isTameable() && !tamed && !isAlpha();
+        return super.isTameable() && !tamed && !isAlpha();
     }
 
     public FoodTimer getFoodTimer() {
@@ -167,7 +189,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
             MSEMain.getInstance().getLogger().info("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
                     + mseEntity.locZ + ")");
-        return (int) Calculator.calculateLevelDependentStatFor(attributesContainer.getMaxTamingProgress(), getLevel(), getMultiplier());
+        return (int) Calculator.calculateLevelDependentStatFor(maxTamingProgress, getLevel(), getMultiplier());
     }
 
     public UUID getOwner() {
@@ -180,21 +202,6 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         return tribe;
     }
 
-    public double getDamage() {
-        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), level, getMultiplier());
-    }
-
-    public double getMaxDamage() {
-        return Calculator.calculateLevelDependentStatFor(attributesContainer.getDamage(), attributesContainer.getLevelCap(), getMultiplier());
-    }
-
-    public float getSpeed() {
-        float speedMultiplier = getMultiplier();
-        speedMultiplier /= 2;
-        return (float) Calculator.calculateLevelDependentStatFor(attributesContainer.getSpeed(), level, speedMultiplier);
-    }
-
-    @Override
     public String getDefaultName() {
         if (this.isAlpha())
             return "Alpha " + mseEntity.getEntityType() + " (" + level + ")";
@@ -216,22 +223,25 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
 
     @Override
     public float getMultiplier() {
-        return attributesContainer.getLevelMultiplier() * alphaPredatorMultiplier;
+        return getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
-    /**
-     * Increases the level. Can also be used for initialization.
-     *
-     * @param levelIncrease Use 0 to initialize
-     */
-    @Override
-    public void updateLevel(int levelIncrease) {
-        if (level == null)
-            level = Calculator.getRandomInt(attributesContainer.getLevelCap()) + 1;
-        if (levelIncrease > 0)
-            level += levelIncrease;
-        if (!isTamed())
-            mseEntity.setCustomName(getDefaultName());
+    public int getMaxFoodValue() {
+        return maxFoodValue;
+    }
+
+    public int getFoodsaturationFor(String food) {
+        if (foodSaturations.containsKey(food))
+            return foodSaturations.get(food);
+        return 0;
+    }
+
+    public int getHighestFoodSaturation() {
+        return highestFoodSaturation;
+    }
+
+    public Map<Material, Integer> getPreferredFood() {
+        return preferredFood;
     }
 
     /**
@@ -244,5 +254,32 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         foodTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
     }
 
+    /**
+     * Increases the level. Can also be used for initialization.
+     *
+     * @param levelIncrease Use 0 to initialize
+     */
+    public void updateLevel(int levelIncrease) {
+        level = Calculator.getRandomInt(getMaxLevel() + 1);
+        if (levelIncrease > 0)
+            level += levelIncrease;
+        if (!isTamed())
+            mseEntity.setCustomName(getDefaultName());
+    }
+
+    /**
+     * Increases the xp for this entity. Also handles level ups.
+     *
+     * @param xpIncrease Amount of increase
+     */
+    public void increaseXp(float xpIncrease) {
+        currentXp += xpIncrease;
+        float currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(getXpUntilLevelUp(), level, getMultiplier());
+        while (currentXp >= currentXpForLevelUp) {
+            currentXp -= currentXpForLevelUp;
+            updateLevel(1);
+            currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(getXpUntilLevelUp(), level, getMultiplier());
+        }
+    }
 
 }

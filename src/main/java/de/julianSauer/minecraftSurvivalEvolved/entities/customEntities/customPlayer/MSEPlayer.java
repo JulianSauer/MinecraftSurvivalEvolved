@@ -1,7 +1,7 @@
 package de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.customPlayer;
 
-import de.julianSauer.minecraftSurvivalEvolved.entities.containers.EntityAttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.UnconsciousnessTimer;
+import de.julianSauer.minecraftSurvivalEvolved.entities.containers.AttributesContainer;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.AttributedEntity;
 import de.julianSauer.minecraftSurvivalEvolved.entities.customEntities.Unconsciousable;
 import net.minecraft.server.v1_9_R1.EntityLiving;
@@ -15,17 +15,21 @@ import java.util.UUID;
 /**
  * Wrapper class for players.
  */
-public class MSEPlayer implements Unconsciousable, AttributedEntity {
+public class MSEPlayer extends AttributesContainer implements Unconsciousable, AttributedEntity {
+
+    private boolean initialized;
 
     Player player;
-
-    EntityAttributesContainer entityAttributesContainer;
 
     UnconsciousnessTimer unconsciousnessTimer;
 
     MSEPlayer(Player player) {
+        super("Player");
         this.player = player;
-        entityAttributesContainer = new EntityAttributesContainer(player);
+        level = player.getLevel();
+        currentXp = player.getExp();
+        initialized = false;
+        this.player = player;
     }
 
     @Override
@@ -44,53 +48,8 @@ public class MSEPlayer implements Unconsciousable, AttributedEntity {
     }
 
     @Override
-    public double getDamage() {
-        return entityAttributesContainer.getDamage();
-    }
-
-    @Override
-    public double getMaxDamage() {
-        return entityAttributesContainer.getMaxDamage();
-    }
-
-    @Override
     public float getSpeed() {
         return player.getWalkSpeed();
-    }
-
-    @Override
-    public int getTorpidity() {
-        return entityAttributesContainer.getTorpidity();
-    }
-
-    @Override
-    public void setTorpidity(int torpidity) {
-        entityAttributesContainer.setTorpidity(torpidity);
-    }
-
-    @Override
-    public int getMaxTorpidity() {
-        return entityAttributesContainer.getMaxTorpidity();
-    }
-
-    @Override
-    public int getTorporDepletion() {
-        return entityAttributesContainer.getTorporDepletion();
-    }
-
-    @Override
-    public boolean isUnconscious() {
-        return entityAttributesContainer.isUnconscious();
-    }
-
-    @Override
-    public void setUnconscious(boolean unconscious) {
-        entityAttributesContainer.setUnconscious(unconscious);
-    }
-
-    @Override
-    public int getFortitude() {
-        return entityAttributesContainer.getFortitude();
     }
 
     @Override
@@ -105,32 +64,12 @@ public class MSEPlayer implements Unconsciousable, AttributedEntity {
 
     @Override
     public int getMaxFood() {
-        return entityAttributesContainer.getAttributesContainer().getMaxFoodValue();
+        return 30;
     }
 
     @Override
     public int getFoodDepletion() {
         return 0;
-    }
-
-    @Override
-    public int getLevel() {
-        return entityAttributesContainer.getLevel();
-    }
-
-    @Override
-    public float getLevelMultiplier() {
-        return entityAttributesContainer.getMultiplier();
-    }
-
-    @Override
-    public float getXpUntilLevelUp() {
-        return entityAttributesContainer.getXpUntilLevelUp();
-    }
-
-    @Override
-    public int getLevelCap() {
-        return entityAttributesContainer.getAttributesContainer().getLevelCap();
     }
 
     @Override
@@ -140,7 +79,7 @@ public class MSEPlayer implements Unconsciousable, AttributedEntity {
 
     @Override
     public String getDefaultName() {
-        return entityAttributesContainer.getDefaultName();
+        return player.getName();
     }
 
     @Override

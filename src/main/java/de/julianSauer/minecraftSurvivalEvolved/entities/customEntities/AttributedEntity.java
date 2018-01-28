@@ -30,7 +30,7 @@ public interface AttributedEntity {
 
     float getXpUntilLevelUp();
 
-    int getLevelCap();
+    int getMaxLevel();
 
     String getName();
 
