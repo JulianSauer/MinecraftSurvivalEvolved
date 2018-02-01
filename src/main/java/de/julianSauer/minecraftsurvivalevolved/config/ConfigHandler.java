@@ -91,6 +91,32 @@ public class ConfigHandler extends ConfigHandlerBase {
         return ret;
     }
 
+    public Map<String, Map<String, Object>> getPlayers() {
+        String configName = "PlayerDatabase.yml";
+        Map<String, Map<String, Object>> playersAttributes = new HashMap<>();
+        addConfigToCache("", configName);
+        ConfigurationSection attributeSections = getConfigurationSectionFromConfig(configName, "");
+        for (String playerUUID : attributeSections.getKeys(false)) {
+            Map<String, Object> playerAttributes = new HashMap<>();
+            playerAttributes.put("Name", attributeSections.get(playerUUID + ".Name"));
+            playerAttributes.put("Level", attributeSections.get(playerUUID + ".Level"));
+            playerAttributes.put("CurrentXp", attributeSections.get(playerUUID + ".CurrentXp"));
+            playerAttributes.put("Torpidity", attributeSections.get(playerUUID + ".Torpidity"));
+            playersAttributes.put(playerUUID, playerAttributes);
+        }
+        return playersAttributes;
+    }
+
+    public void setPlayers(Map<UUID, Map<String, Object>> players) {
+        String configName = "PlayerDatabase.yml";
+        addConfigToCache("", configName);
+        for (Map.Entry<UUID, Map<String, Object>> player : players.entrySet()) {
+            String path = player.getKey() + ".";
+            for (Map.Entry<String, Object> entry : player.getValue().entrySet())
+                setValueInConfig(configName, path + entry.getKey(), entry.getValue());
+        }
+    }
+
     public Map<UUID, Tribe> getTribes() {
 
         File tribeFolder = new File(MSEMain.getInstance().getDataFolder() + "/Tribes");

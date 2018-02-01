@@ -3,6 +3,7 @@ package de.juliansauer.minecraftsurvivalevolved.main;
 import de.juliansauer.minecraftsurvivalevolved.commands.MSECommandExecutor;
 import de.juliansauer.minecraftsurvivalevolved.config.ConfigHandler;
 import de.juliansauer.minecraftsurvivalevolved.entities.EntityRegistry;
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.MSEPlayerMap;
 import de.juliansauer.minecraftsurvivalevolved.gui.visuals.HologramHandler;
 import de.juliansauer.minecraftsurvivalevolved.items.CustomRecipes;
 import de.juliansauer.minecraftsurvivalevolved.listeners.*;
@@ -67,6 +68,7 @@ public class MSEMain extends JavaPlugin {
     @Override
     public void onDisable() {
         TribeRegistry.getTribeRegistry().saveTribes();
+        MSEPlayerMap.getPlayerRegistry().savePlayers();
         HologramHandler.despawnAllHolograms();
         getLogger().info("Disabled");
     }

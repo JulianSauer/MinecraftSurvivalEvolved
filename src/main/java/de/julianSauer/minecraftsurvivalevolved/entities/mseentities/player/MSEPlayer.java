@@ -10,6 +10,8 @@ import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -26,10 +28,26 @@ public class MSEPlayer extends AttributesContainer implements Unconsciousable, A
     MSEPlayer(Player player) {
         super("Player");
         this.player = player;
-        level = player.getLevel();
-        currentXp = player.getExp();
-        initialized = false;
-        this.player = player;
+        level = 1;
+        currentXp = 0;
+        initialized = true;
+    }
+
+    public void initWithAttributeMap(Map<String, Object> attributes) {
+        level = (int) attributes.get("Level");
+        currentXp = ((Number) attributes.get("CurrentXp")).floatValue();
+        torpidity = (int) attributes.get("Torpidity");
+        updateConsciousness();
+        initialized = true;
+    }
+
+    public Map<String, Object> getAttributesMap() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("Name", getName());
+        attributes.put("Level", level);
+        attributes.put("CurrentXp", currentXp);
+        attributes.put("Torpidity", torpidity);
+        return attributes;
     }
 
     @Override
