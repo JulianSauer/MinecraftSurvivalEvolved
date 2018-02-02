@@ -37,7 +37,6 @@ public class MSEPlayer extends AttributesContainer implements Unconsciousable, A
         level = (int) attributes.get("Level");
         currentXp = ((Number) attributes.get("CurrentXp")).floatValue();
         torpidity = (int) attributes.get("Torpidity");
-        updateConsciousness();
         initialized = true;
     }
 

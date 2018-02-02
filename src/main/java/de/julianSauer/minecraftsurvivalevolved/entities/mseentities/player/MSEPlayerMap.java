@@ -62,6 +62,7 @@ public class MSEPlayerMap {
             if (offlinePlayers.containsKey(playerUUID))
                 msePlayer.initWithAttributeMap(offlinePlayers.get(playerUUID));
             playerToMSEPlayerMap.put(playerUUID, msePlayer);
+            msePlayer.updateConsciousness();
         }
     }
 
