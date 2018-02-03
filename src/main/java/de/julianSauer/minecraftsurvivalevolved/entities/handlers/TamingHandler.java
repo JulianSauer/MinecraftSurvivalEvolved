@@ -82,7 +82,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
      * @param lastDamager       Player is saved in case the entity becomes unconscious and is successfully tamed
      */
     public void increaseTorpidityBy(int torpidityIncrease, UUID lastDamager) {
-        if (!mseEntity.isAlpha())
+        if (!mseEntity.isTameable() && !mseEntity.isTamed())
             tamer = lastDamager;
         mseEntity.increaseTorpidityBy(torpidityIncrease);
     }

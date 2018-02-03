@@ -43,7 +43,7 @@ public class EntityDamageByEntityListener implements ArrowListener {
 
             // Increase torpor
             MSEEntity mseEntity = getMSEEntityFromEntity(target);
-            if (mseEntity != null && mseEntity.isTameable())
+            if (mseEntity != null)
                 mseEntity.getTamingHandler().increaseTorpidityBy((int) torpidity, player.getUniqueId());
             else if (msePlayerMap.isMSEPlayer(target))
                 msePlayerMap.getMSEPlayer(target.getUniqueId()).increaseTorpidityBy((int) torpidity);

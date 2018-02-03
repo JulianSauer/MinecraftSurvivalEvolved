@@ -1,7 +1,7 @@
 package de.juliansauer.minecraftsurvivalevolved.entities;
 
-import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.MSEEntity;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.TamingHandler;
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.MSEEntity;
 import de.juliansauer.minecraftsurvivalevolved.gui.visuals.BarHandler;
 import de.juliansauer.minecraftsurvivalevolved.gui.visuals.HologramHandler;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
@@ -76,7 +76,8 @@ public class UnconsciousnessTimerTameable<T extends EntityInsentient & MSEEntity
     @Override
     public void cancel() {
         HologramHandler.despawnHologram(hologram);
-        mseEntity.setCustomName(mseEntity.getDefaultName());
+        if (!mseEntity.isTamed())
+            mseEntity.setCustomName(mseEntity.getDefaultName());
         threadCurrentlyRunning = false;
         super.cancel();
     }
