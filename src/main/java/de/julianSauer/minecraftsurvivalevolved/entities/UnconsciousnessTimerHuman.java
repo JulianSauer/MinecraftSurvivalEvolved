@@ -55,6 +55,8 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
         UnconsciousPlayers.removeUnconsciousPlayer(player);
+        msePlayer.setTorpidity(0);
+        msePlayer.setUnconscious(false);
         HologramHandler.despawnHologram(hologram);
         super.cancel();
     }
