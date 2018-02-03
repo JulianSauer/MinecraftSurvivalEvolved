@@ -5,6 +5,7 @@ import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.MSEPl
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.UnconsciousPlayers;
 import de.juliansauer.minecraftsurvivalevolved.gui.visuals.HologramHandler;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -32,6 +33,9 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         this.player.getWorld().playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1, 1);
         hologram = HologramHandler.spawnHologramAt(this.player.getLocation().add(0, 0.93, 0),
                 "Torpor: " + msePlayer.getTorpidity() + "/" + msePlayer.getMaxTorpidity());
+        Entity mount = this.player.getVehicle();
+        if (mount != null)
+            mount.eject();
         UnconsciousPlayers.addUnconsciousPlayer(this.player);
     }
 
@@ -46,7 +50,9 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         if (!player.hasPotionEffect(PotionEffectType.BLINDNESS))
             this.player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
         msePlayer.decreaseTorpidityBy(msePlayer.getTorporDepletion());
-        HologramHandler.updateHologram(hologram, "Torpor: " + msePlayer.getTorpidity() + "/" + msePlayer.getMaxTorpidity());
+        HologramHandler.despawnHologram(hologram);
+        hologram = HologramHandler.spawnHologramAt(this.player.getLocation().add(0, 0.93, 0),
+                "Torpor: " + msePlayer.getTorpidity() + "/" + msePlayer.getMaxTorpidity());
     }
 
     @Override

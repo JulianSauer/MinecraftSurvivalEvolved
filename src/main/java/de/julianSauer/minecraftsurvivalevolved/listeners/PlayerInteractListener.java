@@ -9,8 +9,10 @@ import de.juliansauer.minecraftsurvivalevolved.gui.visuals.ScoreboardHandler;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * Handles mounting of tamed entities and opening of their main menu.
@@ -23,8 +25,21 @@ public class PlayerInteractListener implements BasicEventListener {
         gui = new InventoryGUI();
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onUnconsciousPlayerInteract(PlayerInteractEvent e) {
+        if (playerIsUnconscious(e.getPlayer())) {
+            e.setCancelled(true);
+            return;
+        }
+    }
+
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
+
+        if (playerIsUnconscious(e.getPlayer())) {
+            e.setCancelled(true);
+            return;
+        }
 
         Entity entity = e.getRightClicked();
         MSEEntity mseEntity = getMSEEntityFromEntity(entity);
@@ -46,6 +61,11 @@ public class PlayerInteractListener implements BasicEventListener {
 
     @EventHandler
     public void onPlayerAccessUnconsciousInventory(PlayerInteractEntityEvent e) {
+
+        if (playerIsUnconscious(e.getPlayer())) {
+            e.setCancelled(true);
+            return;
+        }
 
         Entity entity = e.getRightClicked();
         if (!(entity instanceof Player))

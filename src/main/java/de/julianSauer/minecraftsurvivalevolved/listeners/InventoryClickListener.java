@@ -1,6 +1,8 @@
 package de.juliansauer.minecraftsurvivalevolved.listeners;
 
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.MSEEntity;
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.MSEPlayer;
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.MSEPlayerMap;
 import de.juliansauer.minecraftsurvivalevolved.gui.inventories.InventoryGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +24,11 @@ public class InventoryClickListener implements BasicInventoryListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
+
+        if (playerIsUnconscious(e.getWhoClicked().getUniqueId())) {
+            e.setCancelled(true);
+            return;
+        }
 
         if (playerClickedOnButtonMenu(e)) {
 
