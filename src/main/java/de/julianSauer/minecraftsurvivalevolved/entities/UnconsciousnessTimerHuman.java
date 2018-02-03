@@ -58,6 +58,7 @@ public class UnconsciousnessTimerHuman extends BukkitRunnable implements Unconsc
         msePlayer.setTorpidity(0);
         msePlayer.setUnconscious(false);
         HologramHandler.despawnHologram(hologram);
+        msePlayer.setUnconsciousnessTimer(null);
         super.cancel();
     }
 
