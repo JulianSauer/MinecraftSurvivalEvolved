@@ -22,7 +22,8 @@ public class EntityDamageByEntityListener implements ArrowListener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 
-        if (playerIsUnconscious(e.getDamager().getUniqueId())) {
+        if (playerIsUnconscious(e.getDamager().getUniqueId())
+                || entityIsUnconscious(e.getDamager())) {
             e.setCancelled(true);
             return;
         }
