@@ -102,6 +102,7 @@ public class ConfigHandler extends ConfigHandlerBase {
             playerAttributes.put("Level", attributeSections.get(playerUUID + ".Level"));
             playerAttributes.put("CurrentXp", attributeSections.get(playerUUID + ".CurrentXp"));
             playerAttributes.put("Torpidity", attributeSections.get(playerUUID + ".Torpidity"));
+            playerAttributes.put("Unconscious", attributeSections.get(playerUUID + ".Unconscious"));
             playersAttributes.put(playerUUID, playerAttributes);
         }
         return playersAttributes;

@@ -89,11 +89,13 @@ public interface Unconsciousable extends InventoryHolder {
             if (getUnconsciousnessTimer() != null && getUnconsciousnessTimer().isThreadCurrentlyRunning())
                 getUnconsciousnessTimer().cancel();
 
-        } else if ((!isUnconscious() && getTorpidity() >= getFortitude())) {
+        } else if ((isUnconscious() || getTorpidity() >= getFortitude())) {
             // Fall asleep
             setUnconscious(true);
-            setUnconsciousnessTimer(new UnconsciousnessTimerHuman(getEntity()));
-            getUnconsciousnessTimer().runTaskTimer(MSEMain.getInstance(), 0, getUnconsciousnessTimer().getUnconsciousnessUpdateInterval());
+            if (getUnconsciousnessTimer() == null)
+                setUnconsciousnessTimer(new UnconsciousnessTimerHuman(getEntity()));
+            if (!getUnconsciousnessTimer().isThreadCurrentlyRunning())
+                getUnconsciousnessTimer().runTaskTimer(MSEMain.getInstance(), 0, getUnconsciousnessTimer().getUnconsciousnessUpdateInterval());
         }
 
     }

@@ -34,9 +34,14 @@ public class MSEPlayer extends AttributesContainer implements Unconsciousable, A
     }
 
     public void initWithAttributeMap(Map<String, Object> attributes) {
-        level = (int) attributes.get("Level");
-        currentXp = ((Number) attributes.get("CurrentXp")).floatValue();
-        torpidity = (int) attributes.get("Torpidity");
+        if (attributes.get("Level") != null)
+            level = (int) attributes.get("Level");
+        if (attributes.get("CurrentXp") != null)
+            currentXp = ((Number) attributes.get("CurrentXp")).floatValue();
+        if (attributes.get("Torpidity") != null)
+            torpidity = (int) attributes.get("Torpidity");
+        if (attributes.get("Unconscious") != null)
+            unconscious = (boolean) attributes.get("Unconscious");
         initialized = true;
     }
 
@@ -46,6 +51,7 @@ public class MSEPlayer extends AttributesContainer implements Unconsciousable, A
         attributes.put("Level", level);
         attributes.put("CurrentXp", currentXp);
         attributes.put("Torpidity", torpidity);
+        attributes.put("Unconscious", unconscious);
         return attributes;
     }
 
