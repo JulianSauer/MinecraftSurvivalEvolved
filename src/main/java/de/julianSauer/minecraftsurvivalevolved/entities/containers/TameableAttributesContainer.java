@@ -2,8 +2,8 @@ package de.juliansauer.minecraftsurvivalevolved.entities.containers;
 
 import de.juliansauer.minecraftsurvivalevolved.config.ConfigHandler;
 import de.juliansauer.minecraftsurvivalevolved.entities.FoodTimer;
-import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.MSEEntity;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.Persistentable;
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.MSEEntity;
 import de.juliansauer.minecraftsurvivalevolved.gui.visuals.AlphaParticleSpawner;
 import de.juliansauer.minecraftsurvivalevolved.main.MSEMain;
 import de.juliansauer.minecraftsurvivalevolved.utils.Calculator;

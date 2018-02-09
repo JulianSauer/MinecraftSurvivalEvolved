@@ -3,8 +3,6 @@ package de.juliansauer.minecraftsurvivalevolved.gui.visuals;
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.AttributedEntity;
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.Unconsciousable;
 import de.juliansauer.minecraftsurvivalevolved.main.MSEMain;
-import net.minecraft.server.v1_9_R1.Entity;
-import net.minecraft.server.v1_9_R1.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,9 +28,9 @@ public class ScoreboardHandler {
      * and added to activeScoreboards as a cache.
      *
      * @param entity Reference to the entity which's values should be displayed in the scoreboard
-     * @param player    Player that will see the scoreboard
+     * @param player Player that will see the scoreboard
      */
-    public static<T extends AttributedEntity & Unconsciousable> void addPlayer(T entity, Player player) {
+    public static <T extends AttributedEntity & Unconsciousable> void addPlayer(T entity, Player player) {
         ScoreboardUpdater scoreboardUpdater = getScoreboardFor(entity);
         player.setScoreboard(scoreboardUpdater.scoreboard);
     }

@@ -26,7 +26,7 @@ public class FoodTimer<T extends EntityInsentient & MSEEntity> extends BukkitRun
     @Override
     public void run() {
 
-        if (!mseEntity.isAlive()){
+        if (!mseEntity.isAlive()) {
             this.cancel();
             return;
         }

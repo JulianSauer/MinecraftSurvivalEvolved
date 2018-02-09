@@ -1,8 +1,8 @@
 package de.juliansauer.minecraftsurvivalevolved.entities.mseentities;
 
-import de.juliansauer.minecraftsurvivalevolved.entities.containers.TameableAttributesContainer;
 import de.juliansauer.minecraftsurvivalevolved.entities.UnconsciousnessTimer;
 import de.juliansauer.minecraftsurvivalevolved.entities.UnconsciousnessTimerTameable;
+import de.juliansauer.minecraftsurvivalevolved.entities.containers.TameableAttributesContainer;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.MiningHandler;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.PathfinderHandler;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.TamingHandler;
