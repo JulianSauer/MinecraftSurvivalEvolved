@@ -1,46 +1,21 @@
 package de.juliansauer.minecraftsurvivalevolved.tribes;
 
-import org.bukkit.entity.Player;
-
 import java.util.UUID;
 
-public class TribeMember {
+public interface TribeMember {
 
-    private Player player;
+    boolean hasTribe();
 
-    private Tribe tribe;
+    boolean isAllowedTo(RankPermission permission);
 
-    public TribeMember(Player player, Tribe tribe) {
-        this.player = player;
-        this.tribe = tribe;
-    }
+    Tribe getTribe();
 
-    public boolean hasTribe() {
-        return tribe != null;
-    }
+    void setTribe(Tribe tribe);
 
-    public boolean isAllowedTo(RankPermission permission) {
-        return Rank.rankIsEqualOrHigher(tribe.getRankOfMember(player), tribe.getRankFor(permission));
-    }
+    UUID getUniqueID();
 
-    public Tribe getTribe() {
-        return tribe;
-    }
+    Rank getRank();
 
-    public void setTribe(Tribe tribe) {
-        this.tribe = tribe;
-    }
-
-    public UUID getUniqueId() {
-        return player.getUniqueId();
-    }
-
-    public Rank getRank() {
-        return tribe.getRankOfMember(player);
-    }
-
-    public void setRank(Rank newRank) {
-        tribe.setRankOf(player, newRank);
-    }
+    void setRank(Rank newRank);
 
 }

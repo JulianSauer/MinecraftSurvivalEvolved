@@ -4,6 +4,10 @@ import de.juliansauer.minecraftsurvivalevolved.entities.UnconsciousnessTimer;
 import de.juliansauer.minecraftsurvivalevolved.entities.containers.AttributesContainer;
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.AttributedEntity;
 import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.Unconsciousable;
+import de.juliansauer.minecraftsurvivalevolved.tribes.Rank;
+import de.juliansauer.minecraftsurvivalevolved.tribes.RankPermission;
+import de.juliansauer.minecraftsurvivalevolved.tribes.Tribe;
+import de.juliansauer.minecraftsurvivalevolved.tribes.TribeMember;
 import net.minecraft.server.v1_9_R1.EntityLiving;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
@@ -17,13 +21,15 @@ import java.util.UUID;
 /**
  * Wrapper class for players.
  */
-public class MSEPlayer extends AttributesContainer implements Unconsciousable, AttributedEntity {
+public class MSEPlayer extends AttributesContainer implements Unconsciousable, AttributedEntity, TribeMember {
 
     private boolean initialized;
 
     Player player;
 
     UnconsciousnessTimer unconsciousnessTimer;
+
+    private Tribe tribe;
 
     MSEPlayer(Player player) {
         super("Player");
@@ -140,6 +146,38 @@ public class MSEPlayer extends AttributesContainer implements Unconsciousable, A
         if (player instanceof CraftPlayer)
             return ((CraftPlayer) player).getHandle();
         return null;
+    }
+
+    // TribeMember
+
+    @Override
+    public boolean hasTribe() {
+        return tribe != null;
+    }
+
+    @Override
+    public boolean isAllowedTo(RankPermission permission) {
+        return Rank.rankIsEqualOrHigher(tribe.getRankOfMember(player), tribe.getRankFor(permission));
+    }
+
+    @Override
+    public Tribe getTribe() {
+        return tribe;
+    }
+
+    @Override
+    public void setTribe(Tribe tribe) {
+        this.tribe = tribe;
+    }
+
+    @Override
+    public Rank getRank() {
+        return tribe.getRankOfMember(player);
+    }
+
+    @Override
+    public void setRank(Rank newRank) {
+        tribe.setRankOf(player, newRank);
     }
 
 }

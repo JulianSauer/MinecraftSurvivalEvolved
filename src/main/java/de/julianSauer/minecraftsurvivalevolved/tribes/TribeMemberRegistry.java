@@ -1,5 +1,6 @@
 package de.juliansauer.minecraftsurvivalevolved.tribes;
 
+import de.juliansauer.minecraftsurvivalevolved.entities.mseentities.player.MSEPlayerMap;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -17,9 +18,12 @@ public class TribeMemberRegistry {
 
     private Map<UUID, TribeMember> tribesOfPlayers;
 
+    private MSEPlayerMap msePlayerMap;
+
     private TribeMemberRegistry() {
         tribesOfPlayers = new HashMap<>();
         tribeRegistry = TribeRegistry.getTribeRegistry();
+        msePlayerMap = MSEPlayerMap.getPlayerRegistry();
     }
 
     public static TribeMemberRegistry getTribeMemberRegistry() {
@@ -30,16 +34,17 @@ public class TribeMemberRegistry {
 
     public void registerPlayer(Player player) {
         UUID playerUUID = player.getUniqueId();
+        TribeMember tribeMember = msePlayerMap.getMSEPlayer(playerUUID);
         for (Tribe tribe : tribeRegistry.getTribes()) {
             for (UUID member : tribe.getMemberUUIDs()) {
                 if (member.equals(playerUUID)) {
-                    TribeMember tribeMember = new TribeMember(player, tribe);
+                    tribeMember.setTribe(tribe);
                     tribesOfPlayers.put(member, tribeMember);
                     return;
                 }
             }
         }
-        tribesOfPlayers.put(playerUUID, new TribeMember(player, null));
+        tribesOfPlayers.put(playerUUID, tribeMember);
     }
 
     public void unregisterPlayer(UUID playerUUID) {

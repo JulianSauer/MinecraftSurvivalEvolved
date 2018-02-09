@@ -718,12 +718,12 @@ class CommandTribe extends BasicCommand implements MSECommand {
 
         } else {
             executingPlayer.sendMessage(ChatMessages.WARNING_TRANSFER_OWNERSHIP.setParams(tribe.getName(), targetPlayerName));
-            pendingTribeTransfers.put(executingMember.getUniqueId(), new AbstractMap.SimpleEntry<>(targetPlayer, tribe));
+            pendingTribeTransfers.put(executingMember.getUniqueID(), new AbstractMap.SimpleEntry<>(targetPlayer, tribe));
             // Player has 20 seconds to confirm the action.
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    pendingTribeTransfers.remove(executingMember.getUniqueId());
+                    pendingTribeTransfers.remove(executingMember.getUniqueID());
                     this.cancel();
                 }
             }.runTaskTimerAsynchronously(MSEMain.getInstance(), 400, 0);
