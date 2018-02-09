@@ -2,7 +2,7 @@ package de.juliansauer.minecraftsurvivalevolved.entities.mseentities;
 
 import de.juliansauer.minecraftsurvivalevolved.entities.containers.TameableAttributesContainer;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import net.minecraft.server.v1_9_R1.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_9_R1.PathfinderGoal;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -186,7 +186,7 @@ public interface MSEEntity extends Tameable, AttributedEntity {
 
     PathfinderGoalSelector getTargetSelector();
 
-    PathfinderGoalMeleeAttack getMeleeAttack();
+    PathfinderGoal getMeleeAttack();
 
     /**
      * Creates an org.bukkit.Location based on the entity's coordinates.

@@ -10,9 +10,9 @@ import org.bukkit.inventory.Inventory;
 
 public class MSEWolf extends EntityWolf implements MSEEntity {
 
-    private TameableAttributesContainer tameableAttributesContainer;
+    private TameableAttributesContainer<MSEWolf> tameableAttributesContainer;
 
-    private TamingHandler tamingHandler;
+    private TamingHandler<MSEWolf> tamingHandler;
 
     private MiningHandler miningHandler;
 
@@ -30,10 +30,10 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
         super(world);
         entityType = getName();
 
-        tameableAttributesContainer = new TameableAttributesContainer(this);
-        tamingHandler = new TamingHandler(this);
+        tameableAttributesContainer = new TameableAttributesContainer<>(this);
+        tamingHandler = new TamingHandler<>(this);
         miningHandler = new MiningHandler(this);
-        movementHandler = new RidingHandler(this);
+        movementHandler = new RidingHandler<>(this);
         pathfinderHandler = new PathfinderHandlerMonster(this);
         pitchWhileTaming = 0;
     }
@@ -99,7 +99,7 @@ public class MSEWolf extends EntityWolf implements MSEEntity {
     }
 
     @Override
-    public PathfinderGoalMeleeAttack getMeleeAttack() {
+    public PathfinderGoal getMeleeAttack() {
         return new PathfinderGoalMeleeAttack(this, 1.0D, true);
     }
 

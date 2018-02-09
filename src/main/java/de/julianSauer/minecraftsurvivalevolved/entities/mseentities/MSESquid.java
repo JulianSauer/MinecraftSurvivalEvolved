@@ -10,9 +10,9 @@ import org.bukkit.inventory.Inventory;
 
 public class MSESquid extends EntitySquid implements MSEEntity {
 
-    private TameableAttributesContainer tameableAttributesContainer;
+    private TameableAttributesContainer<MSESquid> tameableAttributesContainer;
 
-    private TamingHandler tamingHandler;
+    private TamingHandler<MSESquid> tamingHandler;
 
     private MiningHandler miningHandler;
 
@@ -30,10 +30,10 @@ public class MSESquid extends EntitySquid implements MSEEntity {
         super(world);
         entityType = getName();
 
-        tameableAttributesContainer = new TameableAttributesContainer(this);
-        tamingHandler = new TamingHandler(this);
+        tameableAttributesContainer = new TameableAttributesContainer<>(this);
+        tamingHandler = new TamingHandler<>(this);
         miningHandler = new MiningHandler(this);
-        movementHandler = new SwimmingHandler(this);
+        movementHandler = new SwimmingHandler<>(this);
         pathfinderHandler = new PathfinderHandlerAnimal(this);
         pitchWhileTaming = 0;
     }
@@ -98,7 +98,7 @@ public class MSESquid extends EntitySquid implements MSEEntity {
     }
 
     @Override
-    public PathfinderGoalMeleeAttack getMeleeAttack() {
+    public PathfinderGoal getMeleeAttack() {
         return null;
     }
 

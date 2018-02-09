@@ -25,7 +25,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     private final T mseEntity;
 
-    private UnconsciousnessTimerTameable unconsciousnessTimerTameable;
+    private UnconsciousnessTimerTameable<T> unconsciousnessTimerTameable;
 
     private UUID tamer;
     private int tamingProgress;
@@ -134,7 +134,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         return unconsciousnessTimerTameable;
     }
 
-    public void setUnconsciousnessTimerTameable(UnconsciousnessTimerTameable unconsciousnessTimerTameable) {
+    public void setUnconsciousnessTimerTameable(UnconsciousnessTimerTameable<T> unconsciousnessTimerTameable) {
         this.unconsciousnessTimerTameable = unconsciousnessTimerTameable;
     }
 
@@ -168,7 +168,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
                 mseEntity.getCraftEntity().eject();
             resumeConsciousness = false;
             mseEntity.setUnconscious(true);
-            unconsciousnessTimerTameable = new UnconsciousnessTimerTameable(this, mseEntity);
+            unconsciousnessTimerTameable = new UnconsciousnessTimerTameable<>(this, mseEntity);
             unconsciousnessTimerTameable.runTaskTimer(MSEMain.getInstance(), 0, unconsciousnessTimerTameable.getUnconsciousnessUpdateInterval());
         }
 

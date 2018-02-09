@@ -11,9 +11,9 @@ import org.bukkit.inventory.Inventory;
 
 public class MSESpider extends EntitySpider implements MSEEntity {
 
-    private TameableAttributesContainer tameableAttributesContainer;
+    private TameableAttributesContainer<MSESpider> tameableAttributesContainer;
 
-    private TamingHandler tamingHandler;
+    private TamingHandler<MSESpider> tamingHandler;
 
     private MiningHandler miningHandler;
 
@@ -31,10 +31,10 @@ public class MSESpider extends EntitySpider implements MSEEntity {
         super(world);
         entityType = getName();
 
-        tameableAttributesContainer = new TameableAttributesContainer(this);
-        tamingHandler = new TamingHandler(this);
+        tameableAttributesContainer = new TameableAttributesContainer<>(this);
+        tamingHandler = new TamingHandler<>(this);
         miningHandler = new MiningHandler(this);
-        movementHandler = new RidingHandler(this);
+        movementHandler = new RidingHandler<>(this);
         pathfinderHandler = new PathfinderHandlerMonster(this);
         pitchWhileTaming = 0;
     }
@@ -100,7 +100,7 @@ public class MSESpider extends EntitySpider implements MSEEntity {
     }
 
     @Override
-    public PathfinderGoalMeleeAttack getMeleeAttack() {
+    public PathfinderGoal getMeleeAttack() {
         return new PathfinderGoalSpiderMeleeAttack(this);
     }
 

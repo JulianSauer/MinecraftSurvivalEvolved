@@ -12,11 +12,31 @@ public class EntityRegistry {
 
     public enum TameableEntityType {
 
-        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, MSESpider.class),
-        GIANT("Giant", 53, EntityType.GIANT, EntityGiantZombie.class, MSEGiant.class),
+        BAT("Bat", 65, EntityType.BAT, EntityBat.class, MSEBat.class),
+        BLAZE("Blaze", 61, EntityType.BLAZE, EntityBlaze.class, MSEBlaze.class),
         CAVE_SPIDER("CaveSpider", 59, EntityType.CAVE_SPIDER, EntityCaveSpider.class, MSECaveSpider.class),
+        CHICKEN("Chicken", 93, EntityType.CHICKEN, EntityChicken.class, MSEChicken.class),
+        COW("Cow", 92, EntityType.COW, EntityCow.class, MSECow.class),
+        CREEPER("Creeper", 50, EntityType.CREEPER, EntityCreeper.class, MSECreeper.class),
+        ENDER_DRAGON("EnderDragon", 63, EntityType.ENDER_DRAGON, EntityEnderDragon.class, MSEEnderDragon.class),
+        ENDERMAN("Enderman", 58, EntityType.ENDERMAN, EntityEnderman.class, MSEEnderman.class),
+        ENDERMITE("Endermite", 67, EntityType.ENDERMITE, EntityEndermite.class, MSEEndermite.class),
+        GHAST("Ghast", 56, EntityType.GHAST, EntityGhast.class, MSEGhast.class),
+        GIANT("Giant", 53, EntityType.GIANT, EntityGiantZombie.class, MSEGiant.class),
+        GUARDIAN("Guardian", 68, EntityType.GUARDIAN, EntityGuardian.class, MSEGuardian.class),
+        MAGMA_CUBE("LavaSlime", 62, EntityType.MAGMA_CUBE, EntityMagmaCube.class, MSEMagmaCube.class),
+        MUSHROOM_COW("MushroomCow", 96, EntityType.MUSHROOM_COW, EntityMushroomCow.class, MSEMushroomCow.class),
+        PIG("Pig", 90, EntityType.PIG, EntityPig.class, MSEPig.class),
+        PIG_ZOMBIE("PigZombie", 57, EntityType.PIG_ZOMBIE, EntityPigZombie.class, MSEPigZombie.class),
+        RABBIT("Rabbit", 101, EntityType.RABBIT, EntityRabbit.class, MSERabbit.class),
+        SHEEP("Sheep", 91, EntityType.SHEEP, EntitySheep.class, MSESheep.class),
+        SILVERFISH("Silverfish", 60, EntityType.SILVERFISH, EntitySilverfish.class, MSESilverfish.class),
+        SKELETON("Skeleton", 51, EntityType.SKELETON, EntitySkeleton.class, MSESkeleton.class),
+        SLIME("Slime", 55, EntityType.SLIME, EntitySkeleton.class, MSESlime.class),
+        SPIDER("Spider", 52, EntityType.SPIDER, EntitySpider.class, MSESpider.class),
         SQUID("Squid", 94, EntityType.SQUID, EntitySquid.class, MSESquid.class),
-        WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, MSEWolf.class);
+        WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, MSEWolf.class),
+        ZOMBIE("Zombie", 54, EntityType.ZOMBIE, EntityZombie.class, MSEZombie.class);
 
         private final String name;
         private final int id;

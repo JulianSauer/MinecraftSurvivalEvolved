@@ -39,7 +39,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     private final Map<Material, Integer> preferredFood;
     private final Map<String, Integer> foodSaturations;
 
-    private FoodTimer foodTimer;
+    private FoodTimer<T> foodTimer;
 
     public TameableAttributesContainer(T mseEntity) {
 
@@ -250,7 +250,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     public void startFoodTimer() {
         if (foodTimer != null)
             return;
-        foodTimer = new FoodTimer(mseEntity);
+        foodTimer = new FoodTimer<>(mseEntity);
         foodTimer.runTaskTimerAsynchronously(MSEMain.getInstance(), 0L, 100L);
     }
 
