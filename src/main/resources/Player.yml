@@ -1,5 +1,4 @@
-# Base stats of all entites if not specified by a EntityName.yml file
-LevelCap: 1
+LevelCap: 100
 LevelMultiplier: 1
 Tameable: false
 

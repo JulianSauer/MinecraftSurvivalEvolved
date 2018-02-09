@@ -1,3 +1,7 @@
+# Base values for attributes
+# Change according to level: value * (1 + level*LEVEL_MULTIPLIER)
+Speed: 0.05
+
 # Blocks that can be mined with this entity
 # The value specifies how menu seconds it would take with their base attack damage
 MineableBlocks:
@@ -6,7 +10,7 @@ MineableBlocks:
 # Food needed for taming/feeding
 # The value specifies it's efficiency
 PreferredFood:
-  NETHER_WARD: 30
+  NETHER_WARTS: 30
   RAW_BEEF: 20
   PORK: 20
   RAW_CHICKEN: 15

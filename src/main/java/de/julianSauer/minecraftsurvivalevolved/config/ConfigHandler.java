@@ -20,14 +20,34 @@ public class ConfigHandler extends ConfigHandlerBase {
 
     public ConfigHandler() {
         super(new String[]{
+                "Bat.yml",
+                "Blaze.yml",
                 "CaveSpider.yml",
+                "Chicken.yml",
+                "Cow.yml",
+                "Creeper.yml",
                 "DefaultEntity.yml",
+                "EnderDragon.yml",
+                "Enderman.yml",
+                "Endermite.yml",
                 "Food.yml",
+                "Ghast.yml",
                 "Giant.yml",
+                "Guardian.yml",
+                "MagmaCube.yml",
+                "MushroomCow.yml",
+                "Pig.yml",
+                "PigZombie.yml",
                 "Player.yml",
+                "Rabbit.yml",
+                "Sheep.yml",
+                "Silverfish.yml",
+                "Skeleton.yml",
+                "Slime.yml",
                 "Spider.yml",
                 "Squid.yml",
-                "Wolf.yml"
+                "Wolf.yml",
+                "Zombie.yml"
         });
     }
 
@@ -253,7 +273,8 @@ public class ConfigHandler extends ConfigHandlerBase {
                 } catch (ClassCastException e) {
                     noValueFoundFor(entity + ".yml", defaultEntity, sectionName);
                 }
-            }
+            } else if (!"NONE".equals(materialName))
+                noValueFoundFor(entity + ".yml", defaultEntity, sectionName + "." + materialName);
         }
         return returnMap;
     }

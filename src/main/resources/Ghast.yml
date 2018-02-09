@@ -1,0 +1,16 @@
+# Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
+MineableBlocks:
+  NETHERRACK: 1
+  NETHER_BRICK: 3
+  NETHER_BRICK_STAIRS: 3
+
+# Food needed for taming/feeding
+# The value specifies it's efficiency
+PreferredFood:
+  NETHER_STAR: 80
+  FIREBALL: 30
+  BLAZE_POWDER: 20
+  SULPHUR: 4
+  COAL_BLOCK: 5
+  COAL: 2

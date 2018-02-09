@@ -1,0 +1,21 @@
+# Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
+MineableBlocks:
+  NONE: 0
+
+# Food needed for taming/feeding
+# The value specifies it's efficiency
+PreferredFood:
+  ROTTEN_FLESH: 30
+  RAW_BEEF: 20
+  PORK: 20
+  MUTTON: 20
+  RAW_CHICKEN: 10
+  RABBIT: 10
+  RAW_FISH: 10
+  COOKED_BEEF: 6
+  COOKED_MUTTON: 4
+  GRILLED_PORK: 4
+  COOKED_CHICKEN: 2
+  COOKED_FISH: 2
+  COOKED_RABBIT: 2

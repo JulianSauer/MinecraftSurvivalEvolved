@@ -10,7 +10,7 @@ MineableBlocks:
 # The value specifies it's efficiency
 PreferredFood:
   EGG: 30
-  NETHER_WARD: 25
+  NETHER_WARTS: 25
   RAW_BEEF: 20
   PORK: 20
   RAW_CHICKEN: 15

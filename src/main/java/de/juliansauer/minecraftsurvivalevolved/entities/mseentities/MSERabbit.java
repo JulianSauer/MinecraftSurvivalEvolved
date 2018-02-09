@@ -54,6 +54,11 @@ public class MSERabbit extends EntityRabbit implements MSEEntity {
     public void a(NBTTagCompound data) {
         super.a(data);
         MSEEntity.super.load(data);
+        // Killer rabbits must be alpha
+        if (isAlpha())
+            setRabbitType(99);
+        else if (getRabbitType() == 99)
+            this.setHealth(0);
     }
 
     @Override

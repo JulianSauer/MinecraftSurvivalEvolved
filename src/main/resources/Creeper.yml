@@ -6,6 +6,8 @@ MineableBlocks:
 # Food needed for taming/feeding
 # The value specifies it's efficiency
 PreferredFood:
-  DRAGONS_BREATH: 40
-  EYE_OF_ENDER: 15
-  ENDER_PEARL: 10
+  TNT: 40
+  FIREBALL: 30
+  SULPHUR: 20
+  COAL_BLOCK: 20
+  COAL: 10

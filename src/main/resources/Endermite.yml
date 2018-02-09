@@ -1,0 +1,11 @@
+# Blocks that can be mined with this entity
+# The value specifies how menu seconds it would take with their base attack damage
+MineableBlocks:
+  NONE: 0
+
+# Food needed for taming/feeding
+# The value specifies it's efficiency
+PreferredFood:
+  DRAGONS_BREATH: 100
+  EYE_OF_ENDER: 90
+  ENDER_PEARL: 60
