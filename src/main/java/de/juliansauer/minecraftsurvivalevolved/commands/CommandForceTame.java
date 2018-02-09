@@ -16,7 +16,19 @@ import java.util.stream.Collectors;
 /**
  * Handles /mse forcetame.
  */
-class HandleForceTame extends CommandHandler {
+class CommandForceTame extends BasicCommand implements MSECommand {
+
+    private String[] commandAliases;
+
+    public CommandForceTame() {
+        super();
+        commandAliases = new String[]{"forcetame", "ft"};
+    }
+
+    @Override
+    public String[] getCommandAliases() {
+        return commandAliases;
+    }
 
     @Override
     public void process(CommandSender sender, String... args) {

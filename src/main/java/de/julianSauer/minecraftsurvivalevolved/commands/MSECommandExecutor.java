@@ -5,16 +5,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MSECommandExecutor implements CommandExecutor {
 
-    private CommandHandler handleForceTame;
-    private CommandHandler handleTribeCommand;
-    private CommandHandler handleTribesCommand;
+    private List<MSECommand> commands;
 
     public MSECommandExecutor() {
-        handleForceTame = new HandleForceTame();
-        handleTribeCommand = new HandleTribeCommand();
-        handleTribesCommand = new HandleTribesCommand();
+        commands = new ArrayList<>();
+        commands.add(new CommandHelp());
+        commands.add(new CommandTribe());
+        commands.add(new CommandTribes());
+        commands.add(new CommandForceTame());
     }
 
     @Override
@@ -25,19 +28,11 @@ public class MSECommandExecutor implements CommandExecutor {
 
         if (args.length >= 1) {
 
-            if (args[0].equalsIgnoreCase("help")) {
-                sender.sendMessage(ChatMessages.HELP1.setParams());
-                sender.sendMessage(ChatMessages.HELP2.setParams());
-
-            } else if ((args[0].equalsIgnoreCase("forcetame") || args[0].equalsIgnoreCase("ft"))) {
-                handleForceTame.process(sender, args);
-
-            } else if (args[0].equalsIgnoreCase("tribe")) {
-                handleTribeCommand.process(sender, args);
-
-            } else if (args[0].equalsIgnoreCase("tribes")) {
-                handleTribesCommand.process(sender, args);
+            for (MSECommand mseCommand : commands) {
+                if (mseCommand.equalsAnyAlias(args[0]))
+                    mseCommand.process(sender, args);
             }
+
         } else {
             sender.sendMessage(ChatMessages.HELP1.setParams());
             sender.sendMessage(ChatMessages.HELP2.setParams());

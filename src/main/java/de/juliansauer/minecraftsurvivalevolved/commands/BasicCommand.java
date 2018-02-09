@@ -10,15 +10,22 @@ import java.util.Collection;
 /**
  * Represents an object that can process a command.
  */
-abstract class CommandHandler {
+abstract class BasicCommand implements MSECommand {
 
-    TribeRegistry tribeRegistry;
+    protected TribeRegistry tribeRegistry;
 
-    CommandHandler() {
+    BasicCommand() {
         tribeRegistry = TribeRegistry.getTribeRegistry();
     }
 
-    abstract void process(CommandSender sender, String... args);
+    @Override
+    public boolean equalsAnyAlias(String command) {
+        for (String commandAlias : getCommandAliases()) {
+            if (command.equalsIgnoreCase(commandAlias))
+                return true;
+        }
+        return false;
+    }
 
     /**
      * Prints only a certain range of entries within a Collection.

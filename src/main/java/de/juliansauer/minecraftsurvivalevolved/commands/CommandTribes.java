@@ -10,7 +10,19 @@ import java.util.stream.Collectors;
 /**
  * Handles all sub commands of /mse tribes.
  */
-class HandleTribesCommand extends CommandHandler {
+class CommandTribes extends BasicCommand implements MSECommand {
+
+    private String[] commandAliases;
+
+    public CommandTribes() {
+        super();
+        commandAliases = new String[]{"tribes"};
+    }
+
+    @Override
+    public String[] getCommandAliases() {
+        return commandAliases;
+    }
 
     @Override
     public void process(CommandSender sender, String... args) {

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Handles all sub commands of /mse tribe.
  */
-class HandleTribeCommand extends CommandHandler {
+class CommandTribe extends BasicCommand implements MSECommand {
 
     private TribeMemberRegistry tribeMemberRegistry;
     private Set<UUID> pendingTribeLeaves;
@@ -27,8 +27,11 @@ class HandleTribeCommand extends CommandHandler {
 
     private InventoryGUI gui;
 
-    HandleTribeCommand() {
+    private String[] commandAliases;
+
+    public CommandTribe() {
         super();
+        commandAliases = new String[]{"tribe"};
         tribeMemberRegistry = TribeMemberRegistry.getTribeMemberRegistry();
         pendingTribeLeaves = new HashSet<>();
         pendingTribeInvitations = new HashMap<>();
@@ -49,6 +52,11 @@ class HandleTribeCommand extends CommandHandler {
         tribeNameExceptions.add("help");
 
         gui = new InventoryGUI();
+    }
+
+    @Override
+    public String[] getCommandAliases() {
+        return commandAliases;
     }
 
     @Override
