@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Contains taming data for an {@link MSEEntity} and manages the taming process together with {@link UnconsciousnessTimerTameable}.
  */
-public class TamingHandler<T extends EntityInsentient & MSEEntity> {
+public class TamingHandler<T extends EntityInsentient & MSEEntity> implements Persistentable {
 
     private final T mseEntity;
 
@@ -37,6 +37,16 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
         resumeConsciousness = false;
     }
 
+    @Override
+    public boolean isInitialized() {
+        return true;
+    }
+
+    @Override
+    public void initWithDefaults() {
+    }
+
+    @Override
     public void initWith(NBTTagCompound data) {
 
         if (!mseEntity.isTamed()) {
@@ -51,6 +61,7 @@ public class TamingHandler<T extends EntityInsentient & MSEEntity> {
 
     }
 
+    @Override
     public void saveData(NBTTagCompound data) {
         if (!mseEntity.isTamed() && mseEntity.isUnconscious() && !mseEntity.isAlpha()) {
             data.setInt("MSETamingProgress", getTamingProgress());

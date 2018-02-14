@@ -45,6 +45,7 @@ public class MSEMain extends JavaPlugin {
         pluginManager.registerEvents(new BowShootListener(), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
         pluginManager.registerEvents(new EntityDeathListener(), this);
+        pluginManager.registerEvents(new EntitySpawnListener(), this);
         pluginManager.registerEvents(new InventoryClickListener(), this);
         pluginManager.registerEvents(new InventoryCloseListener(), this);
         pluginManager.registerEvents(new InventoryDragListener(), this);

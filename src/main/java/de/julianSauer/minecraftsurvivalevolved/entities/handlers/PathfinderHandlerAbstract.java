@@ -41,15 +41,14 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
 
     @Override
     public void initWithDefaults() {
-        setDefaultGoals();
-        wandering = false;
-        initialized = true;
+        initWithPathfinderHandlerDefaults();
     }
 
     @Override
     public void initWith(NBTTagCompound data) {
-        if (!data.getBoolean("MSEInitialized")) {
-            initWithDefaults();
+        if (!data.getBoolean("MSE" + this.getClass() + "Initialized")) {
+            initWithPathfinderHandlerDefaults();
+            data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
             return;
         }
 
@@ -57,14 +56,16 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
         wandering = data.getBoolean("MSEWandering");
         updateGoals();
         initialized = true;
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
     }
 
     @Override
     public void saveData(NBTTagCompound data) {
         if (!isInitialized())
-            initWithDefaults();
+            initWithPathfinderHandlerDefaults();
         data.setString("MSEEntityMode", entityMode.toString());
         data.setBoolean("MSEWandering", wandering);
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
     }
 
     @Override
@@ -119,6 +120,15 @@ public abstract class PathfinderHandlerAbstract implements PathfinderHandler {
             }
         }
         updateGoals();
+    }
+
+    /**
+     * Prevents overriding of {@link PathfinderHandlerAbstract#initWithDefaults()}.
+     */
+    private void initWithPathfinderHandlerDefaults() {
+        setDefaultGoals();
+        wandering = false;
+        initialized = true;
     }
 
 }

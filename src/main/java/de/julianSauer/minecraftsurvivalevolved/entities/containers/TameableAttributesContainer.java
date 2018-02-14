@@ -61,29 +61,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
 
     @Override
     public void initWithDefaults() {
-
-        super.initWithDefaults();
-
-        if (Calculator.applyProbability(alphaProbability))
-            alphaPredatorMultiplier = 4;
-        else
-            alphaPredatorMultiplier = 1;
-
-        updateLevel(0);
-        currentFoodValue = getMaxFoodValue();
-        currentXp = 0;
-        tamed = false;
-        if (isTamed())
-            startFoodTimer();
-
-        if (isAlpha()) {
-            (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
-            if (mseEntity.getCraftEntity() instanceof LivingEntity)
-                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
-        }
-
-        initialized = true;
-
+        initWithTameableAttributesDefault();
     }
 
     @Override
@@ -91,8 +69,10 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
 
         super.initWith(data);
 
-        if (!data.getBoolean("MSEInitialized")) {
-            initWithDefaults();
+        initialized = data.getBoolean("MSE" + this.getClass() + "Initialized");
+        if (!initialized) {
+            initWithTameableAttributesDefault();
+            data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
             return;
         }
 
@@ -123,6 +103,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         }
 
         initialized = true;
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
 
     }
 
@@ -132,7 +113,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         super.saveData(data);
 
         if (!isInitialized())
-            initWithDefaults();
+            initWithTameableAttributesDefault();
 
         data.setInt("MSELevel", getLevel());
         data.setBoolean("MSEIsAlpha", isAlpha());
@@ -148,6 +129,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
             if (tribe != null)
                 data.setString("MSETribe", tribe.toString());
         }
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
     }
 
     @Override
@@ -156,35 +138,51 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     }
 
     public boolean isAlpha() {
+        if (!isInitialized())
+            initWithDefaults();
         return (alphaPredatorMultiplier != 1);
     }
 
     public boolean isTamed() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return tamed && !isAlpha();
     }
 
     public void setTamed(boolean tamed) {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         this.tamed = tamed;
     }
 
     public void setTribe(UUID tribe) {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         this.tribe = tribe;
     }
 
     public void setOwner(UUID owner) {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         this.owner = owner;
     }
 
     @Override
     public boolean isTameable() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return super.isTameable() && !tamed && !isAlpha();
     }
 
     public FoodTimer getFoodTimer() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return foodTimer;
     }
 
     public int getMaxTamingProgress() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         if (isAlpha())
             MSEMain.getInstance().getLogger().info("Tried accessing functionality that is limited to non-alpha entities ("
                     + mseEntity.getName() + " at x:" + mseEntity.locX + " y:" + mseEntity.locY + " z:"
@@ -193,16 +191,22 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     }
 
     public UUID getOwner() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         if (tamed && !isAlpha())
             return owner;
         return null;
     }
 
     public UUID getTribe() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return tribe;
     }
 
     public String getDefaultName() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         if (this.isAlpha())
             return "Alpha " + mseEntity.getEntityType() + " (" + level + ")";
         else
@@ -210,37 +214,53 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
     }
 
     public int getCurrentFoodValue() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return currentFoodValue;
     }
 
     public void setCurrentFoodValue(int currentFoodValue) {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         this.currentFoodValue = currentFoodValue;
     }
 
     public int getFoodDepletion() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return foodDepletion;
     }
 
     @Override
     public float getMultiplier() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return getLevelMultiplier() * alphaPredatorMultiplier;
     }
 
     public int getMaxFoodValue() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return maxFoodValue;
     }
 
     public int getFoodsaturationFor(String food) {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         if (foodSaturations.containsKey(food))
             return foodSaturations.get(food);
         return 0;
     }
 
     public int getHighestFoodSaturation() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return highestFoodSaturation;
     }
 
     public Map<Material, Integer> getPreferredFood() {
+        if (!isInitialized())
+            new IllegalStateException().printStackTrace();
         return preferredFood;
     }
 
@@ -263,7 +283,7 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
         level = Calculator.getRandomInt(getMaxLevel() + 1);
         if (levelIncrease > 0)
             level += levelIncrease;
-        if (!isTamed())
+        if (!tamed)
             mseEntity.setCustomName(getDefaultName());
     }
 
@@ -280,6 +300,31 @@ public class TameableAttributesContainer<T extends EntityInsentient & MSEEntity>
             updateLevel(1);
             currentXpForLevelUp = (float) Calculator.calculateLevelDependentStatFor(getXpUntilLevelUp(), level, getMultiplier());
         }
+    }
+
+    /**
+     * Prevents overriding of {@link TameableAttributesContainer#initWithDefaults()}
+     */
+    private void initWithTameableAttributesDefault() {
+        super.initWithDefaults();
+
+        if (Calculator.applyProbability(alphaProbability))
+            alphaPredatorMultiplier = 4;
+        else
+            alphaPredatorMultiplier = 1;
+
+        currentFoodValue = maxFoodValue;
+        currentXp = 0;
+        tamed = false;
+
+        if (alphaPredatorMultiplier != 1) {
+            (new AlphaParticleSpawner((LivingEntity) mseEntity.getCraftEntity())).startEffects();
+            if (mseEntity.getCraftEntity() instanceof LivingEntity)
+                ((LivingEntity) mseEntity.getCraftEntity()).setRemoveWhenFarAway(false);
+        }
+
+        initialized = true;
+        updateLevel(0);
     }
 
 }

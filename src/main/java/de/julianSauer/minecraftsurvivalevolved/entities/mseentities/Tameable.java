@@ -5,6 +5,7 @@ import de.juliansauer.minecraftsurvivalevolved.entities.UnconsciousnessTimerTame
 import de.juliansauer.minecraftsurvivalevolved.entities.containers.TameableAttributesContainer;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.MiningHandler;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.PathfinderHandler;
+import de.juliansauer.minecraftsurvivalevolved.entities.handlers.Persistentable;
 import de.juliansauer.minecraftsurvivalevolved.entities.handlers.TamingHandler;
 import de.juliansauer.minecraftsurvivalevolved.main.MSEMain;
 import de.juliansauer.minecraftsurvivalevolved.tribes.Tribe;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Basic functionality of a tameable entity.
  */
-public interface Tameable extends Unconsciousable {
+public interface Tameable extends Unconsciousable, Persistentable {
 
     TameableAttributesContainer getTameableAttributesContainer();
 
@@ -129,27 +130,27 @@ public interface Tameable extends Unconsciousable {
         return getPathfinderHandler().isFollowing();
     }
 
-    /**
-     * Loads data for this entity.
-     *
-     * @param data NBTTags used for loading
-     */
-    default void load(NBTTagCompound data) {
+    @Override
+    default void initWithDefaults() {
+        getTameableAttributesContainer().initWithDefaults();
+        getTamingHandler().initWithDefaults();
+        getPathfinderHandler().initWithDefaults();
+    }
+
+    @Override
+    default void initWith(NBTTagCompound data) {
         getTameableAttributesContainer().initWith(data);
         getTamingHandler().initWith(data);
         getPathfinderHandler().initWith(data);
+        data.setBoolean("MSE" + this.getClass() + "Initialized", true);
     }
 
-    /**
-     * Saves data for this entity.
-     *
-     * @param data NBTTags used for saving
-     */
-    default void save(NBTTagCompound data) {
+    @Override
+    default void saveData(NBTTagCompound data) {
         getTameableAttributesContainer().saveData(data);
         getTamingHandler().saveData(data);
         getPathfinderHandler().saveData(data);
-        data.setBoolean("MSEInitialized", true);
+        data.setBoolean("MSE" + this.getClass() + "Initialized", true);
     }
 
     @Override

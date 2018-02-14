@@ -27,6 +27,8 @@ public class MSERabbit extends EntityRabbit implements MSEEntity {
 
     private String entityType;
 
+    private boolean initialized;
+
     public MSERabbit(World world) {
         super(world);
         entityType = getName();
@@ -37,6 +39,8 @@ public class MSERabbit extends EntityRabbit implements MSEEntity {
         movementHandler = new RidingHandler<>(this);
         pathfinderHandler = new PathfinderHandlerAnimal(this);
         pitchWhileTaming = 0;
+
+        initialized = false;
     }
 
     @Override
@@ -51,9 +55,15 @@ public class MSERabbit extends EntityRabbit implements MSEEntity {
     }
 
     @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    @Override
     public void a(NBTTagCompound data) {
         super.a(data);
-        MSEEntity.super.load(data);
+        MSEEntity.super.initWith(data);
+        initialized = true;
         // Killer rabbits must be alpha
         if (isAlpha())
             setRabbitType(99);
@@ -64,7 +74,7 @@ public class MSERabbit extends EntityRabbit implements MSEEntity {
     @Override
     public void b(NBTTagCompound data) {
         super.b(data);
-        MSEEntity.super.save(data);
+        MSEEntity.super.saveData(data);
     }
 
     @Override

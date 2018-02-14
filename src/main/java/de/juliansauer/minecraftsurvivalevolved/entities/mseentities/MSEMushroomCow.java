@@ -26,6 +26,8 @@ public class MSEMushroomCow extends EntityMushroomCow implements MSEEntity {
 
     private String entityType;
 
+    private boolean initialized;
+
     public MSEMushroomCow(World world) {
         super(world);
         entityType = getName();
@@ -36,6 +38,8 @@ public class MSEMushroomCow extends EntityMushroomCow implements MSEEntity {
         movementHandler = new RidingHandler<>(this);
         pathfinderHandler = new PathfinderHandlerAnimal(this);
         pitchWhileTaming = 0;
+
+        initialized = false;
     }
 
     @Override
@@ -50,15 +54,21 @@ public class MSEMushroomCow extends EntityMushroomCow implements MSEEntity {
     }
 
     @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    @Override
     public void a(NBTTagCompound data) {
         super.a(data);
-        MSEEntity.super.load(data);
+        MSEEntity.super.initWith(data);
+        initialized = true;
     }
 
     @Override
     public void b(NBTTagCompound data) {
         super.b(data);
-        MSEEntity.super.save(data);
+        MSEEntity.super.saveData(data);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.juliansauer.minecraftsurvivalevolved.entities.mseentities;
 
 import de.juliansauer.minecraftsurvivalevolved.entities.containers.TameableAttributesContainer;
+import de.juliansauer.minecraftsurvivalevolved.entities.handlers.Persistentable;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.PathfinderGoal;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
@@ -18,10 +19,11 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.UUID;
 
-public interface MSEEntity extends Tameable, AttributedEntity {
+public interface MSEEntity extends Tameable, AttributedEntity, Persistentable {
 
     TameableAttributesContainer getTameableAttributesContainer();
 
@@ -188,6 +190,26 @@ public interface MSEEntity extends Tameable, AttributedEntity {
 
     PathfinderGoal getMeleeAttack();
 
+    // Persistentable
+    @Override
+    default void initWithDefaults() {
+        Tameable.super.initWithDefaults();
+    }
+
+    @Override
+    default void initWith(NBTTagCompound data) {
+        Tameable.super.initWith(data);
+        setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
+    }
+
+    @Override
+    default void saveData(NBTTagCompound data) {
+        Tameable.super.saveData(data);
+        data.setBoolean("MSE" + this.getClass() + "Initialized", false);
+        data.setString("MSEInventory", inventoryAsBase64String());
+        data.setBoolean("MSE" + this.getClass() + "Initialized", true);
+    }
+
     /**
      * Creates an org.bukkit.Location based on the entity's coordinates.
      *
@@ -204,21 +226,9 @@ public interface MSEEntity extends Tameable, AttributedEntity {
         return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), (net.minecraft.server.v1_9_R1.Entity) getEntity());
     }
 
-    @Override
-    default void load(NBTTagCompound data) {
-        Tameable.super.load(data);
-        setInventory(inventoryFromBase64String(data.getString("MSEInventory")));
-    }
-
-    @Override
-    default void save(NBTTagCompound data) {
-        Tameable.super.save(data);
-        data.setBoolean("MSEInitialized", false);
-        data.setString("MSEInventory", inventoryAsBase64String());
-        data.setBoolean("MSEInitialized", true);
-    }
-
     default void setInventory(Inventory inventory) {
+        if (inventory == null)
+            return;
         for (int i = 0; i < inventory.getSize(); i++)
             getInventory().setItem(i, inventory.getItem(i));
     }
@@ -284,6 +294,8 @@ public interface MSEEntity extends Tameable, AttributedEntity {
             dataInput.close();
             return inventory;
 
+        } catch (EOFException e) {
+            assert !isTamed();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

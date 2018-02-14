@@ -57,19 +57,16 @@ public class AttributesContainer implements Persistentable {
 
     @Override
     public void initWithDefaults() {
-        unconscious = false;
-        torpidity = 0;
-        level = 1;
-        currentXp = 0;
-
-        initialized = true;
+        initWithAttributesDefaults();
     }
 
     @Override
     public void initWith(NBTTagCompound data) {
 
-        if (!data.getBoolean("MSEInitialized")) {
-            initWithDefaults();
+        initialized = data.getBoolean("MSE" + this.getClass() + "Initialized");
+        if (!initialized) {
+            initWithAttributesDefaults();
+            data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
             return;
         }
 
@@ -79,17 +76,19 @@ public class AttributesContainer implements Persistentable {
         currentXp = data.getFloat("MSECurrentXp");
 
         initialized = true;
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
     }
 
     @Override
     public void saveData(NBTTagCompound data) {
         if (!isInitialized())
-            initWithDefaults();
+            initWithAttributesDefaults();
 
         data.setBoolean("MSEUnconscious", unconscious);
         data.setInt("MSETorpidity", torpidity);
         data.setInt("MSELevel", level);
         data.setFloat("MSECurrentXp", currentXp);
+        data.setBoolean("MSE" + this.getClass() + "Initialized", initialized);
     }
 
     public boolean isUnconscious() {
@@ -160,6 +159,18 @@ public class AttributesContainer implements Persistentable {
 
     public float getMultiplier() {
         return levelMultiplier;
+    }
+
+    /**
+     * Prevents overriding of {@link AttributesContainer#initWithDefaults()}.
+     */
+    private void initWithAttributesDefaults() {
+        unconscious = false;
+        torpidity = 0;
+        level = 1;
+        currentXp = 0;
+
+        initialized = true;
     }
 
 }
