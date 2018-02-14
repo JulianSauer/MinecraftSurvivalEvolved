@@ -9,7 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
 // TODO: Disable riding
-public class MSEEndermite extends EntityEndermite implements MSEEntity {
+public class MSEEndermite extends EntityEndermite implements MSEEntity, Carryable {
 
     private TameableAttributesContainer<MSEEndermite> tameableAttributesContainer;
 

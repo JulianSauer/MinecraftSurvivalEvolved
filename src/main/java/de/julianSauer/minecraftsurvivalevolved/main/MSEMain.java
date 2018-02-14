@@ -45,6 +45,7 @@ public class MSEMain extends JavaPlugin {
         pluginManager.registerEvents(new BowShootListener(), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(), this);
         pluginManager.registerEvents(new EntityDeathListener(), this);
+        pluginManager.registerEvents(new EntityDismountListener(), this);
         pluginManager.registerEvents(new EntitySpawnListener(), this);
         pluginManager.registerEvents(new InventoryClickListener(), this);
         pluginManager.registerEvents(new InventoryCloseListener(), this);
@@ -55,6 +56,7 @@ public class MSEMain extends JavaPlugin {
         pluginManager.registerEvents(new PlayerMoveListener(), this);
         pluginManager.registerEvents(new PlayerPickupArrowListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
+        pluginManager.registerEvents(new PlayerSneakListener(), this);
         pluginManager.registerEvents(new PrepareItemCraftListener(), this);
         pluginManager.registerEvents(new WorldSaveListener(), this);
 

@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSECaveSpider extends EntityCaveSpider implements MSEEntity {
+public class MSECaveSpider extends EntityCaveSpider implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSECaveSpider> tameableAttributesContainer;
 

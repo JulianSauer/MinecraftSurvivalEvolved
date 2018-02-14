@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSESheep extends EntitySheep implements MSEEntity {
+public class MSESheep extends EntitySheep implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSESheep> tameableAttributesContainer;
 

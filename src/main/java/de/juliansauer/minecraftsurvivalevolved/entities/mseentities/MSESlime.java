@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MSESlime extends EntitySlime implements MSEEntity {
+public class MSESlime extends EntitySlime implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSESlime> tameableAttributesContainer;
 

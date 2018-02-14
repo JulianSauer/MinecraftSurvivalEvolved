@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEGuardian extends EntityGuardian implements MSEEntity {
+public class MSEGuardian extends EntityGuardian implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEGuardian> tameableAttributesContainer;
 

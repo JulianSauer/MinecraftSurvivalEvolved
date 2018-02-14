@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEWolf extends EntityWolf implements MSEEntity {
+public class MSEWolf extends EntityWolf implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEWolf> tameableAttributesContainer;
 

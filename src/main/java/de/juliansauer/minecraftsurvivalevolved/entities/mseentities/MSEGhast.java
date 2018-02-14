@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MSEGhast extends EntityGhast implements MSEEntity {
+public class MSEGhast extends EntityGhast implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEGhast> tameableAttributesContainer;
 

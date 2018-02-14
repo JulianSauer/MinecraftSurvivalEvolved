@@ -23,7 +23,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.UUID;
 
-public interface MSEEntity extends Tameable, AttributedEntity, Persistentable {
+public interface MSEEntity extends Tameable, AttributedEntity, Persistentable, Interactable {
 
     TameableAttributesContainer getTameableAttributesContainer();
 

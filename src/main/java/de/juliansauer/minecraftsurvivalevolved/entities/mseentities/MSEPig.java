@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEPig extends EntityPig implements MSEEntity {
+public class MSEPig extends EntityPig implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEPig> tameableAttributesContainer;
 

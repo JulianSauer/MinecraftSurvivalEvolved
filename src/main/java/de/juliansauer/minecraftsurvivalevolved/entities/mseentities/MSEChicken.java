@@ -9,7 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
 // TODO: Disable riding
-public class MSEChicken extends EntityChicken implements MSEEntity {
+public class MSEChicken extends EntityChicken implements MSEEntity, Carryable {
 
     private TameableAttributesContainer<MSEChicken> tameableAttributesContainer;
 

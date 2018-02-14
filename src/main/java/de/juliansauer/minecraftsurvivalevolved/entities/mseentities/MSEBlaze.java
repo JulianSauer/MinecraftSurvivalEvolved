@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEBlaze extends EntityBlaze implements MSEEntity {
+public class MSEBlaze extends EntityBlaze implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEBlaze> tameableAttributesContainer;
 

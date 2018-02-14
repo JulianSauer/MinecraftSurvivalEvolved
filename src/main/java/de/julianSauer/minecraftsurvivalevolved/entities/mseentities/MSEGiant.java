@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEGiant extends EntityGiantZombie implements MSEEntity {
+public class MSEGiant extends EntityGiantZombie implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEGiant> tameableAttributesContainer;
 

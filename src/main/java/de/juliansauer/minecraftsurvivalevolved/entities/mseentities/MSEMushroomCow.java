@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSEMushroomCow extends EntityMushroomCow implements MSEEntity {
+public class MSEMushroomCow extends EntityMushroomCow implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEMushroomCow> tameableAttributesContainer;
 

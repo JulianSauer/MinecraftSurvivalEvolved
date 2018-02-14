@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSESquid extends EntitySquid implements MSEEntity {
+public class MSESquid extends EntitySquid implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSESquid> tameableAttributesContainer;
 

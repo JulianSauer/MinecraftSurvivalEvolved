@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-public class MSESpider extends EntitySpider implements MSEEntity {
+public class MSESpider extends EntitySpider implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSESpider> tameableAttributesContainer;
 

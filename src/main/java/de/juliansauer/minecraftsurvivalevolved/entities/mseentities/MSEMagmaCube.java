@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MSEMagmaCube extends EntityMagmaCube implements MSEEntity {
+public class MSEMagmaCube extends EntityMagmaCube implements MSEEntity, Rideable {
 
     private TameableAttributesContainer<MSEMagmaCube> tameableAttributesContainer;
 
