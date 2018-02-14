@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-// TODO: Disable riding
 public class MSEPigZombie extends EntityPigZombie implements MSEEntity {
 
     private TameableAttributesContainer<MSEPigZombie> tameableAttributesContainer;

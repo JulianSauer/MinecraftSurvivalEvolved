@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-// TODO: Disable riding
 public class MSECreeper extends EntityCreeper implements MSEEntity {
 
     private TameableAttributesContainer<MSECreeper> tameableAttributesContainer;

@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-// TODO: Disable riding
 public class MSERabbit extends EntityRabbit implements MSEEntity, Carryable {
 
     private TameableAttributesContainer<MSERabbit> tameableAttributesContainer;

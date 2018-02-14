@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 
-// TODO: Disable riding
 public class MSEEnderman extends EntityEnderman implements MSEEntity {
 
     private TameableAttributesContainer<MSEEnderman> tameableAttributesContainer;
