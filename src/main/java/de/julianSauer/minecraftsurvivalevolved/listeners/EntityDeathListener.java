@@ -65,8 +65,6 @@ public class EntityDeathListener implements BasicEventListener {
     private void sendDeathMessage(MSEEntity mseEntity) {
 
         UUID tribeUUID = mseEntity.getTribe();
-        if (tribeUUID == null)
-            return;
         Tribe tribe = TribeRegistry.getTribeRegistry().getTribe(tribeUUID);
 
         if (tribe != null)

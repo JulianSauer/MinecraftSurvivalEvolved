@@ -24,23 +24,41 @@ public class EntitySpawnListener implements BasicEventListener {
 
         CraftLivingEntity entity = (CraftLivingEntity) e.getEntity();
 
-        if (entity instanceof Witch
-                || entity instanceof Villager
-                || entity instanceof Horse
-                || entity instanceof EnderDragon
-                || entity instanceof Bat
+        if (entity instanceof Blaze
+                || entity instanceof CaveSpider
+                || entity instanceof Chicken
+                || entity instanceof Cow
+                || entity instanceof Creeper
+                || entity instanceof Enderman
+                || entity instanceof Endermite
+                || entity instanceof Ghast
+                || entity instanceof Giant
                 || entity instanceof Guardian
-                || entity instanceof Wither
-                || entity instanceof Ocelot)
-            return;
+                || entity instanceof MagmaCube
+                || entity instanceof MushroomCow
+                || entity instanceof Pig
+                || entity instanceof PigZombie
+                || entity instanceof Rabbit
+                || entity instanceof Sheep
+                || entity instanceof Silverfish
+                || entity instanceof Skeleton
+                || entity instanceof Slime
+                || entity instanceof Spider
+                || entity instanceof Squid
+                || entity instanceof Wolf
+                || entity instanceof Zombie) {
 
-        if (!(entity.getHandle() instanceof MSEEntity)) {
-            logger.warning("A " + entity.getName() + " spawned in " + entity.getWorld().getBiome(entity.getLocation().getBlockX(), entity.getLocation().getBlockZ()).name() + " and was not a MSEEntity");
-            entity.setHealth(0);
-            return;
+            if (entity.getHandle() instanceof MSEEntity) {
+                MSEEntity mseEntity = (MSEEntity) entity.getHandle();
+                mseEntity.initWithDefaults();
+            } else {
+                int x = entity.getLocation().getBlockX();
+                int z = entity.getLocation().getBlockZ();
+                logger.warning("A " + entity.getName() + " spawned in " + entity.getWorld().getBiome(x, z).name() + " and was not a MSEEntity");
+                entity.remove();
+            }
         }
-        MSEEntity mseEntity = (MSEEntity) entity.getHandle();
-        mseEntity.initWithDefaults();
+
     }
 
 }
